@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+if [ "$1" = 'install' -a "$HOSTNAME" = "buildkitsandbox" ]; then
+    export DEBIAN_FRONTEND=noninteractive
+    /usr/bin/apt-get update
+    /usr/bin/apt-get install -y ${@:2}
+    /usr/bin/apt-get clean
+    rm -rf /var/lib/apt/lists/*
+else 
+    /usr/bin/apt-get $@
+fi
