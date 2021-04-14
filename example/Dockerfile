@@ -21,14 +21,14 @@ ENV MIMIC_CROSS_ROOT=/mimic-cross
 
 COPY mimic-cross/target $MIMIC_CROSS_ROOT
 RUN $MIMIC_CROSS_ROOT/setup.sh
-SHELL ["/host/bin/bash", "-c"]
+# SHELL ["/host/bin/bash", "-c"]
 
-FROM mimic-cross-aarch64
-
-RUN apt-get update && apt-get install -y \
-	cmake \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
-
-COPY main.c .
-RUN gcc main.c
+# FROM mimic-cross-aarch64
+#
+# RUN apt-get update && apt-get install -y \
+# 	cmake \
+#  && apt-get clean \
+#  && rm -rf /var/lib/apt/lists/*
+#
+# COPY main.c .
+# RUN gcc main.c
