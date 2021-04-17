@@ -1,3 +1,5 @@
+# syntax = docker/dockerfile:experimental
+
 FROM ubuntu:20.04 as host
 
 # ENV DEBIAN_FRONTEND=noninteractive
@@ -16,19 +18,26 @@ RUN $MIMIC_CROSS_ROOT/setup.sh
 
 FROM multiarch/ubuntu-core:arm64-focal as mimic-cross-aarch64
 
+FROM mimic-cross-aarch64
+
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > \
+    /etc/apt/apt.conf.d/keep-cache
+RUN \
+    --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
+    apt update && \
+    apt-get install -y --no-install-recommends \
+    gcc \
+	cmake
+
 COPY --from=host / /host
 ENV MIMIC_CROSS_ROOT=/mimic-cross
 
 COPY mimic-cross/target $MIMIC_CROSS_ROOT
 RUN $MIMIC_CROSS_ROOT/setup.sh
-# SHELL ["/host/bin/bash", "-c"]
+SHELL ["/host/bin/bash", "-c"]
 
-# FROM mimic-cross-aarch64
-#
-# RUN apt-get update && apt-get install -y \
-# 	cmake \
-#  && apt-get clean \
-#  && rm -rf /var/lib/apt/lists/*
-#
-# COPY main.c .
+
+COPY main.c .
 # RUN gcc main.c

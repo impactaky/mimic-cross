@@ -3,7 +3,7 @@
 executable_list=$(dpkg -L $1 \
     | grep -v '^/lib/x86_64-linux-gnu' \
     | grep -v '^/usr/lib/x86_64-linux-gnu' \
-    | xargs -I {} sh -c 'test `realpath {}` = {} -a ! -d {} -a -x {} && echo {} || :')
+    | xargs -I {} sh -c 'test ! -d {} -a -x {} && echo {} || :')
 
 for executable in $executable_list; do
     if [[ ! -e /host$executable ]]; then

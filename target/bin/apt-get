@@ -1,21 +1,20 @@
 #!/host/bin/bash -e
 
-if [ "$1" = 'install' -o "$1" = 'upgrade' ]; then
-    package_list=$(mktemp)
-    /usr/bin/apt-get install cmake --dry-run | grep Inst | cut -d ' ' -f 2 \
-        | sed -e "s/^gcc\(-[0-9]\+\)\?$/gcc\1-$(arch)-linux-gnu/" \
-        | sort -u > $package_list
-    supported_packages=$(comm -12 "$MIMIC_CROSS_ROOT"/supported_packages.list "$package_list")
-    rm "$package_list"
-fi
-
+ts=$(date "+%Y-%m-%d %H:%M:%S")
 /usr/bin/apt-get $@
+package_list=$(mktemp)
+awk -F[-:\ ] -v ts="$ts" 'ts<$0 && $8=="installed"' /var/log/dpkg.log | awk -F[:\ ] '{print $7}' | sort -u > $package_list
+supported_packages=$(comm -12 "$MIMIC_CROSS_ROOT"/supported_packages.list "$package_list")
+rm "$package_list"
 
-if [ ! "${supported_packages+exist}" ]; then
+if [[ ! "${supported_packages}" ]]; then 
     exit 0
 fi
 
-chroot /host apt-get install $supported_packages
+mv /host/etc/resolv.conf /host/etc/resolv.conf.orig
+cp /etc/resolv.conf /host/etc/resolv.conf
+/host/$(which chroot) /host apt-get install $supported_packages
+mv /host/etc/resolv.conf.orig /host/etc/resolv.conf
 for package in $supported_packages; do
-    $MIMIC_CROSS_ROOT/postinst/$package.sh
+    . $MIMIC_CROSS_ROOT/postinst/$package.sh
 done

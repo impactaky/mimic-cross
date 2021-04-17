@@ -10,5 +10,6 @@ fi
 mkdir -p /lib64
 ln -s /host/lib64/ld-linux-x86-64.* /lib64/
 
+. $MIMIC_CROSS_ROOT/hostize_installed_packages.sh
+
 cp $MIMIC_CROSS_ROOT/bin/apt-get /usr/local/bin/apt-get
-cp /etc/resolv.conf /host/etc/resolv.conf
