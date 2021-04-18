@@ -1,9 +1,12 @@
 #!/host/bin/bash -e
 
+source $MIMIC_CROSS_ROOT/script/replace_package_name.sh
+
 ts=$(date "+%Y-%m-%d %H:%M:%S")
 /usr/bin/apt-get $@
 package_list=$(mktemp)
-awk -F[-:\ ] -v ts="$ts" 'ts<$0 && $8=="installed"' /var/log/dpkg.log | awk -F[:\ ] '{print $7}' | sort -u > $package_list
+awk -F[-:\ ] -v ts="$ts" 'ts<$0 && $8=="installed"' /var/log/dpkg.log | awk -F[:\ ] '{print $7}' \
+    | replace_package_name > $package_list
 supported_packages=$(comm -12 "$MIMIC_CROSS_ROOT"/supported_packages.list "$package_list")
 rm "$package_list"
 

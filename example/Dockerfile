@@ -2,15 +2,17 @@
 
 FROM ubuntu:20.04 as host
 
-# ENV DEBIAN_FRONTEND=noninteractive
-# RUN apt-get update && apt-get install -y \
-#     autoconf \
-#     gcc \
-#     g++ \
-#     git \
-#     make \
-#  && apt-get clean \
-#  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > \
+    /etc/apt/apt.conf.d/keep-cache
+RUN \
+    --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
+    apt update && \
+    apt-get install -y --no-install-recommends \
+    patchelf \
+	cmake
 
 ENV MIMIC_CROSS_ROOT=/mimic-cross
 COPY mimic-cross/host $MIMIC_CROSS_ROOT
@@ -28,6 +30,7 @@ RUN \
     --mount=type=cache,target=/var/lib/apt \
     apt update && \
     apt-get install -y --no-install-recommends \
+    sudo \
     gcc \
 	cmake
 

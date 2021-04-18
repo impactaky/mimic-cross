@@ -2,3 +2,4 @@ cmake
 coreutils
 gcc-aarch64-linux-gnu
 make
+sudo

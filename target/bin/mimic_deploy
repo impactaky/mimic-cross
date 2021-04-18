@@ -1,9 +1,18 @@
 #!/host/bin/bash -eu
 
-HOST_LDD=/host/$(which ldd)
-$HOST_LDD $1 | grep "not found" | awk '{print $1}' \
-| while read so
-do
-    so_path=$(find /host/usr/local/lib /host/usr/lib /host/lib -name $so | head -n 1)
-    ln -sf $so_path ${so_path#/host}
-done
+deploy_bin=/tmp/${1##*/}
+
+cp $1 $deploy_bin
+
+# RUNPATH=/usr/lib/foo -> RUNPATH=/host/usr/lib/foo
+objdump -x $deploy_bin | awk '$1=="RUNPATH" {print $2}' \
+    | sed -e "s#^/#/host/#" -e "s#:/#:/host/#g" \
+    | xargs -I {} /host/usr/bin/patchelf --set-rpath '{}' $deploy_bin
+
+/host/$(which ldd) $deploy_bin | grep "not found" && {
+    rm $deploy_bin
+    echo [ERROR] some shared library not found 1>&2
+    exit 1
+}
+
+mv $deploy_bin ${1#/host}

@@ -9,6 +9,7 @@ fi
 
 mkdir -p /lib64
 ln -s /host/lib64/ld-linux-x86-64.* /lib64/
+ln -s /host/usr/aarch64-linux-gnu /usr
 
 . $MIMIC_CROSS_ROOT/hostize_installed_packages.sh
 
