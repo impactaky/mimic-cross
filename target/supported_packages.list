@@ -1,5 +1,7 @@
+bash
 cmake
 coreutils
-gcc-aarch64-linux-gnu
+cpp-9-aarch64-linux-gnu
+gcc-9-aarch64-linux-gnu
 make
 sudo

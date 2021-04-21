@@ -32,6 +32,7 @@ RUN \
     apt-get install -y --no-install-recommends \
     sudo \
     gcc \
+    libc6-dev \
 	cmake
 
 COPY --from=host / /host
