@@ -1,105 +1,105 @@
-ln -sf /host/bin/cat /bin/cat
-ln -sf /host/bin/chgrp /bin/chgrp
-ln -sf /host/bin/chmod /bin/chmod
-ln -sf /host/bin/chown /bin/chown
-ln -sf /host/bin/cp /bin/cp
-ln -sf /host/bin/date /bin/date
-ln -sf /host/bin/dd /bin/dd
-ln -sf /host/bin/df /bin/df
-ln -sf /host/bin/dir /bin/dir
-ln -sf /host/bin/echo /bin/echo
-ln -sf /host/bin/false /bin/false
-ln -sf /host/bin/ln /bin/ln
-ln -sf /host/bin/ls /bin/ls
-ln -sf /host/bin/mkdir /bin/mkdir
-ln -sf /host/bin/mknod /bin/mknod
-ln -sf /host/bin/mktemp /bin/mktemp
-ln -sf /host/bin/mv /bin/mv
-ln -sf /host/bin/pwd /bin/pwd
-ln -sf /host/bin/readlink /bin/readlink
-ln -sf /host/bin/rm /bin/rm
-ln -sf /host/bin/rmdir /bin/rmdir
-ln -sf /host/bin/sleep /bin/sleep
-ln -sf /host/bin/stty /bin/stty
-ln -sf /host/bin/sync /bin/sync
-ln -sf /host/bin/touch /bin/touch
-ln -sf /host/bin/true /bin/true
-ln -sf /host/bin/uname /bin/uname
-ln -sf /host/bin/vdir /bin/vdir
-ln -sf /host/usr/bin/[ /usr/bin/[
+mimic-deploy /host/bin/cat
+mimic-deploy /host/bin/chgrp
+mimic-deploy /host/bin/chmod
+mimic-deploy /host/bin/chown
+mimic-deploy /host/bin/cp
+mimic-deploy /host/bin/date
+mimic-deploy /host/bin/dd
+mimic-deploy /host/bin/df
+mimic-deploy /host/bin/dir
+mimic-deploy /host/bin/echo
+mimic-deploy /host/bin/false
+mimic-deploy /host/bin/ln
+mimic-deploy /host/bin/ls
+mimic-deploy /host/bin/mkdir
+mimic-deploy /host/bin/mknod
+mimic-deploy /host/bin/mktemp
+mimic-deploy /host/bin/mv
+mimic-deploy /host/bin/pwd
+mimic-deploy /host/bin/readlink
+mimic-deploy /host/bin/rm
+mimic-deploy /host/bin/rmdir
+mimic-deploy /host/bin/sleep
+mimic-deploy /host/bin/stty
+mimic-deploy /host/bin/sync
+mimic-deploy /host/bin/touch
+mimic-deploy /host/bin/true
+mimic-deploy /host/bin/uname
+mimic-deploy /host/bin/vdir
+mimic-deploy /host/usr/bin/[
 # ln -sf /host/usr/bin/arch /usr/bin/arch
-ln -sf /host/usr/bin/b2sum /usr/bin/b2sum
-ln -sf /host/usr/bin/base32 /usr/bin/base32
-ln -sf /host/usr/bin/base64 /usr/bin/base64
-ln -sf /host/usr/bin/basename /usr/bin/basename
-ln -sf /host/usr/bin/chcon /usr/bin/chcon
-ln -sf /host/usr/bin/cksum /usr/bin/cksum
-ln -sf /host/usr/bin/comm /usr/bin/comm
-ln -sf /host/usr/bin/csplit /usr/bin/csplit
-ln -sf /host/usr/bin/cut /usr/bin/cut
-ln -sf /host/usr/bin/dircolors /usr/bin/dircolors
-ln -sf /host/usr/bin/dirname /usr/bin/dirname
-ln -sf /host/usr/bin/du /usr/bin/du
-ln -sf /host/usr/bin/env /usr/bin/env
-ln -sf /host/usr/bin/expand /usr/bin/expand
-ln -sf /host/usr/bin/expr /usr/bin/expr
-ln -sf /host/usr/bin/factor /usr/bin/factor
-ln -sf /host/usr/bin/fmt /usr/bin/fmt
-ln -sf /host/usr/bin/fold /usr/bin/fold
-ln -sf /host/usr/bin/groups /usr/bin/groups
-ln -sf /host/usr/bin/head /usr/bin/head
-ln -sf /host/usr/bin/hostid /usr/bin/hostid
-ln -sf /host/usr/bin/id /usr/bin/id
-ln -sf /host/usr/bin/install /usr/bin/install
-ln -sf /host/usr/bin/join /usr/bin/join
-ln -sf /host/usr/bin/link /usr/bin/link
-ln -sf /host/usr/bin/logname /usr/bin/logname
-ln -sf /host/usr/bin/md5sum /usr/bin/md5sum
-ln -sf /host/usr/bin/mkfifo /usr/bin/mkfifo
-ln -sf /host/usr/bin/nice /usr/bin/nice
-ln -sf /host/usr/bin/nl /usr/bin/nl
-ln -sf /host/usr/bin/nohup /usr/bin/nohup
-ln -sf /host/usr/bin/nproc /usr/bin/nproc
-ln -sf /host/usr/bin/numfmt /usr/bin/numfmt
-ln -sf /host/usr/bin/od /usr/bin/od
-ln -sf /host/usr/bin/paste /usr/bin/paste
-ln -sf /host/usr/bin/pathchk /usr/bin/pathchk
-ln -sf /host/usr/bin/pinky /usr/bin/pinky
-ln -sf /host/usr/bin/pr /usr/bin/pr
-ln -sf /host/usr/bin/printenv /usr/bin/printenv
-ln -sf /host/usr/bin/printf /usr/bin/printf
-ln -sf /host/usr/bin/ptx /usr/bin/ptx
-ln -sf /host/usr/bin/realpath /usr/bin/realpath
-ln -sf /host/usr/bin/runcon /usr/bin/runcon
-ln -sf /host/usr/bin/seq /usr/bin/seq
-ln -sf /host/usr/bin/sha1sum /usr/bin/sha1sum
-ln -sf /host/usr/bin/sha224sum /usr/bin/sha224sum
-ln -sf /host/usr/bin/sha256sum /usr/bin/sha256sum
-ln -sf /host/usr/bin/sha384sum /usr/bin/sha384sum
-ln -sf /host/usr/bin/sha512sum /usr/bin/sha512sum
-ln -sf /host/usr/bin/shred /usr/bin/shred
-ln -sf /host/usr/bin/shuf /usr/bin/shuf
-ln -sf /host/usr/bin/sort /usr/bin/sort
-ln -sf /host/usr/bin/split /usr/bin/split
-ln -sf /host/usr/bin/stat /usr/bin/stat
-ln -sf /host/usr/bin/stdbuf /usr/bin/stdbuf
-ln -sf /host/usr/bin/sum /usr/bin/sum
-ln -sf /host/usr/bin/tac /usr/bin/tac
-ln -sf /host/usr/bin/tail /usr/bin/tail
-ln -sf /host/usr/bin/tee /usr/bin/tee
-ln -sf /host/usr/bin/test /usr/bin/test
-ln -sf /host/usr/bin/timeout /usr/bin/timeout
-ln -sf /host/usr/bin/tr /usr/bin/tr
-ln -sf /host/usr/bin/truncate /usr/bin/truncate
-ln -sf /host/usr/bin/tsort /usr/bin/tsort
-ln -sf /host/usr/bin/tty /usr/bin/tty
-ln -sf /host/usr/bin/unexpand /usr/bin/unexpand
-ln -sf /host/usr/bin/uniq /usr/bin/uniq
-ln -sf /host/usr/bin/unlink /usr/bin/unlink
-ln -sf /host/usr/bin/users /usr/bin/users
-ln -sf /host/usr/bin/wc /usr/bin/wc
-ln -sf /host/usr/bin/who /usr/bin/who
-ln -sf /host/usr/bin/whoami /usr/bin/whoami
-ln -sf /host/usr/bin/yes /usr/bin/yes
-ln -sf /host/usr/sbin/chroot /usr/sbin/chroot
-ln -sf /host/usr/bin/md5sum.textutils /usr/bin/md5sum.textutils
+mimic-deploy /host/usr/bin/b2sum
+mimic-deploy /host/usr/bin/base32
+mimic-deploy /host/usr/bin/base64
+mimic-deploy /host/usr/bin/basename
+mimic-deploy /host/usr/bin/chcon
+mimic-deploy /host/usr/bin/cksum
+mimic-deploy /host/usr/bin/comm
+mimic-deploy /host/usr/bin/csplit
+mimic-deploy /host/usr/bin/cut
+mimic-deploy /host/usr/bin/dircolors
+mimic-deploy /host/usr/bin/dirname
+mimic-deploy /host/usr/bin/du
+mimic-deploy /host/usr/bin/env
+mimic-deploy /host/usr/bin/expand
+mimic-deploy /host/usr/bin/expr
+mimic-deploy /host/usr/bin/factor
+mimic-deploy /host/usr/bin/fmt
+mimic-deploy /host/usr/bin/fold
+mimic-deploy /host/usr/bin/groups
+mimic-deploy /host/usr/bin/head
+mimic-deploy /host/usr/bin/hostid
+mimic-deploy /host/usr/bin/id
+mimic-deploy /host/usr/bin/install
+mimic-deploy /host/usr/bin/join
+mimic-deploy /host/usr/bin/link
+mimic-deploy /host/usr/bin/logname
+mimic-deploy /host/usr/bin/md5sum
+mimic-deploy /host/usr/bin/mkfifo
+mimic-deploy /host/usr/bin/nice
+mimic-deploy /host/usr/bin/nl
+mimic-deploy /host/usr/bin/nohup
+mimic-deploy /host/usr/bin/nproc
+mimic-deploy /host/usr/bin/numfmt
+mimic-deploy /host/usr/bin/od
+mimic-deploy /host/usr/bin/paste
+mimic-deploy /host/usr/bin/pathchk
+mimic-deploy /host/usr/bin/pinky
+mimic-deploy /host/usr/bin/pr
+mimic-deploy /host/usr/bin/printenv
+mimic-deploy /host/usr/bin/printf
+mimic-deploy /host/usr/bin/ptx
+mimic-deploy /host/usr/bin/realpath
+mimic-deploy /host/usr/bin/runcon
+mimic-deploy /host/usr/bin/seq
+mimic-deploy /host/usr/bin/sha1sum
+mimic-deploy /host/usr/bin/sha224sum
+mimic-deploy /host/usr/bin/sha256sum
+mimic-deploy /host/usr/bin/sha384sum
+mimic-deploy /host/usr/bin/sha512sum
+mimic-deploy /host/usr/bin/shred
+mimic-deploy /host/usr/bin/shuf
+mimic-deploy /host/usr/bin/sort
+mimic-deploy /host/usr/bin/split
+mimic-deploy /host/usr/bin/stat
+mimic-deploy /host/usr/bin/stdbuf
+mimic-deploy /host/usr/bin/sum
+mimic-deploy /host/usr/bin/tac
+mimic-deploy /host/usr/bin/tail
+mimic-deploy /host/usr/bin/tee
+mimic-deploy /host/usr/bin/test
+mimic-deploy /host/usr/bin/timeout
+mimic-deploy /host/usr/bin/tr
+mimic-deploy /host/usr/bin/truncate
+mimic-deploy /host/usr/bin/tsort
+mimic-deploy /host/usr/bin/tty
+mimic-deploy /host/usr/bin/unexpand
+mimic-deploy /host/usr/bin/uniq
+mimic-deploy /host/usr/bin/unlink
+mimic-deploy /host/usr/bin/users
+mimic-deploy /host/usr/bin/wc
+mimic-deploy /host/usr/bin/who
+mimic-deploy /host/usr/bin/whoami
+mimic-deploy /host/usr/bin/yes
+mimic-deploy /host/usr/sbin/chroot
+mimic-deploy /host/usr/bin/md5sum.textutils

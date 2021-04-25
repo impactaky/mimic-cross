@@ -1,3 +1,3 @@
-ln -sf /host/usr/bin/cmake /usr/bin/cmake
-ln -sf /host/usr/bin/cpack /usr/bin/cpack
-ln -sf /host/usr/bin/ctest /usr/bin/ctest
+mimic-deploy /host/usr/bin/cmake
+mimic-deploy /host/usr/bin/cpack
+mimic-deploy /host/usr/bin/ctest

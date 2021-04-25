@@ -1,0 +1,68 @@
+#!/host/bin/bash -eu
+
+OPT=$(getopt -o k -- "$@")
+if [ $? != 0 ] ; then
+    exit 1
+fi
+eval set -- "$OPT"
+
+KEEP_TARGET_BIN=0
+while true; do
+    case $1 in
+        -k)
+            KEEP_TARGET_BIN=1
+            shift
+            ;;
+        --)
+            shift
+            break
+            ;;
+    esac
+done
+
+if [[ ! -e $1 ]]; then
+    echo [WARN] $1 is not exist 1>&2
+fi
+
+if [[ $KEEP_TARGET_BIN -ne 0 ]]; then
+    mv ${1#/host} $MIMIC_CROSS_ROOT/work 
+    echo ${1#/host} $MIMIC_CROSS_ROOT/work >> /var/log/mimic-cross/target.log
+    cat <<EOF > ${1#/host} 
+#!/bin/bash
+
+if [[ "\$MIMIC_CROSS_CALL_TARGET_BIN" ]]; then
+    $MIMIC_CROSS_ROOT/work/${1##*/} $@
+else
+    $1 $@
+fi
+EOF
+    chmod +x ${1#/host}
+    echo add script to ${1#/host} >> /var/log/mimic-cross/target.log
+    exit 0
+fi
+
+RUNPATH=$(objdump -x $1 | awk '$1=="RUNPATH" && !($2~/^\$ORIGIN/) {print $2}')
+
+if [[ ! $RUNPATH ]]; then
+    ln -sf $1 ${1#/host}
+    echo ln -sf $1 ${1#/host} >> /var/log/mimic-cross/target.log
+    exit 0
+fi
+
+deploy_bin=/tmp/${1##*/}
+cp $1 $deploy_bin
+
+# RUNPATH=/usr/lib/foo -> RUNPATH=/host/usr/lib/foo
+# RUNPATH=$ORIGIN/foo  -> RUNPATH=$ORIGIN/foo
+echo $RUNPATH \
+    | sed -e "s#^/#/host/#" -e "s#:/#:/host/#g" \
+    | xargs -I {} /host/usr/bin/patchelf --set-rpath '{}' $deploy_bin
+
+/host/$(which ldd) $deploy_bin | grep "not found" && {
+    rm $deploy_bin
+    echo [ERROR] some shared library not found 1>&2
+    exit 1
+}
+
+mv $deploy_bin ${1#/host}
+echo add /host prefix to RUNPATH in ${1#/host} >> /var/log/mimic-cross/target.log

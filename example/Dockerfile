@@ -9,7 +9,7 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
 RUN \
     --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
-    apt update && \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
     patchelf \
 	cmake
@@ -28,7 +28,7 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
 RUN \
     --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
-    apt update && \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
     sudo \
     gcc \
@@ -37,6 +37,7 @@ RUN \
 
 COPY --from=host / /host
 ENV MIMIC_CROSS_ROOT=/mimic-cross
+ENV PATH=$MIMIC_CROSS_ROOT/bin:$PATH
 
 COPY mimic-cross/target $MIMIC_CROSS_ROOT
 RUN $MIMIC_CROSS_ROOT/setup.sh

@@ -1,1 +1,1 @@
-ln -sf /host/usr/bin/make /usr/bin/make
+mimic-deploy /host/usr/bin/make

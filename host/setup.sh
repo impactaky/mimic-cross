@@ -18,3 +18,5 @@ arch > $MIMIC_CROSS_ROOT/arch
 # rm -r patchelf
 
 cp $MIMIC_CROSS_ROOT/bin/apt-get /usr/local/bin/apt-get
+
+cp /etc/resolv.conf /etc/resolv.conf.orig

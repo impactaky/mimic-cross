@@ -1,3 +1,3 @@
-ln -sf /host/bin/bash /bin/bash
+mimic-deploy /host/bin/bash
 # not dynamic executable : /usr/bin/bashbug
-ln -sf /host/usr/bin/clear_console /usr/bin/clear_console
+mimic-deploy /host/usr/bin/clear_console
