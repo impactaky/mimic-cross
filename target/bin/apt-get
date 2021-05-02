@@ -6,4 +6,10 @@ ts=$(date "+%Y-%m-%d %H:%M:%S")
 /usr/bin/apt-get $@
 package_list=$(awk -F[-:\ ] -v ts="$ts" 'ts<$0 && $8=="installed"' /var/log/dpkg.log | awk -F[:\ ] '{print $7}')
 
+if [[ "$1" = "update" ]]; then
+    cp /etc/resolv.conf /host/etc/resolv.conf
+    /host/$(which chroot) /host apt-get $@
+    cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
+fi
+
 . $MIMIC_CROSS_ROOT/script/deploy_packages.sh $package_list
