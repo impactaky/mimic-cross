@@ -24,10 +24,10 @@ mimic-deploy /host/bin/stty
 mimic-deploy /host/bin/sync
 mimic-deploy /host/bin/touch
 mimic-deploy /host/bin/true
-mimic-deploy /host/bin/uname
+# mimic-deploy /host/bin/uname
 mimic-deploy /host/bin/vdir
 mimic-deploy /host/usr/bin/[
-# ln -sf /host/usr/bin/arch /usr/bin/arch
+# mimic-deploy /host/bin/arch
 mimic-deploy /host/usr/bin/b2sum
 mimic-deploy /host/usr/bin/base32
 mimic-deploy /host/usr/bin/base64

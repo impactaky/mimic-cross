@@ -1,22 +1,41 @@
 # syntax = docker/dockerfile:experimental
 
+FROM ubuntu:20.04 as mimic-lib
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        binutils gcc make cmake libc6-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+COPY mimic-cross/mimic-lib /mimic-lib
+RUN mkdir -p /mimic-lib/build && cd /mimic-lib/build && \
+    cmake .. -DMIMIC_TARGET_ARCH=aarch64 && \
+    make
+
+# =======================================================================
+
 FROM ubuntu:20.04 as host
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
-  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > \
-    /etc/apt/apt.conf.d/keep-cache
-RUN \
-    --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-    patchelf \
-	cmake
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends patchelf && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
 
 ENV MIMIC_CROSS_ROOT=/mimic-cross
 COPY mimic-cross/host $MIMIC_CROSS_ROOT
 RUN $MIMIC_CROSS_ROOT/setup.sh
+
+FROM host as debug
+RUN apt-get update && \
+    apt-get install -y gcc make sudo && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists
+
+
+# =======================================================================
 
 FROM multiarch/ubuntu-core:arm64-focal as mimic-cross-aarch64
 
@@ -36,6 +55,7 @@ RUN \
 	cmake
 
 COPY --from=host / /host
+COPY --from=mimic-lib /mimic-lib/build/libmimic-cross.so /host/mimic-cross/lib
 ENV MIMIC_CROSS_ROOT=/mimic-cross
 ENV PATH=$MIMIC_CROSS_ROOT/bin:$PATH
 
@@ -46,3 +66,4 @@ SHELL ["/host/bin/bash", "-c"]
 
 COPY main.c .
 # RUN gcc main.c
+
