@@ -1,8 +1,8 @@
-source $MIMIC_CROSS_ROOT/script/replace_package_name.sh
+source /mimic-cross/script/replace_package_name.sh
 
 package_list=$(mktemp)
 printf '%s\n' $@ | replace_package_name > $package_list
-supported_packages=$(comm -12 "$MIMIC_CROSS_ROOT"/supported_packages.list "$package_list")
+supported_packages=$(comm -12 /mimic-cross/supported_packages.list "$package_list")
 rm $package_list
 
 if [[ ! "${supported_packages}" ]]; then 
@@ -16,5 +16,5 @@ cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
 
 for package in $supported_packages; do
     echo Configure : $package >> /var/log/mimic-cross/target.log
-    . $MIMIC_CROSS_ROOT/postinst/${package}.sh
+    . /mimic-cross/postinst/${package}.sh
 done

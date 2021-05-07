@@ -24,9 +24,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
 
-ENV MIMIC_CROSS_ROOT=/mimic-cross
-COPY mimic-cross/host $MIMIC_CROSS_ROOT
-RUN $MIMIC_CROSS_ROOT/setup.sh
+COPY mimic-cross/host /mimic-cross
+RUN /mimic-cross/setup.sh
 
 FROM host as debug
 RUN apt-get update && \
@@ -56,11 +55,10 @@ RUN \
 
 COPY --from=host / /host
 COPY --from=mimic-lib /mimic-lib/build/libmimic-cross.so /host/mimic-cross/lib
-ENV MIMIC_CROSS_ROOT=/mimic-cross
-ENV PATH=$MIMIC_CROSS_ROOT/bin:$PATH
+ENV PATH=/mimic-cross/bin:$PATH
 
-COPY mimic-cross/target $MIMIC_CROSS_ROOT
-RUN $MIMIC_CROSS_ROOT/setup.sh
+COPY mimic-cross/target /mimic-cross
+RUN /mimic-cross/setup.sh
 SHELL ["/host/bin/bash", "-c"]
 
 

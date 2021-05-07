@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-HOST_ARCH=$(cat /host/$MIMIC_CROSS_ROOT/arch)
+HOST_ARCH=$(cat /host/mimic-cross/arch)
 
 ln -s $(realpath /host/usr/lib/$HOST_ARCH-linux-gnu /usr/lib/)
 if [[ $(realpath /lib) != /usr/lib ]]; then
@@ -13,10 +13,10 @@ ln -s /host/usr/aarch64-linux-gnu /usr
 ln -s /host/mimic-cross/lib/libmimic-cross.so /host/lib/$HOST_ARCH-linux-gnu/
 
 mkdir -p /var/log/mimic-cross
-mkdir -p $MIMIC_CROSS_ROOT/deploy/host
-mkdir -p $MIMIC_CROSS_ROOT/deploy/target
+mkdir -p /mimic-cross/deploy/host
+mkdir -p /mimic-cross/deploy/target
 
-. $MIMIC_CROSS_ROOT/hostize_installed_packages.sh
+. /mimic-cross/hostize_installed_packages.sh
 
-cp $MIMIC_CROSS_ROOT/bin/apt-get /usr/local/bin/
-cp $MIMIC_CROSS_ROOT/bin/mimic-deploy /usr/local/bin/
+cp /mimic-cross/bin/apt-get /usr/local/bin/
+cp /mimic-cross/bin/mimic-deploy /usr/local/bin/
