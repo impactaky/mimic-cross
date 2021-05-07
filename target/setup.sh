@@ -18,4 +18,5 @@ mkdir -p $MIMIC_CROSS_ROOT/deploy/target
 
 . $MIMIC_CROSS_ROOT/hostize_installed_packages.sh
 
-cp $MIMIC_CROSS_ROOT/bin/* /usr/local/bin/
+cp $MIMIC_CROSS_ROOT/bin/apt-get /usr/local/bin/
+cp $MIMIC_CROSS_ROOT/bin/mimic-deploy /usr/local/bin/

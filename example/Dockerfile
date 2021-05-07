@@ -20,7 +20,7 @@ FROM ubuntu:20.04 as host
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends patchelf && \
+    apt-get install -y --no-install-recommends patch patchelf && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
 
