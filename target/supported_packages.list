@@ -28,6 +28,7 @@ mawk
 mount
 ncurses-bin
 passwd
+perl-base
 procps
 python3-pip
 python3.8-minimal

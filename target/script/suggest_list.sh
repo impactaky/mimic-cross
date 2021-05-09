@@ -10,10 +10,5 @@ for executable in $executable_list; do
         echo "# not dynamic executable : $executable"
         continue
     }
-    ldd $executable \
-    | grep -v "/lib/$(arch)-linux-gnu" \
-    | grep -v "ld-linux-$(arch)" \
-    | xargs test -f \
-        || echo "mimic_deploy /host$executable" \
-        && echo "ln -sf /host$executable $executable"
+    echo "mimic-deploy /host$executable"
 done

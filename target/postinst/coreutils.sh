@@ -24,7 +24,7 @@ mimic-deploy /host/bin/stty
 mimic-deploy /host/bin/sync
 mimic-deploy /host/bin/touch
 mimic-deploy /host/bin/true
-# mimic-deploy /host/bin/uname
+mimic-deploy /host/bin/uname
 mimic-deploy /host/bin/vdir
 mimic-deploy /host/usr/bin/[
 mimic-deploy /host/bin/arch
