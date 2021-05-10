@@ -37,3 +37,4 @@ sudo
 sysvinit-utils
 tar
 util-linux
+wget
