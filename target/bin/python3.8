@@ -1,3 +1,15 @@
-#!/bin/bash -e
+#!/bin/bash
 
-PYTHONPATH=/host/usr/local/lib/python3.8/dist-packages:$PYTHONPATH /mimic-cross/deploy/host/python3.8 "$@"
+# call pip module
+echo "$@" | grep -P "(^| )-m pip\b" > /dev/null &&  {
+    cp /etc/resolv.conf /host/etc
+    chroot /host python3.8 "$@"
+    cp /etc/resolv.conf.orig /etc/resolv.conf
+    DISABLE_MIMIC_PYTHONPATH=1 /mimic-cross/deploy/host/python3.8 "$@"
+}
+
+if [[ ${DISABLE_MIMIC_PYTHONPATH:exist} ]]; then
+    (exec -a '/usr/bin/python3.8' /mimic-cross/deploy/host/python3.8 "$@")
+else
+    (PYTHONPATH=/host/usr/local/lib/python3.8/dist-packages:$PYTHONPATH exec -a '/usr/bin/python3.8' /host/usr/bin/python3.8 "$@")
+fi
