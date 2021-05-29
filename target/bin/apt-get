@@ -1,13 +1,13 @@
 #!/host/bin/bash -e
 
 ts=$(date "+%Y-%m-%d %H:%M:%S")
-/usr/bin/apt-get $@
+/usr/bin/apt-get "$@"
 package_list=$(awk -F[-:\ ] -v ts="$ts" 'ts<$0 && $8=="installed"' /var/log/dpkg.log | awk -F[:\ ] '{print $7}')
 
 if [[ "$1" = "update" ]]; then
     cp /etc/resolv.conf /host/etc/resolv.conf
-    /host/$(which chroot) /host apt-get $@
+    /host/$(which chroot) /host apt-get "$@"
     cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
 fi
 
-. /mimic-cross/script/deploy_packages.sh $package_list
+. /mimic-cross/script/deploy_packages.sh "$package_list"
