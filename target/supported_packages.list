@@ -7,6 +7,7 @@ bzip2
 cmake
 coreutils
 cpp-9-aarch64-linux-gnu
+curl
 dash
 debianutils
 diffutils
@@ -15,6 +16,14 @@ fdisk
 findutils
 g++-9-aarch64-linux-gnu
 gcc-9-aarch64-linux-gnu
+git
+gnupg-utils
+gpg
+gpg-agent
+gpg-wks-client
+gpg-wks-server
+gpgconf
+gpgsm
 gpgv
 grep
 gzip
@@ -27,9 +36,12 @@ make
 mawk
 mount
 ncurses-bin
+ninja-build
 passwd
+patch
 perl-base
 procps
+python3-distutils
 python3-pip
 python3.8-minimal
 sed
