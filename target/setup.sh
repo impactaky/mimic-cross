@@ -20,5 +20,7 @@ mkdir -p /mimic-cross/deploy/bin
 
 cp /mimic-cross/bin/apt-get /usr/local/bin/
 cp /mimic-cross/bin/mimic-deploy /usr/local/bin/
+cp /mimic-cross/bin/mimic-host-run /usr/local/bin/
+cp /mimic-cross/bin/mimic-dual-run /usr/local/bin/
 
 . /mimic-cross/hostize_installed_packages.sh

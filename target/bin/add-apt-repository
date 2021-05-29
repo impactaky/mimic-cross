@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+/usr/bin/add-apt-repository $@
+chroot /host add-apt-repository $@

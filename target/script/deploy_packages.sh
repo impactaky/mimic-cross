@@ -4,10 +4,9 @@ package_list=$(mktemp)
 printf '%s\n' $@ | replace_package_name > $package_list
 supported_packages=$(comm -12 /mimic-cross/supported_packages.list "$package_list")
 supported_packages+=" "$(
-    printf '%s\n' $@ |
-    cat $package_list \
+    comm -13 /mimic-cross/supported_packages.list "$package_list" \
     | xargs -n 1 -P$(nproc) -I {} \
-      sh -c "dpkg -L {} | grep -e '/usr/lib/python3/dist-packages/.*cpython.*\.so$' -e '/usr/lib/python3.' > /dev/null && echo {}" \
+      sh -c "dpkg -L {} | grep -e '^/usr/bin' -e '^/bin' -e '^/usr/sbin' -e '^/sbin' -e '^/usr/lib/python3/dist-packages/.*cpython.*\.so$' -e '^/usr/lib/python3.' > /dev/null && echo {}" \
     | sed -e "s/:$(dpkg --print-architecture)$//"
     )
 supported_packages=$(echo $supported_packages | sed -e "s/:$(dpkg --print-architecture)$//")

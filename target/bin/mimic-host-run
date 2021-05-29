@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+cp /etc/resolv.conf /host/etc/resolv.conf
+/host/$(which chroot) /host "$@"
+cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
