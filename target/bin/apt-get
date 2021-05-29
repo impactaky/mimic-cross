@@ -1,7 +1,5 @@
 #!/host/bin/bash -e
 
-source /mimic-cross/script/replace_package_name.sh
-
 ts=$(date "+%Y-%m-%d %H:%M:%S")
 /usr/bin/apt-get $@
 package_list=$(awk -F[-:\ ] -v ts="$ts" 'ts<$0 && $8=="installed"' /var/log/dpkg.log | awk -F[:\ ] '{print $7}')

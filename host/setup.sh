@@ -6,6 +6,7 @@ if [[ $(arch) != x86_64 ]]; then
 fi
 
 arch > /mimic-cross/arch
+mkdir /mimic-cross/data
 
 # # install latest patchelf
 # git clone https://github.com/NixOS/patchelf

@@ -1,0 +1,12 @@
+--- ./origi/distutils/sysconfig.py	2021-05-29 15:14:24.997081364 +0900
++++ ./python3.8/distutils/sysconfig.py	2021-05-29 15:16:02.049856692 +0900
+@@ -468,6 +468,9 @@ def _init_posix():
+     global _config_vars
+     _config_vars = {}
+     _config_vars.update(build_time_vars)
++    with open('/mimic-cross/data/config_vars.pickle', 'rb') as f:
++        import pickle
++        _config_vars.update(pickle.load(f))
+ 
+ 
+ def _init_nt():
