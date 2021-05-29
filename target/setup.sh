@@ -2,6 +2,7 @@
 
 arch > /mimic-cross/arch
 HOST_ARCH=$(cat /host/mimic-cross/arch)
+echo PATH=\"/mimic-cross/deploy/bin:$PATH\" > /etc/environment
 
 ln -s $(realpath /host/usr/lib/$HOST_ARCH-linux-gnu /usr/lib/)
 if [[ $(realpath /lib) != /usr/lib ]]; then
@@ -15,6 +16,7 @@ ln -s /host/usr/aarch64-linux-gnu /usr
 mkdir -p /var/log/mimic-cross
 mkdir -p /mimic-cross/deploy/host
 mkdir -p /mimic-cross/deploy/target
+mkdir -p /mimic-cross/deploy/bin
 
 cp /mimic-cross/bin/apt-get /usr/local/bin/
 cp /mimic-cross/bin/mimic-deploy /usr/local/bin/
