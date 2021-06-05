@@ -1,16 +1,19 @@
 source /mimic-cross/script/replace_package_name.sh
 
+origin_package_list=$(mktemp)
 package_list=$(mktemp)
-printf '%s\n' $@ | replace_package_name > $package_list
+printf '%s\n' $@ | sort -u > $origin_package_list
+cat $origin_package_list | replace_package_name > $package_list
 supported_packages=$(comm -12 /mimic-cross/supported_packages.list "$package_list")
 supported_packages+=" "$(
-    comm -13 /mimic-cross/supported_packages.list "$package_list" \
+    comm -13 /mimic-cross/supported_packages.list "$origin_package_list" \
     | xargs -n 1 -P$(nproc) -I {} \
-      sh -c "dpkg -L {} | grep -e '^/usr/bin' -e '^/bin' -e '^/usr/sbin' -e '^/sbin' -e '^/usr/lib/python3/dist-packages/.*cpython.*\.so$' -e '^/usr/lib/python3.' > /dev/null && echo {}" \
-    | sed -e "s/:$(dpkg --print-architecture)$//"
+      sh -c "dpkg -L {} | grep -e '[^/]*\.cpython.*\.so$' > /dev/null && echo {}" \
+    | sed -e "s/:.\+$//"
     )
-supported_packages=$(echo $supported_packages | sed -e "s/:$(dpkg --print-architecture)$//")
+supported_packages=$(echo $supported_packages | sed -e "s/:.\+$//" | sort -u)
 # For run /host/usr/bin/python3 as /usr/bin/python3
+rm $origin_package_list
 rm $package_list
 
 if [[ ! "${supported_packages// }" ]]; then
