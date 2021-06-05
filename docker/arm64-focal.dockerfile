@@ -37,8 +37,7 @@ COPY target /mimic-cross-target
 FROM multiarch/ubuntu-core:arm64-focal 
 
 COPY --from=host / /host
-COPY target /mimic-cross
+COPY --from=host /mimic-cross-target /mimic-cross
 RUN /mimic-cross/setup.sh
-
 
 # vim:set ft=dockerfile :
