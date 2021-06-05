@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/bin/dmesg
 mimic-deploy /host/bin/findmnt
 mimic-deploy /host/bin/lsblk

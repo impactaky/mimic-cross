@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/bin/kill
 mimic-deploy /host/bin/ps
 # not dynamic executable : /etc/init.d/procps

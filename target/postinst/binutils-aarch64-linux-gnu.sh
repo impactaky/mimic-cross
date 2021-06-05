@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/usr/bin/aarch64-linux-gnu-addr2line
 mimic-deploy /host/usr/bin/aarch64-linux-gnu-ar
 mimic-deploy /host/usr/bin/aarch64-linux-gnu-as

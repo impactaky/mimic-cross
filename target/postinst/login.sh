@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/bin/login
 mimic-deploy /host/usr/bin/faillog
 mimic-deploy /host/usr/bin/lastlog

@@ -2,4 +2,5 @@
 
 package_list=$(dpkg -l | grep "^ii" | awk '{print $2}')
 
-. /mimic-cross/script/deploy_packages.sh $package_list
+#shellcheck disable=SC1091
+. /mimic-cross/script/deploy_packages.sh "$package_list"

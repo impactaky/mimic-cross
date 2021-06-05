@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/sbin/mkhomedir_helper
 mimic-deploy /host/sbin/pam_extrausers_chkpwd
 mimic-deploy /host/sbin/pam_extrausers_update

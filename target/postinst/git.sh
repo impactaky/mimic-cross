@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/usr/bin/git
 mimic-deploy /host/usr/bin/git-shell
 mimic-deploy /host/usr/lib/git-core/git

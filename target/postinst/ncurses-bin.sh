@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/usr/bin/clear
 mimic-deploy /host/usr/bin/infocmp
 mimic-deploy /host/usr/bin/tabs

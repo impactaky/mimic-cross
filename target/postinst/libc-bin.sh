@@ -1,3 +1,4 @@
+#!/bin/bash
 # not dynamic executable : /sbin/ldconfig
 # not dynamic executable : /sbin/ldconfig.real
 # not dynamic executable : /usr/bin/catchsegv

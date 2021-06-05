@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/sbin/badblocks
 mimic-deploy /host/sbin/debugfs
 mimic-deploy /host/sbin/dumpe2fs

@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/bin/cat
 mimic-deploy /host/bin/chgrp
 mimic-deploy /host/bin/chmod

@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/bin/bunzip2
 mimic-deploy /host/bin/bzcat
 # not dynamic executable : /bin/bzdiff

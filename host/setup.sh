@@ -1,11 +1,11 @@
 #!/bin/bash -eu
 
 if [[ $(arch) != x86_64 ]]; then
-    echo "currently host architecture support only x86_64"
-    exit 1
+  echo "currently host architecture support only x86_64"
+  exit 1
 fi
 
-arch > /mimic-cross/arch
+arch >/mimic-cross/arch
 mkdir /mimic-cross/data
 
 # # install latest patchelf

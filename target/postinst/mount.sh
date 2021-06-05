@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/bin/mount
 mimic-deploy /host/bin/umount
 mimic-deploy /host/sbin/losetup

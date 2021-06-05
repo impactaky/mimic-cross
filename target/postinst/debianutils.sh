@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/bin/run-parts
 mimic-deploy /host/bin/tempfile
 # not dynamic executable : /bin/which

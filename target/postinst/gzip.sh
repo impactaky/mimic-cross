@@ -1,3 +1,4 @@
+#!/bin/bash
 # not dynamic executable : /bin/gunzip
 # not dynamic executable : /bin/gzexe
 mimic-deploy /host/bin/gzip

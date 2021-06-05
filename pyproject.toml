@@ -1,0 +1,8 @@
+[tool.pysen]
+version = "0.9.1"
+
+[tool.pysen.plugin.shfmt]
+function = "pysen_plugins::shfmt"
+
+[tool.pysen.plugin.shellcheck]
+function = "pysen_plugins::shellcheck"

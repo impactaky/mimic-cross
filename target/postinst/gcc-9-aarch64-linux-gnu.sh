@@ -1,3 +1,4 @@
+#!/bin/bash
 mimic-deploy /host/usr/bin/aarch64-linux-gnu-gcc-9
 mimic-deploy /host/usr/bin/aarch64-linux-gnu-gcc-ar-9
 mimic-deploy /host/usr/bin/aarch64-linux-gnu-gcc-nm-9

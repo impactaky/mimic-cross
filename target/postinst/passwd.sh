@@ -1,3 +1,4 @@
+#!/bin/bash
 # not dynamic executable : /sbin/shadowconfig
 mimic-deploy /host/usr/bin/chage
 mimic-deploy /host/usr/bin/chfn
