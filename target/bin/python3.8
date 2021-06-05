@@ -1,15 +1,28 @@
 #!/bin/bash -e
 
+mimic-python() {
+    (PYTHONPATH=/host/usr/lib/python3.8:/host/usr/lib/python3.8/lib-dynload:/host/usr/local/lib/python3.8/dist-packages:/host/usr/lib/python3/dist-packages:$PYTHONPATH exec -a '/usr/bin/python3.8' /host/usr/bin/python3.8 "$@")
+}
+
 # call pip module
 echo "$@" | grep -P "(^| )-m pip\b" > /dev/null &&  {
+    old_pip_list=$(mktemp)
+    new_pip_list=$(mktemp)
+    mimic-python -m pip list | tail -n +3 | cut -d ' ' -f 1 > $old_pip_list
+    mimic-python "$@"
+    [[ ${MIMIC_TARGET_ONLY:exist} ]] && exit 0
+    mimic-python -m pip list | tail -n +3 | cut -d ' ' -f 1 > $new_pip_list
+    cmp -s $old_pip_list $new_pip_list && {
+        rm $old_pip_list $new_pip_list
+        exit 0
+    }
     cp /etc/resolv.conf /host/etc
     chroot /host python3.8 "$@"
-    cp /etc/resolv.conf.orig /etc/resolv.conf
-    DISABLE_MIMIC_PYTHONPATH=1 /mimic-cross/deploy/host/python3.8 "$@"
+    cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
 }
 
 if [[ ${DISABLE_MIMIC_PYTHONPATH:exist} ]]; then
     (exec -a '/usr/bin/python3.8' /host/usr/bin/python3.8 "$@")
 else
-    (PYTHONPATH=/host/usr/lib/python3.8:/host/usr/lib/python3.8/lib-dynload:/host/usr/local/lib/python3.8/dist-packages:/host/usr/lib/python3/dist-packages:$PYTHONPATH exec -a '/usr/bin/python3.8' /host/usr/bin/python3.8 "$@")
+    mimic-python "$@"
 fi
