@@ -27,9 +27,6 @@ COPY --from=mimic-lib /mimic-lib/build/libmimic-cross.so /usr/lib/x86_64-linux-g
 
 COPY host /mimic-cross
 RUN /mimic-cross/setup.sh
-
-FROM host as host-release
-
 COPY target /mimic-cross-target
 
 # =======================================================================
@@ -37,7 +34,7 @@ COPY target /mimic-cross-target
 FROM multiarch/ubuntu-core:arm64-focal 
 
 COPY --from=host / /host
-COPY --from=host /mimic-cross-target /mimic-cross
+RUN mv /host/mimic-cross-target /mimic-cross
 RUN /mimic-cross/setup.sh
 
 # vim:set ft=dockerfile :
