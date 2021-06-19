@@ -11,7 +11,7 @@ supported_packages=$(comm -12 /mimic-cross/supported_packages.list "$package_lis
 supported_packages+=" "$(
   comm -13 /mimic-cross/supported_packages.list "$origin_package_list" \
     | xargs -n 1 -P"$(nproc)" -I {} \
-      sh -c "dpkg -L {} | grep -e '[^/]*\.cpython.*\.so$' > /dev/null && echo {}" \
+      sh -c "dpkg -L {} | grep -e '/python[^/]\+/dist-packages/.\+\.so' > /dev/null && echo {}" \
     | sed -e "s/:.\+$//"
 )
 supported_packages=$(echo "$supported_packages" | sed -e "s/:.\+$//" | sort -u)

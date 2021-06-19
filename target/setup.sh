@@ -24,5 +24,11 @@ cp /mimic-cross/bin/mimic-deploy /usr/local/bin/
 cp /mimic-cross/bin/mimic-host-run /usr/local/bin/
 cp /mimic-cross/bin/mimic-dual-run /usr/local/bin/
 
+[[ "$(ls -A /etc/apt/sources.list.d/)" ]] && cp /etc/apt/sources.list.d/* /host/etc/apt/sources.list.d/
+cp /etc/apt/trusted.gpg.d/* /host/etc/apt/trusted.gpg.d/
+
+cp /etc/resolv.conf /host/etc/resolv.conf
+dpkg -l | awk '/gnupg/ {print $2}' | xargs -r /host/"$(which chroot)" /host apt-get install
+cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
 #shellcheck disable=SC1091
 . /mimic-cross/hostize_installed_packages.sh
