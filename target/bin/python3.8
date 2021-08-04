@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+VERSIONED_PYTHON=$(realpath $0 | xargs basename)
+
 mimic-python() {
     PREFIXED_PYTHONPATH=''
     for path in $(echo $PYTHONPATH | sed "s/:/ /g"); do
@@ -9,7 +11,8 @@ mimic-python() {
     for path in $(echo $LD_LIBRARY_PATH | sed "s/:/ /g"); do
         PREFIXED_LD_LIBRARY_PATH+=/host$path:
     done
-    (LD_LIBRARY_PATH=$PREFIXED_LD_LIBRARY_PATH:$LD_LIBRARY_PATH PYTHONPATH=$PREFIXED_PYTHONPATH:/host/usr/lib/python3.8:/host/usr/lib/python3.8/lib-dynload:/host/usr/local/lib/python3.8/dist-packages:/host/usr/lib/python3/dist-packages:$PYTHONPATH exec -a '/usr/bin/python3.8' /host/usr/bin/python3.8 "$@")
+    PREFIXED_VIRTUAL_ENV=/host$VIRTUAL_ENV
+    (LD_LIBRARY_PATH=$PREFIXED_LD_LIBRARY_PATH:$LD_LIBRARY_PATH PYTHONPATH=$PREFIXED_PYTHONPATH:/host/usr/lib/$VERSIONED_PYTHON:/host/usr/lib/$VERSIONED_PYTHON/lib-dynload:/host/usr/local/lib/$VERSIONED_PYTHON/dist-packages:/host/usr/lib/python3/dist-packages:$PYTHONPATH exec -a "$0" /host/usr/bin/"$VERSIONED_PYTHON" "$@")
 }
 
 # call pip module
@@ -17,14 +20,23 @@ echo "$@" | grep -P "(^| )-m pip\b" > /dev/null &&  {
     pip_log=$(mktemp)
     mimic-python "$@" --log-file "$pip_log"
     cp /etc/resolv.conf /host/etc
-    cat "$pip_log" | awk '$2=="Added" && '/aarch64.whl/' {print($3)}' | sort -u | xargs -r chroot /host python3.8 -m pip install
+    cat "$pip_log" | awk '$2=="Added" && '/aarch64.whl/' {print($3)}' | sort -u | xargs -r chroot /host $VERSIONED_PYTHON -m pip install
     cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
     rm $pip_log
     exit 0
 }
 
+# call venv module
+echo "$@" | grep -P "(^| )-m venv\b" > /dev/null &&  {
+    mimic-python "$@"
+    cp /etc/resolv.conf /host/etc
+    chroot /host $VERSIONED_PYTHON "$@"
+    cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
+    exit 0
+}
+
 if [[ ${DISABLE_MIMIC_PYTHONPATH:exist} ]]; then
-    (exec -a '/usr/bin/python3.8' /host/usr/bin/python3.8 "$@")
+    (exec -a "$0" /host/usr/bin/"$VERSIONED_PYTHON" "$@")
 else
     mimic-python "$@"
 fi

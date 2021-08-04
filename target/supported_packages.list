@@ -43,6 +43,7 @@ perl-base
 procps
 python3-distutils
 python3-pip
+python3-venv
 python3.8-minimal
 sed
 software-properties-common
