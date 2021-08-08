@@ -19,9 +19,11 @@ mimic-python() {
 echo "$@" | grep -P "(^| )-m pip\b" > /dev/null &&  {
     pip_log=$(mktemp)
     mimic-python "$@" --log-file "$pip_log"
-    cp /etc/resolv.conf /host/etc
-    cat "$pip_log" | awk '$2=="Added" && '/aarch64.whl/' {print($3)}' | sort -u | xargs -r chroot /host $VERSIONED_PYTHON -m pip install
-    cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
+    if [[ ${MIMIC_CROSS_TARGET_ONLY:-0} -eq '0' ]]; then
+        cp /etc/resolv.conf /host/etc
+        cat "$pip_log" | awk '$2=="Added" && '/aarch64.whl/' {print($3)}' | sort -u | xargs -r chroot /host $VERSIONED_PYTHON -m pip install
+        cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
+    fi
     rm $pip_log
     exit 0
 }
