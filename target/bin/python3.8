@@ -11,8 +11,13 @@ mimic-python() {
     for path in $(echo $LD_LIBRARY_PATH | sed "s/:/ /g"); do
         PREFIXED_LD_LIBRARY_PATH+=/host$path:
     done
-    PREFIXED_VIRTUAL_ENV=/host$VIRTUAL_ENV
-    (LD_LIBRARY_PATH=$PREFIXED_LD_LIBRARY_PATH:$LD_LIBRARY_PATH PYTHONPATH=$PREFIXED_PYTHONPATH:/host/usr/lib/$VERSIONED_PYTHON:/host/usr/lib/$VERSIONED_PYTHON/lib-dynload:/host/usr/local/lib/$VERSIONED_PYTHON/dist-packages:/host/usr/lib/python3/dist-packages:$PYTHONPATH exec -a "$0" /host/usr/bin/"$VERSIONED_PYTHON" "$@")
+    MIMIC_CROSS_PYTHONPATH=$PREFIXED_PYTHONPATH:$PYTHONPATH:/host/usr/lib/$VERSIONED_PYTHON:/usr/lib/$VERSIONED_PYTHON:/host/usr/lib/$VERSIONED_PYTHON/lib-dynload:/usr/lib/$VERSIONED_PYTHON/lib-dynload:/host/usr/local/lib/$VERSIONED_PYTHON/dist-packages:/usr/local/lib/$VERSIONED_PYTHON/dist-packages:/host/usr/lib/python3/dist-packages \
+
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        MIMIC_CROSS_PYTHONPATH="/host$VIRTUAL_ENV/lib/$VERSIONED_PYTHON/site-packages:$MIMIC_CROSS_PYTHONPATH"
+    fi
+
+    (LD_LIBRARY_PATH=$PREFIXED_LD_LIBRARY_PATH:$LD_LIBRARY_PATH PYTHONPATH=$MIMIC_CROSS_PYTHONPATH exec -a "$0" /host/usr/bin/"$VERSIONED_PYTHON" "$@")
 }
 
 # call pip module
