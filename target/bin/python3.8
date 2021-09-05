@@ -20,10 +20,14 @@ mimic-python() {
     (LD_LIBRARY_PATH=$PREFIXED_LD_LIBRARY_PATH:$LD_LIBRARY_PATH PYTHONPATH=$MIMIC_CROSS_PYTHONPATH exec -a "$0" /host/usr/bin/"$VERSIONED_PYTHON" "$@")
 }
 
+native-python() {
+    qemu-aarch64-static -0 "$0" /mimic-cross/deploy/target/"$VERSIONED_PYTHON" "$@"
+}
+
 # call pip module
 echo "$@" | grep -P "(^| )-m pip\b" > /dev/null &&  {
     pip_log=$(mktemp)
-    mimic-python "$@" --log-file "$pip_log"
+    native-python "$@" --log-file "$pip_log"
     if [[ ${MIMIC_CROSS_TARGET_ONLY:-0} -eq '0' ]]; then
         cp /etc/resolv.conf /host/etc
         cat "$pip_log" | awk '$2=="Added" && '/aarch64.whl/' {print($3)}' | sort -u | xargs -r chroot /host $VERSIONED_PYTHON -m pip install
@@ -35,15 +39,17 @@ echo "$@" | grep -P "(^| )-m pip\b" > /dev/null &&  {
 
 # call venv module
 echo "$@" | grep -P "(^| )-m venv\b" > /dev/null &&  {
-    mimic-python "$@"
-    cp /etc/resolv.conf /host/etc
-    chroot /host $VERSIONED_PYTHON "$@"
-    cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
+    MIMIC_CROSS_DISABLE_MIMIC=1 native-python "$@"
+    if [[ ${MIMIC_CROSS_TARGET_ONLY:-0} -eq '0' ]]; then
+        cp /etc/resolv.conf /host/etc
+        chroot /host $VERSIONED_PYTHON "$@"
+        cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
+    fi
     exit 0
 }
 
-if [[ ${DISABLE_MIMIC_PYTHONPATH:exist} ]]; then
-    (exec -a "$0" /host/usr/bin/"$VERSIONED_PYTHON" "$@")
+if [[ ${MIMIC_CROSS_DISABLE_MIMIC:-0} -eq '1' ]]; then
+    native-python "$@"
 else
     mimic-python "$@"
 fi
