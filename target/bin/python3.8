@@ -22,16 +22,14 @@ mimic-python() {
 
 native-python() {
     UNPREFIXED_PYTHONPATH=''
-    echo $PYTHONPATH | tr : \  | xargs -n 1 | grep -v "^/host" |
     while read path; do
         UNPREFIXED_PYTHONPATH+=$path:
-    done
+    done < <(echo $PYTHONPATH | tr : \  | xargs -n 1 | grep -v "^/host")
     UNPREFIXED_LD_LIBRARY_PATH=''
-    echo $LD_LIBRARY_PATH | tr : \  | xargs -n 1 | grep -v "^/host" |
     while read path; do
         UNPREFIXED_LD_LIBRARY_PATH+=$path:
-    done
-    LD_LIBRARY_PATH=$UNPREFIXED_LD_LIBRARY_PATH PYTHONPATH=$UNPREFIXED_PYTHONPATH qemu-aarch64-static -0 "$0" /mimic-cross/deploy/target/"$VERSIONED_PYTHON" "$@"
+    done < <(echo $LD_LIBRARY_PATH | tr : \  | xargs -n 1 | grep -v "^/host")
+    MIMIC_CROSS_DISABLE_MIMIC=1 LD_LIBRARY_PATH=$UNPREFIXED_LD_LIBRARY_PATH PYTHONPATH=$UNPREFIXED_PYTHONPATH qemu-aarch64-static -0 "$0" /mimic-cross/deploy/target/"$VERSIONED_PYTHON" "$@"
 }
 
 # call pip module
