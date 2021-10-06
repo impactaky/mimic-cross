@@ -1,6 +1,6 @@
---- ./orig/sysconfig.py	2021-05-29 14:24:44.457014340 +0900
-+++ ./python3.8/sysconfig.py	2021-05-29 14:21:13.860319173 +0900
-@@ -421,6 +421,9 @@ def _init_posix(vars):
+--- ./sysconfig.py	2021-10-06 00:49:28.768333019 +0000
++++ /host/usr/lib/python3.8/sysconfig.py	2021-10-06 00:49:43.780409481 +0000
+@@ -431,6 +431,9 @@ def _init_posix(vars):
      _temp = __import__(name, globals(), locals(), ['build_time_vars'], 0)
      build_time_vars = _temp.build_time_vars
      vars.update(build_time_vars)
@@ -8,5 +8,5 @@
 +        import pickle
 +        vars.update(pickle.load(f))
  
- 
  def _init_non_posix(vars):
+     """Initialize the module as appropriate for NT"""
