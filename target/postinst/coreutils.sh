@@ -28,7 +28,7 @@ mimic-deploy /host/bin/true
 mimic-deploy /host/bin/uname
 mimic-deploy /host/bin/vdir
 mimic-deploy /host/usr/bin/[
-mimic-deploy /host/bin/arch
+mimic-deploy /host/usr/bin/arch
 mimic-deploy /host/usr/bin/b2sum
 mimic-deploy /host/usr/bin/base32
 mimic-deploy /host/usr/bin/base64
