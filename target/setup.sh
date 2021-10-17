@@ -35,4 +35,4 @@ cp /etc/resolv.conf /host/etc/resolv.conf
 dpkg -l | awk '/gnupg/ {print $2}' | xargs -r /host/"$(which chroot)" /host apt-get install
 cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
 #shellcheck disable=SC1091
-. /mimic-cross/hostize_installed_packages.sh
+/mimic-cross/hostize_installed_packages.sh
