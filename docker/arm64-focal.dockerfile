@@ -20,7 +20,7 @@ FROM ubuntu:20.04 as host
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends binutils patch patchelf && \
+    apt-get install -y --no-install-recommends binutils patch patchelf qemu-user-static && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
 COPY --from=mimic-lib /mimic-lib/build/libmimic-cross.so /usr/lib/x86_64-linux-gnu/

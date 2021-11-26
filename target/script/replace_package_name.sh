@@ -6,5 +6,5 @@ replace_package_name() {
     -e "s/^g++\(-[0-9]\+\)\?$/g++\1-$(arch)-linux-gnu/" \
     -e "s/^gcc\(-[0-9]\+\)\?$/gcc\1-$(arch)-linux-gnu/" \
     -e "s/:$(dpkg --print-architecture)$//" \
-    | sort -u
+    | LANG=C sort -u
 }

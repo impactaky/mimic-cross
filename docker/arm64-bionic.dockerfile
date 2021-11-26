@@ -33,7 +33,7 @@ FROM ubuntu:18.04 as host
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends binutils patch && \
+    apt-get install -y --no-install-recommends binutils patch qemu-user-static && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
 COPY --from=dependencies /mimic-lib/build/libmimic-cross.so /usr/lib/x86_64-linux-gnu/
