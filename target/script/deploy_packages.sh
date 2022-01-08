@@ -25,7 +25,7 @@ fi
 
 echo Install : "$supported_packages" >>/var/log/mimic-cross/host.log
 cp /etc/resolv.conf /host/etc/resolv.conf
-/host/"$(which chroot)" /host apt-get install "$supported_packages"
+/host/"$(command -v chroot)" /host apt-get install "$supported_packages"
 cp /host/etc/resolv.conf.orig /host/etc/resolv.conf
 
 for package in $supported_packages; do
