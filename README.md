@@ -37,3 +37,6 @@ mimic-cross provide apt-get and pip wrapper for package management with mimickin
 3. If mimicking supported package installed, package install by apt-get in /host sysroot.
 4. Set up for mimicking (make symbolic links etc...)
 
+# Variables
+
+
