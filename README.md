@@ -25,14 +25,13 @@ Currently, support only ubuntu20.04 and aarch64.
 Mimic-cross introduces binaries running on host into the environment run by qemu-use-static to speed up the process.
 To do so, the mimic-cross image has a sysroot for the host architecture under /host.
 
-This allows us to run the program faster without using QEMU instead of increasing the image size.
-
+This allows us to run the program faster without using QEMU instead of increasing the image size.  
 The image size increase can be handled by multistage build.
 
 ### More details
 
-[apt package management in mimic-cross](docs/apt-get.md)
-[about mimic python](docs/python3.md)
+* [apt package management in mimic-cross](docs/apt-get.md)
+* [about mimic python](docs/python3.md)
 
 
 
