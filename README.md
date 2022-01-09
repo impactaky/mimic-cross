@@ -16,27 +16,23 @@ FROM impactaky/mimic-cross:arm64-focal
 ## Supported environments
 
 Currently, support only ubuntu20.04 and aarch64.  
-Supported apt packages is here [supported_pacakges.list](target/supported_packages.list)
 
 ## How mimic-cross works
 
 ![Untitled Diagram (1)](https://user-images.githubusercontent.com/37619203/131243313-c4f6264f-621c-47b6-981b-a76f4ec7902f.png)
 
 
-Mimic-cross introduces binaries running on host into the environment run by qemu-use-static to speed up the process.  
+Mimic-cross introduces binaries running on host into the environment run by qemu-use-static to speed up the process.
 To do so, the mimic-cross image has a sysroot for the host architecture under /host.
 
-### Package management with mimicking
+This allows us to run the program faster without using QEMU instead of increasing the image size.
 
-mimic-cross provide apt-get and pip wrapper for package management with mimicking.
+The image size increase can be handled by multistage build.
 
-#### What happen when run apt-get
+### More details
 
-1. Run apt-get in target sysroot
-2. Check installed package
-3. If mimicking supported package installed, package install by apt-get in /host sysroot.
-4. Set up for mimicking (make symbolic links etc...)
+[apt package management in mimic-cross](docs/apt-get.md)
+[about mimic python](docs/python3.md)
 
-# Variables
 
 
