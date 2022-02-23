@@ -15,7 +15,7 @@ FROM impactaky/mimic-cross:arm64-focal
 
 ## Supported environments
 
-Currently, support only ubuntu20.04 and aarch64.  
+Currently, support only ubuntu18.04 or 20.04 and aarch64. 
 
 ## How mimic-cross works
 
