@@ -51,6 +51,7 @@ if [[ $KEEP_TARGET_BIN -eq 0 ]]; then
     if [[ $deploy_bin = /mimic-cross/* ]]; then
         mv $deploy_bin $deploy_to
     else
+        mkdir -p $(dirname $deploy_to)
         ln -sf $deploy_bin $deploy_to
     fi
     echo ln -sf $deploy_bin $deploy_to >> /var/log/mimic-cross/target.log
