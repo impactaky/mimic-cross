@@ -24,6 +24,7 @@ cp /mimic-cross/bin/mimic-deploy /usr/local/bin/
 cp /mimic-cross/bin/mimic-host-run /usr/local/bin/
 cp /mimic-cross/bin/mimic-dual-run /usr/local/bin/
 
+mimic-deploy /host/bin/cp
 cp /host/usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
 # random devices used in apt-key script
