@@ -24,8 +24,6 @@ cp /mimic-cross/bin/mimic-deploy /usr/local/bin/
 cp /mimic-cross/bin/mimic-host-run /usr/local/bin/
 cp /mimic-cross/bin/mimic-dual-run /usr/local/bin/
 
-cp /host/usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
-
 # random devices used in apt-key script
 /host/"$(command -v chroot)" /host mknod /dev/random c 1 8
 /host/"$(command -v chroot)" /host mknod /dev/urandom c 1 9
