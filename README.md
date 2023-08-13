@@ -3,6 +3,8 @@
 Note: This project will be substantially rewritten.   
 Currently, written in bash, which makes it difficult to maintain and add extensibility.
 
+I don't have much time at the moment, so if there is a strong demand, please write in the issue or in the discussion.
+
 Future goals: 
 
 * Rewriting in Typescript
