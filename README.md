@@ -1,5 +1,20 @@
 # mimic-cross
 
+Note: This project will be substantially rewritten.   
+Currently, written in bash, which makes it difficult to maintain and add extensibility.
+
+Future goals: 
+
+* Rewriting in Typescript
+    * [dax_extras](https://github.com/impactaky/dax_extras) is started for this purpose
+* Support for tools other than apt-get
+    * Support CentOS
+    * This is useful for building python wheel
+* Support multi-arch
+    * So that the host machine can work with aarch64
+ 
+## About
+
 A cross compile environment Docker image,
 can be used like docker multiarch image without speed penalty.
 
