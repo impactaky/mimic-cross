@@ -29,8 +29,11 @@ cp /host/usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 # random devices used in apt-key script
 /host/"$(command -v chroot)" /host mknod /dev/random c 1 8
 /host/"$(command -v chroot)" /host mknod /dev/urandom c 1 9
+/host/"$(command -v chroot)" /host mknod /dev/null c 1 3
+/host/"$(command -v chroot)" /host mknod /dev/zero c 1 5
+/host/"$(command -v chroot)" /host chmod 666 /dev/random /dev/urandom /dev/null /dev/zero
 
-[[ "$(ls -A /etc/apt/sources.list.d/)" ]] && cp /etc/apt/sources.list.d/* /host/etc/apt/sources.list.d/
+# [[ "$(ls -A /etc/apt/sources.list.d/)" ]] && cp /etc/apt/sources.list.d/* /host/etc/apt/sources.list.d/
 cp /etc/apt/trusted.gpg.d/* /host/etc/apt/trusted.gpg.d/
 
 cp /etc/resolv.conf /host/etc/resolv.conf

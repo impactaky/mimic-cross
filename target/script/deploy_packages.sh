@@ -12,6 +12,7 @@ supported_packages+=" "$(
   LANG=C comm -13 /mimic-cross/supported_packages.list "$origin_package_list" \
     | xargs -n 1 -P"$(nproc)" -I {} \
       sh -c "dpkg -L {} | grep -e '/python[^/]\+/dist-packages/.\+\.so' > /dev/null && echo {}" \
+    | grep -v ros- \
     | sed -e "s/:.\+$//"
 )
 supported_packages=$(echo "$supported_packages" | sed -e "s/:.\+$//" | LANG=C sort -u)

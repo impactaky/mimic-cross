@@ -1,14 +1,19 @@
 #!/host/bin/bash -eu
 
-OPT=$(getopt -o k -- "$@")
+OPT=$(getopt -o ck -- "$@")
 if [ $? != 0 ] ; then
     exit 1
 fi
 eval set -- "$OPT"
 
 KEEP_TARGET_BIN=0
+FORCE_COPY=0
 while true; do
     case $1 in
+        -c)
+            FORCE_COPY=1
+            shift
+            ;;
         -k)
             KEEP_TARGET_BIN=1
             shift
@@ -43,6 +48,11 @@ if [[ $RUNPATH ]]; then
         exit 1
     }
     echo add /host prefix to RUNPATH in $deploy_bin >> /var/log/mimic-cross/target.log
+fi
+
+if [[ $FORCE_COPY -eq 1 ]]; then
+    deploy_bin=/mimic-cross/deploy/host/${1##*/}
+    cp $1 $deploy_bin
 fi
 
 /host/usr/bin/patchelf --add-needed libmimic-cross.so $deploy_bin
