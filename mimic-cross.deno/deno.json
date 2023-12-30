@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.210.0/",
+    "daxex/": "https://deno.land/x/dax_extras@2.3.1/",
+    "dax/": "https://deno.land/x/dax@0.36.0/"
+  }
+}
