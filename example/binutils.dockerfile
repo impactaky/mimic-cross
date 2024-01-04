@@ -17,7 +17,7 @@
 # => [7/7] RUN make -j `nproc`                                                                                                            434.8s
 
 
-FROM impactaky/mimic-cross:arm64-focal
+FROM impactaky/mimic-cross-arm64-ubuntu20.04:71cc12616b8952d9b2d76113932f435124f9b5e8
 # [+] Building 97.5s (11/11) FINISHED
 # => [2/7] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget ca-certificates         binutils gcc make li  51.9s
 # => [3/7] RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz                                                                   5.0s
