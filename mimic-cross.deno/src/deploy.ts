@@ -1,7 +1,8 @@
 import $ from "daxex/mod.ts";
 import { PathRef } from "dax/mod.ts";
+import { config } from "config/config.ts";
 
-export async function readRunpath (path: PathRef) : Promise<string | undefined> {
+export async function readRunpath(path: PathRef): Promise<string | undefined> {
   return (await $`objdump -x ${path}`.stderr("null").noThrow()
     .apply((l) => {
       const e = $.split(l);
@@ -11,7 +12,7 @@ export async function readRunpath (path: PathRef) : Promise<string | undefined> 
     .text()).trimEnd();
 }
 
-export async function mimicDeploy (src: PathRef, dst: PathRef) {
+export async function mimicDeploy(src: PathRef, dst: PathRef) {
   const runpath = await readRunpath(src);
   if (!runpath) return;
   let needPatch = false;
@@ -24,9 +25,12 @@ export async function mimicDeploy (src: PathRef, dst: PathRef) {
   if (!needPatch) return;
   const deployBin = dst.join(src.basename());
   await src.copyFile(deployBin);
-  const newRunpath = runpath.replace(/^\//, "/host/").replace(":/", ":/host/");
+  const newRunpath = runpath.replace(/^\//, `${config.hostRoot}/`).replace(
+    ":/",
+    `:${config.hostRoot}/`,
+  );
   await $`/usr/bin/patchelf --set-rpath ${newRunpath} ${deployBin}`;
   await $.path("./target.log").appendText(
-    `add /host prefix to RUNPATH in ${deployBin}\n`,
+    `add ${config.hostRoot} prefix to RUNPATH in ${deployBin}\n`,
   );
 }
