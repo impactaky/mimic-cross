@@ -11,8 +11,8 @@ export async function readRunpath (path: PathRef) : Promise<string | undefined> 
     .text()).trimEnd();
 }
 
-export async function mimicDeploy (path: PathRef, deployTo: PathRef) {
-  const runpath = await readRunpath(path);
+export async function mimicDeploy (src: PathRef, dst: PathRef) {
+  const runpath = await readRunpath(src);
   if (!runpath) return;
   let needPatch = false;
   for (const p of runpath.split(":")) {
@@ -22,8 +22,8 @@ export async function mimicDeploy (path: PathRef, deployTo: PathRef) {
     }
   }
   if (!needPatch) return;
-  const deployBin = deployTo.join(path.basename());
-  await path.copyFile(deployBin);
+  const deployBin = dst.join(src.basename());
+  await src.copyFile(deployBin);
   const newRunpath = runpath.replace(/^\//, "/host/").replace(":/", ":/host/");
   await $`/usr/bin/patchelf --set-rpath ${newRunpath} ${deployBin}`;
   await $.path("./target.log").appendText(
