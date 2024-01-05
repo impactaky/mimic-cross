@@ -1,6 +1,6 @@
 import $ from "daxex/mod.ts";
 import { mimicDeploy, readRunpath } from "./deploy.ts";
-import { assertEquals } from "std/testing/asserts.ts";
+import { assertEquals } from "std/assert/assert_equals.ts";
 
 const testDataPath = $.path(Deno.env.get("MIMIC_TEST_DATA_PATH")!);
 const deployDir = testDataPath.join("deploy");
