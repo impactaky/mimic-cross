@@ -44,12 +44,13 @@ RUN apt-get update \
 COPY --from=mimic-lib /mimic-lib/build/libmimic-cross.so /usr/lib/x86_64-linux-gnu/
 RUN mkdir -p /mimic-cross/bin/
 COPY --from=mimic-lib /deno/deno /mimic-cross/bin/deno
+RUN arch > /mimic-cross/arch
 
 COPY host /mimic-cross/host
 
 # =======================================================================
 
-FROM host-stage1 as mimic-test
+FROM host-stage1 as mimic-test-host
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -72,6 +73,15 @@ COPY mimic-cross.deno /mimic-cross.deno
 WORKDIR /mimic-cross.deno
 ENV PATH="/mimic-cross/bin:$PATH"
 RUN deno cache config/*.test.ts src/*.test.ts
+
+# =======================================================================
+
+FROM --platform=linux/arm64 ubuntu:22.04 as mimic-test
+
+COPY --from=host-stage1 / /mimic-cross/host
+COPY mimic-cross.deno /mimic-cross/mimic-cross.deno
+RUN /mimic-cross/mimic-cross.deno/setup.sh
+
 
 # =======================================================================
 
