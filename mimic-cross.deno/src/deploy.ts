@@ -13,18 +13,20 @@ export async function readRunpath(path: PathRef): Promise<string | undefined> {
 }
 
 export async function mimicDeploy(src: PathRef, dst: PathRef) {
-  const runpath = await readRunpath(src);
+  const deployBin = dst.join(src.basename());
+  await src.copyFile(deployBin);
+  await $`patchelf --add-needed libmimic-cross.so ${deployBin}`;
+
+  const runpath = await readRunpath(deployBin);
   if (!runpath) return;
-  let needPatch = false;
+  let needRunpathPatch = false;
   for (const p of runpath.split(":")) {
     if (!p.startsWith("$ORIGIN")) {
-      needPatch = true;
+      needRunpathPatch = true;
       break;
     }
   }
-  if (!needPatch) return;
-  const deployBin = dst.join(src.basename());
-  await src.copyFile(deployBin);
+  if (!needRunpathPatch) return;
   const newRunpath = runpath.replace(/^\//, `${config.hostRoot}/`).replace(
     ":/",
     `:${config.hostRoot}/`,

@@ -1,6 +1,6 @@
 import $ from "daxex/mod.ts";
 import { config, loadConfig } from "./config.ts";
-import { assertEquals } from "std/assert/assert_equals.ts";
+import { assertEquals } from "std/assert/mod.ts";
 
 Deno.test("config", async () => {
   const testConfig = {
