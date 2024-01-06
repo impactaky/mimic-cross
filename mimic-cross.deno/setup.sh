@@ -15,6 +15,11 @@ mkdir -p /lib64
 ln -s /mimic-cross/host/lib64/ld-linux-x86-64.* /lib64/
 ln -s /mimic-cross/host/usr/aarch64-linux-gnu /usr
 
+# random devices used in apt-key script
+/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/random c 1 8
+/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/urandom c 1 9
+
+
 # mkdir -p /var/log/mimic-cross
 # mkdir -p /mimic-cross/deploy/host
 # mkdir -p /mimic-cross/deploy/target
@@ -26,10 +31,6 @@ ln -s /mimic-cross/host/usr/aarch64-linux-gnu /usr
 # cp /mimic-cross/bin/mimic-dual-run /usr/local/bin/
 #
 # cp /host/usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
-#
-# # random devices used in apt-key script
-# /host/"$(command -v chroot)" /host mknod /dev/random c 1 8
-# /host/"$(command -v chroot)" /host mknod /dev/urandom c 1 9
 #
 # [[ "$(ls -A /etc/apt/sources.list.d/)" ]] && cp /etc/apt/sources.list.d/* /host/etc/apt/sources.list.d/
 # cp /etc/apt/trusted.gpg.d/* /host/etc/apt/trusted.gpg.d/

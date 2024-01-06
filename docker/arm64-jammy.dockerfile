@@ -48,6 +48,7 @@ COPY --from=mimic-lib /deno/deno /mimic-cross/bin/mimic-deno
 RUN arch > /mimic-cross/arch
 
 RUN mkdir -p /mimic-cross/internal/bin
+RUN ln -s ../../../usr/sbin/chroot /mimic-cross/internal/bin
 RUN ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin
 RUN ln -s ../../../usr/bin/patchelf /mimic-cross/internal/bin
 
