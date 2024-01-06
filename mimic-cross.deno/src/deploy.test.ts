@@ -1,28 +1,10 @@
 import $ from "daxex/mod.ts";
 import { mimicDeploy, readRunpath } from "./deploy.ts";
 import { assert, assertEquals } from "std/assert/mod.ts";
-import { PathRef } from "dax/mod.ts";
-import { config } from "config/config.ts";
+import { checkNeeded, getElfMachine } from "../test/util.ts";
 
 const testDataPath = $.path(Deno.env.get("MIMIC_TEST_DATA_PATH")!);
 const deployDir = testDataPath.join("deploy");
-
-async function checkNeeded(path: PathRef, needed: string): Promise<boolean> {
-  const commandOut =
-    await $`${config.internalBin}/patchelf --print-needed ${path}`.lines();
-  for (const line of commandOut) {
-    if (line == needed) return true;
-  }
-  return false;
-}
-
-async function getElfMachine(path: PathRef): Promise<string> {
-  return (await $`${config.internalBin}/readelf -h ${path}`.apply((l) => {
-    const e = l.split(":");
-    if (e[0].trim() !== "Machine") return;
-    return e[1].trim();
-  }).text()).trimEnd();
-}
 
 Deno.test("readRunPath", async () => {
   const runpath = await readRunpath(testDataPath.join("libhello.so"));
@@ -58,5 +40,6 @@ Deno.test("mimicDeploy /bin/ls", async () => {
   const runpath = await readRunpath(deployBin);
   assertEquals(runpath, "");
   assert(await checkNeeded(deployBin, "libmimic-cross.so"));
+  // TODO support multiarch
   assertEquals(await getElfMachine(deployBin), "Advanced Micro Devices X86-64");
 });
