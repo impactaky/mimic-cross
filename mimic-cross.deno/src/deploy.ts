@@ -3,7 +3,8 @@ import { PathRef } from "dax/mod.ts";
 import { config } from "config/config.ts";
 
 export async function readRunpath(path: PathRef): Promise<string | undefined> {
-  return (await $`objdump -x ${path}`.stderr("null").noThrow()
+  return (await $`${config.internalBin}/objdump -x ${path}`.stderr("null")
+    .noThrow()
     .apply((l) => {
       const e = $.split(l);
       if (e[0] != "RUNPATH") return;
@@ -15,7 +16,7 @@ export async function readRunpath(path: PathRef): Promise<string | undefined> {
 export async function mimicDeploy(src: PathRef, dst: PathRef) {
   const deployBin = dst.join(src.basename());
   await src.copyFile(deployBin);
-  await $`patchelf --add-needed libmimic-cross.so ${deployBin}`;
+  await $`${config.internalBin}/patchelf --add-needed libmimic-cross.so ${deployBin}`;
 
   const runpath = await readRunpath(deployBin);
   if (!runpath) return;
@@ -31,7 +32,7 @@ export async function mimicDeploy(src: PathRef, dst: PathRef) {
     ":/",
     `:${config.hostRoot}/`,
   );
-  await $`/usr/bin/patchelf --set-rpath ${newRunpath} ${deployBin}`;
+  await $`${config.internalBin}/patchelf --set-rpath ${newRunpath} ${deployBin}`;
   await $.path("./target.log").appendText(
     `add ${config.hostRoot} prefix to RUNPATH in ${deployBin}\n`,
   );

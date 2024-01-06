@@ -2,12 +2,14 @@ import $ from "daxex/mod.ts";
 import { mimicDeploy, readRunpath } from "./deploy.ts";
 import { assert, assertEquals } from "std/assert/mod.ts";
 import { PathRef } from "dax/mod.ts";
+import { config } from "config/config.ts";
 
 const testDataPath = $.path(Deno.env.get("MIMIC_TEST_DATA_PATH")!);
 const deployDir = testDataPath.join("deploy");
 
 async function checkNeeded(path: PathRef, needed: string): Promise<boolean> {
-  const commandOut = await $`patchelf --print-needed ${path}`.lines();
+  const commandOut =
+    await $`${config.internalBin}/patchelf --print-needed ${path}`.lines();
   for (const line of commandOut) {
     if (line == needed) return true;
   }

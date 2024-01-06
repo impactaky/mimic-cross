@@ -36,6 +36,7 @@ FROM ubuntu:22.04 as host-stage1
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        binutils \
         ca-certificates \
         patchelf \
         wget \
@@ -43,10 +44,14 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists
 COPY --from=mimic-lib /mimic-lib/build/libmimic-cross.so /usr/lib/x86_64-linux-gnu/
 RUN mkdir -p /mimic-cross/bin/
-COPY --from=mimic-lib /deno/deno /mimic-cross/bin/deno
+COPY --from=mimic-lib /deno/deno /mimic-cross/bin/mimic-deno
 RUN arch > /mimic-cross/arch
 
-COPY host /mimic-cross/host
+RUN mkdir -p /mimic-cross/internal/bin
+RUN ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin
+RUN ln -s ../../../usr/bin/patchelf /mimic-cross/internal/bin
+
+# COPY host /mimic-cross/host
 
 # =======================================================================
 
@@ -69,10 +74,10 @@ RUN gcc -shared -o libhello.so hello.c \
 ENV MIMIC_TEST_DATA_PATH=/test
 RUN mkdir -p /test/deploy
 
-COPY mimic-cross.deno /mimic-cross.deno
-WORKDIR /mimic-cross.deno
-ENV PATH="/mimic-cross/bin:$PATH"
-RUN deno cache config/*.test.ts src/*.test.ts
+# COPY mimic-cross.deno /mimic-cross.deno
+# WORKDIR /mimic-cross.deno
+# ENV PATH="/mimic-cross/bin:$PATH"
+# RUN mimic-deno cache config/*.test.ts src/*.test.ts
 
 # =======================================================================
 
@@ -82,6 +87,13 @@ COPY --from=host-stage1 / /mimic-cross/host
 COPY mimic-cross.deno /mimic-cross/mimic-cross.deno
 RUN /mimic-cross/mimic-cross.deno/setup.sh
 
+COPY --from=mimic-test-host /test /test
+ENV MIMIC_TEST_DATA_PATH=/test
+
+COPY mimic-cross.deno /mimic-cross.deno
+WORKDIR /mimic-cross.deno
+ENV PATH="/mimic-cross/host/mimic-cross/bin:$PATH"
+RUN mimic-deno cache config/*.test.ts src/*.test.ts
 
 # =======================================================================
 

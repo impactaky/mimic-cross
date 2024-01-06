@@ -2,6 +2,7 @@ import $ from "daxex/mod.ts";
 
 export let config = {
   hostRoot: "/mimic-cross/host",
+  internalBin: "/mimic-cross/host/mimic-cross/internal/bin",
 };
 
 export async function loadConfig() {
