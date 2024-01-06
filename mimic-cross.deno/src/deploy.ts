@@ -13,12 +13,11 @@ export async function readRunpath(path: PathRef): Promise<string | undefined> {
     .text()).trimEnd();
 }
 
-export async function mimicDeploy(src: PathRef, dst: PathRef) {
-  const deployBin = dst.join(src.basename());
-  await src.copyFile(deployBin);
-  await $`${config.internalBin}/patchelf --add-needed libmimic-cross.so ${deployBin}`;
+async function implMimicDeploy(src: PathRef, dst: PathRef) {
+  await src.copyFile(dst);
+  await $`${config.internalBin}/patchelf --add-needed libmimic-cross.so ${dst}`;
 
-  const runpath = await readRunpath(deployBin);
+  const runpath = await readRunpath(dst);
   if (!runpath) return;
   let needRunpathPatch = false;
   for (const p of runpath.split(":")) {
@@ -32,8 +31,17 @@ export async function mimicDeploy(src: PathRef, dst: PathRef) {
     ":/",
     `:${config.hostRoot}/`,
   );
-  await $`${config.internalBin}/patchelf --set-rpath ${newRunpath} ${deployBin}`;
+  await $`${config.internalBin}/patchelf --set-rpath ${newRunpath} ${dst}`;
   await $.path("./target.log").appendText(
-    `add ${config.hostRoot} prefix to RUNPATH in ${deployBin}\n`,
+    `add ${config.hostRoot} prefix to RUNPATH in ${dst}\n`,
   );
+}
+
+export function mimicDeploy(arg1: PathRef | string, arg2?: PathRef | string) {
+  if (arg2 !== undefined) {
+    return implMimicDeploy($.path(arg1), $.path(arg2));
+  }
+  const src = $.path(`${config.hostRoot}/${arg1}`);
+  const dst = $.path(arg1);
+  return implMimicDeploy(src, dst);
 }

@@ -47,10 +47,11 @@ RUN mkdir -p /mimic-cross/bin/
 COPY --from=mimic-lib /deno/deno /mimic-cross/bin/mimic-deno
 RUN arch > /mimic-cross/arch
 
-RUN mkdir -p /mimic-cross/internal/bin
-RUN ln -s ../../../usr/sbin/chroot /mimic-cross/internal/bin
-RUN ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin
-RUN ln -s ../../../usr/bin/patchelf /mimic-cross/internal/bin
+RUN mkdir -p /mimic-cross/internal/bin \
+    && ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin \
+    && ln -s ../../../usr/bin/patchelf /mimic-cross/internal/bin \
+    && ln -s ../../../usr/bin/readelf /mimic-cross/internal/bin \
+    && ln -s ../../../usr/sbin/chroot /mimic-cross/internal/bin
 
 # COPY host /mimic-cross/host
 
@@ -108,7 +109,7 @@ COPY target /mimic-cross-target
 FROM --platform=linux/arm64 ubuntu:22.04
 
 COPY --from=host / /host
-RUN mv /host/mimic-cross-target /mimic-cross
-RUN /mimic-cross/setup.sh
+RUN mv /host/mimic-cross-target /mimic-cross \
+    && /mimic-cross/setup.sh
 
 # vim:set ft=dockerfile :
