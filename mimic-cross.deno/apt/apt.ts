@@ -35,7 +35,9 @@ export async function aptGetOnHost(arg: string) {
 export async function deployPackages(packages: string[]) {
   const supportedPackages = await supportedPackagesPromise;
   const filteredPackages = packages.filter((p) => supportedPackages.has(p));
-  await aptGetOnHost(`install -y --no-install-recommends ${filteredPackages.join(" ")}`);
+  await aptGetOnHost(
+    `install -y --no-install-recommends ${filteredPackages.join(" ")}`,
+  );
   for (const p of filteredPackages) {
     const module = await import(`${packageDir}/${p}.ts`);
     if (module.postInstall && typeof module.postInstall === "function") {
@@ -51,4 +53,4 @@ export async function deployInstalledPackages() {
     return e[1];
   }).lines();
   await deployPackages(installedPackages);
-} 
+}
