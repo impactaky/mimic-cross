@@ -1,6 +1,7 @@
 import $ from "daxex/mod.ts";
 import { prepareChroot, runOnHost } from "../src/chroot.ts";
 import { config } from "../config/config.ts";
+import { deployAllCommands } from "./helper.ts";
 
 const packageDir = $.path(import.meta.url).parent()?.join("packages");
 if (!packageDir) throw new Error("Package directory path is undefined.");
@@ -42,6 +43,8 @@ export async function deployPackages(packages: string[]) {
     const module = await import(`${packageDir}/${p}.ts`);
     if (module.postInstall && typeof module.postInstall === "function") {
       await module.postInstall();
+    } else {
+      await deployAllCommands(p);
     }
   }
 }
