@@ -3,6 +3,9 @@ import { Command } from "cliffy/command/mod.ts";
 import { deployAllCommands } from "../apt/helper.ts";
 import { logger } from "./log.ts";
 
+import $ from "daxex/mod.ts";
+$.setPrintCommand(true);
+
 await new Command()
   .name("mimicx")
   .version("0.1.0")
@@ -14,7 +17,7 @@ await new Command()
     }
   })
   .command("deploy-package <packageName:string>", "Deploy a package.")
-  .action((_, packageName) => {
-    deployAllCommands(packageName);
+  .action(async (_, packageName) => {
+    await deployAllCommands(packageName);
   })
   .parse(Deno.args);
