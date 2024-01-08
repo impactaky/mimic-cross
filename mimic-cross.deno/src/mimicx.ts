@@ -19,7 +19,7 @@ await new Command()
       logger.mode = "verbose";
     }
   })
-  .command("deploy-package <packageName:string[]>", "Deploy a package.")
+  .command("deploy-packages <packageName:string[]>", "Deploy packages.")
   .globalOption("-f, --force", "force deploy package")
   .action(async (options, packageName) => {
     await deployPackages(packageName, { force: options.force });
