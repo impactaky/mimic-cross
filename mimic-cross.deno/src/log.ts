@@ -42,4 +42,32 @@ await log.setup({
   },
 });
 
-export let logger = log.getLogger(config.logType);
+class mimicLogger {
+  #logger: log.Logger;
+  #mode: string;
+  constructor(mode: string) {
+    this.#logger = log.getLogger(mode);
+    this.#mode = mode;
+  }
+  get mode() {
+    return this.#mode;
+  }
+  set mode(mode: string) {
+    this.#logger = log.getLogger(mode);
+    this.#mode = mode;
+  }
+  debug(...args: Parameters<log.Logger["debug"]>) {
+    this.#logger.debug(...args);
+  }
+  info(...args: Parameters<log.Logger["info"]>) {
+    this.#logger.info(...args);
+  }
+  warning(...args: Parameters<log.Logger["warning"]>) {
+    this.#logger.warning(...args);
+  }
+  error(...args: Parameters<log.Logger["error"]>) {
+    this.#logger.error(...args);
+  }
+}
+
+export const logger = new mimicLogger(config.logMode);

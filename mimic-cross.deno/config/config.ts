@@ -4,7 +4,7 @@ export let config = {
   hostRoot: "/mimic-cross/host",
   internalBin: "/mimic-cross/host/mimic-cross/internal/bin",
   logFile: "/var/log/mimic-cross.log",
-  logType: "default", // default | verbose | debug
+  logMode: "default", // default | verbose | debug
 };
 
 export async function loadConfig() {
