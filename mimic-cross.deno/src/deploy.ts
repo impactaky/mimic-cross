@@ -16,8 +16,8 @@ export async function readRunpath(path: PathRef): Promise<string | undefined> {
 
 async function implMimicDeploy(src: PathRef, dst: PathRef) {
   await src.copyFile(dst);
-  await $`${config.internalBin}/patchelf --add-needed libmimic-cross.so ${dst}`;
   logger.info(`(deploy) Copy ${src} to ${dst}`);
+  await $`${config.internalBin}/patchelf --add-needed libmimic-cross.so ${dst}`;
 
   const runpath = await readRunpath(dst);
   logger.debug(`(deploy) ${dst} RUNPATH is "${runpath}"`);
