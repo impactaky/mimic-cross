@@ -20,7 +20,7 @@ await new Command()
     }
   })
   .command("deploy-packages <packageName:string[]>", "Deploy packages.")
-  .globalOption("-f, --force", "force deploy package")
+  .option("-f, --force", "force deploy package")
   .action(async (options, packageName) => {
     await deployPackages(packageName, { force: options.force });
   })
