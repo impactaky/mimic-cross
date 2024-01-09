@@ -18,6 +18,9 @@ ln -s /mimic-cross/host/usr/aarch64-linux-gnu /usr
 # random devices used in apt-key script
 /mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/random c 1 8
 /mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/urandom c 1 9
+/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/null c 1 3
+/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/zero c 1 5
+/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host chmod 666 /dev/random /dev/urandom /dev/null /dev/zero
 
 
 # mkdir -p /var/log/mimic-cross
