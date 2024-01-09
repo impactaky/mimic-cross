@@ -2,6 +2,7 @@
 import { Command } from "cliffy/command/mod.ts";
 import { deployPackages } from "../apt/apt.ts";
 import { logger } from "./log.ts";
+import { runOnHost } from "./chroot.ts";
 
 // import $ from "daxex/mod.ts";
 // $.setPrintCommand(true);
@@ -24,5 +25,9 @@ await new Command()
   .action(async (options, ...packageName) => {
     console.log(packageName);
     await deployPackages(packageName, { force: options.force });
+  })
+  .command("chroot <command...:string>", "Run command in host")
+  .action(async (_, ...command) => {
+    await runOnHost(command);
   })
   .parse(Deno.args);
