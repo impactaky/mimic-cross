@@ -28,7 +28,7 @@ export async function aptGetOnHost(arg: string) {
     await runOnHost(
       `apt-get install -y --no-install-recommends ${args.slice(1).join(" ")}`,
     ).env("DEBIAN_FRONTEND", "noninteractive");
-    await runOnHost(`apt-get clean`).quiet();
+    await runOnHost(`apt-get clean`);
     await $.path(`${config.hostRoot}/var/lib/apt/lists`).remove({
       recursive: true,
     });

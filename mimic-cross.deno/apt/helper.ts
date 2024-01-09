@@ -4,6 +4,8 @@ import { mimicDeploy } from "../src/deploy.ts";
 export { mimicDeploy };
 import { getElfArch } from "../src/util.ts";
 import { logger } from "../src/log.ts";
+import { runOnHost } from "../src/chroot.ts";
+import { config } from "config/config.ts";
 
 function isInPATH(filePath: string | PathRef) {
   filePath = $.path(filePath);
@@ -20,16 +22,17 @@ export async function deployAllCommands(
   blockList?: Set<string>,
 ) {
   logger.info(`(deployAllommands) ${package_}`);
-  await $`dpkg -L ${package_}`
+  await runOnHost(`dpkg -L ${package_}`)
     .forEach(async (l) => {
       const path = $.path(l);
+      const hostPath = $.path(`${config.hostRoot}/${l}`);
       if (!isInPATH(path)) return;
-      if (!path.isFileSync() || path.isSymlinkSync()) return;
+      if (!hostPath.isFileSync() || hostPath.isSymlinkSync()) return;
       if (blockList && blockList.has(path.toString())) return;
       // path is executable
-      const ret = await $`[ -x ${path} ]`;
+      const ret = await $`[ -x ${hostPath} ]`;
       if (ret.code !== 0) return;
-      const elfArch = await getElfArch(path);
+      const elfArch = await getElfArch(hostPath);
       if (!elfArch) return;
       await mimicDeploy(path);
     });
