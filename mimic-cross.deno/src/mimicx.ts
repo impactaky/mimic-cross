@@ -19,9 +19,10 @@ await new Command()
       logger.mode = "verbose";
     }
   })
-  .command("deploy-packages <packageName:string[]>", "Deploy packages.")
+  .command("deploy-packages <packageName...:string>", "Deploy packages.")
   .option("-f, --force", "force deploy package")
-  .action(async (options, packageName) => {
+  .action(async (options, ...packageName) => {
+    console.log(packageName);
     await deployPackages(packageName, { force: options.force });
   })
   .parse(Deno.args);
