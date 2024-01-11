@@ -26,8 +26,11 @@ await new Command()
     console.log(packageName);
     await deployPackages(packageName, { force: options.force });
   })
-  .command("chroot <command...:string>", "Run command in host")
-  .action(async (_, ...command) => {
-    await runOnHost(command);
+  .command("chroot [command...]", "Run command in host")
+  .action(async function (_, ...command) {
+    const combinedArgs: string[] = (command || []).concat(
+      this.getLiteralArgs() || [],
+    );
+    await runOnHost(combinedArgs);
   })
   .parse(Deno.args);
