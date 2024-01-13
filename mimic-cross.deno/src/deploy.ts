@@ -1,10 +1,14 @@
 import $ from "daxex/mod.ts";
-import { PathRef } from "dax/mod.ts";
+import { PathRefLike } from "daxex/mod.ts";
 import { config } from "config/config.ts";
 import { logger } from "./log.ts";
 
-export async function readRunpath(path: PathRef): Promise<string | undefined> {
-  return (await $`${config.internalBin}/objdump -x ${path}`.stderr("null")
+export async function readRunpath(
+  path: PathRefLike,
+): Promise<string | undefined> {
+  return (await $`${config.internalBin}/objdump -x ${$.path(path)}`.stderr(
+    "null",
+  )
     .noThrow()
     .apply((l) => {
       const e = $.split(l);
@@ -14,8 +18,8 @@ export async function readRunpath(path: PathRef): Promise<string | undefined> {
     .text()).trimEnd();
 }
 
-async function implMimicDeploy(src: PathRef, dst: PathRef) {
-  await src.copyFile(dst);
+async function implMimicDeploy(src: PathRefLike, dst: PathRefLike) {
+  await $.path(src).copyFile($.path(dst));
   logger.info(`(deploy) Copy ${src} to ${dst}`);
   await $`${config.internalBin}/patchelf --add-needed libmimic-cross.so ${dst}`;
 
@@ -38,7 +42,10 @@ async function implMimicDeploy(src: PathRef, dst: PathRef) {
   logger.info(`(deploy) Modify RUNPATH in ${dst}`);
 }
 
-export function mimicDeploy(arg1: PathRef | string, arg2?: PathRef | string) {
+export function mimicDeploy(
+  arg1: PathRefLike | string,
+  arg2?: PathRefLike | string,
+) {
   if (arg2 !== undefined) {
     return implMimicDeploy($.path(arg1), $.path(arg2));
   }

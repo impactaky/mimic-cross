@@ -1,5 +1,5 @@
 import $ from "daxex/mod.ts";
-import { PathRef } from "dax/mod.ts";
+import { PathRefLike } from "daxex/mod.ts";
 import { mimicDeploy } from "../src/deploy.ts";
 export { mimicDeploy };
 import { getElfArch } from "../src/util.ts";
@@ -7,7 +7,7 @@ import { logger } from "../src/log.ts";
 import { runOnHost } from "../src/chroot.ts";
 import { config } from "config/config.ts";
 
-function isInPATH(filePath: string | PathRef) {
+function isInPATH(filePath: PathRefLike) {
   filePath = $.path(filePath);
   const paths = Deno.env.get("PATH")?.split(":");
   if (!paths) return false;
