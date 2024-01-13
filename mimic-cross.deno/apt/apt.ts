@@ -19,14 +19,13 @@ const supportedPackagesPromise = (async () => {
   return supportedPackages;
 })();
 
-export async function aptGetOnHost(arg: string) {
+export async function aptGetOnHost(arg: string | string[]) {
   await prepareChroot;
-  const args = $.split(arg);
+  const args = arg instanceof Array ? arg : $.split(arg);
   if (args[0] === "install" && Deno.env.get("HOSTNAME") === "buildkitsandbox") {
     await runOnHost(`apt-get update`);
-    console.log(`${args.slice(1).join(" ")}`);
     await runOnHost(
-      `apt-get install -y --no-install-recommends ${args.slice(1).join(" ")}`,
+      ["apt-get", "install", "-y", "--no-install-recommends", ...args.slice(1)],
     ).env("DEBIAN_FRONTEND", "noninteractive");
     await runOnHost(`apt-get clean`);
     await $.path(`${config.hostRoot}/var/lib/apt/lists`).remove({
@@ -34,7 +33,7 @@ export async function aptGetOnHost(arg: string) {
     });
     return;
   }
-  await runOnHost(`apt-get ${arg}`);
+  await runOnHost([`apt-get`, ...args]);
   return;
 }
 

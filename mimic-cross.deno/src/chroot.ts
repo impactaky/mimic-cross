@@ -9,8 +9,15 @@ export const prepareChroot = (async () => {
 // await prepareChroot;
 
 export function runOnHost(command: string | string[]) {
-  const commands: string[] = typeof command === "string"
-    ? command.split(" ")
-    : command;
-  return $`${config.internalBin}/chroot ${config.hostRoot} ${commands}`;
+  if (typeof command === "string") {
+    return $.command(
+      `${config.internalBin}/chroot ${config.hostRoot} ${command}`,
+    );
+  } else {
+    return $.command([
+      `${config.internalBin}/chroot`,
+      config.hostRoot,
+      ...command,
+    ]);
+  }
 }
