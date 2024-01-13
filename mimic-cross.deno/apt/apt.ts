@@ -1,4 +1,5 @@
 import $ from "daxex/mod.ts";
+import { PathRefLike } from "daxex/mod.ts";
 import { prepareChroot, runOnHost } from "../src/chroot.ts";
 import { config } from "../config/config.ts";
 import { deployAllCommands } from "./helper.ts";
@@ -80,4 +81,15 @@ export async function deployInstalledPackages() {
     return e[1];
   }).lines();
   await deployPackages(installedPackages);
+}
+
+export function getIntalledPackagesFromLog(
+  ts: string,
+  logFile: PathRefLike = "/var/log/dpkg.log",
+) {
+  return $.cat(logFile).apply((l) => {
+    if (l < ts) return;
+    const m = l.match(/status installed (.*):/);
+    return m?.[1];
+  }).lines();
 }
