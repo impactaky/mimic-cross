@@ -37,3 +37,11 @@ export async function deployAllCommands(
       await mimicDeploy(path);
     });
 }
+
+export async function deployCli(command: string, target: PathRefLike) {
+  const pathRef = $.path(target);
+  await pathRef.writeText(`#!/bin/sh
+/mimic-cross.deno/src/mimicx.ts ${command} -- $@
+`);
+  await pathRef.chmod(0o755);
+}
