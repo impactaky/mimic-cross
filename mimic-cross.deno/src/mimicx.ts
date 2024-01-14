@@ -1,6 +1,6 @@
 #!/usr/bin/env -S mimic-deno run -A --ext=ts
 import { Command } from "cliffy/command/mod.ts";
-import { deployPackages } from "../apt/apt.ts";
+import { deployPackages, aptGet } from "../apt/apt.ts";
 import { logger } from "./log.ts";
 import { runOnHost } from "./chroot.ts";
 
@@ -23,7 +23,6 @@ await new Command()
   .command("deploy-packages <packageName...:string>", "Deploy packages.")
   .option("-f, --force", "force deploy package")
   .action(async (options, ...packageName) => {
-    console.log(packageName);
     await deployPackages(packageName, { force: options.force });
   })
   .command("chroot [command...]", "Run command in host")
@@ -32,5 +31,13 @@ await new Command()
       this.getLiteralArgs() || [],
     );
     await runOnHost(combinedArgs);
+  })
+  .command("apt-get [args...]", "mimic apt-get command")
+  .option("-f, --force", "force deploy package")
+  .action(async function (options, ...command) {
+    const combinedArgs: string[] = (command || []).concat(
+      this.getLiteralArgs() || [],
+    );
+    await aptGet(combinedArgs, { force: options.force });
   })
   .parse(Deno.args);

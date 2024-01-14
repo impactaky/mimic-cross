@@ -4,6 +4,7 @@ import { prepareChroot, runOnHost } from "../src/chroot.ts";
 import { config } from "../config/config.ts";
 import { deployAllCommands } from "./helper.ts";
 import { logger } from "../src/log.ts";
+import { format } from "std/datetime/mod.ts";
 
 export interface deployPackageOptions {
   force?: boolean;
@@ -93,4 +94,22 @@ export function getIntalledPackagesFromLog(
     const m = l.match(/status installed (.*?):/);
     return m?.[1];
   }).lines();
+}
+
+export async function aptGet(
+  arg: string | string[],
+  options?: deployPackageOptions,
+) {
+  const ts = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+  const args = arg instanceof Array ? arg : $.split(arg);
+  logger.info(`(aptGet) Run apt-get ${arg}`);
+  await $.command([`${config.keepBin}/apt-get`, ...args]);
+  if (args[0] === "update") {
+    await aptGetOnHost(args);
+  }
+  logger.debug(`(aptGet) Start search installed packages from ${ts}`);
+  const installedPackages = await getIntalledPackagesFromLog(ts);
+  logger.debug(`(aptGet) installedPackages = ${installedPackages}`);
+  if (installedPackages.length === 0) return;
+  return deployPackages(installedPackages, options);
 }
