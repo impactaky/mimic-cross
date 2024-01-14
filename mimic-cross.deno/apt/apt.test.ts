@@ -14,14 +14,19 @@ Deno.test("getIntalledPackagesFromLog", async () => {
     "2024-01-13 15:26:44",
     $.path("test/dpkg.log"),
   );
-  assertEquals(packages, ["libtime-duration-perl", "moreutils", "man-db"]);
+  assertEquals(packages, [
+    "libtime-duration-perl",
+    "moreutils",
+    "man-db",
+    "file",
+    "libc-bin",
+  ]);
 });
 
 Deno.test("getIntalledPackagesFromLog not found", async () => {
   const packages = await getIntalledPackagesFromLog(
-    "2024-01-13 15:26:48",
+    "2024-01-14 15:26:48",
     $.path("test/dpkg.log"),
   );
   assertEquals(packages, []);
-  assert(!packages);
 });

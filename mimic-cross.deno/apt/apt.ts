@@ -21,6 +21,7 @@ const supportedPackagesPromise = (async () => {
 })();
 
 export async function aptGetOnHost(arg: string | string[]) {
+  logger.info(`(aptGetOnHost) Run apt-get ${arg}`);
   await prepareChroot;
   const args = arg instanceof Array ? arg : $.split(arg);
   if (args[0] === "install" && Deno.env.get("HOSTNAME") === "buildkitsandbox") {
@@ -89,7 +90,7 @@ export function getIntalledPackagesFromLog(
 ) {
   return $.cat(logFile).apply((l) => {
     if (l < ts) return;
-    const m = l.match(/status installed (.*):/);
+    const m = l.match(/status installed (.*?):/);
     return m?.[1];
   }).lines();
 }
