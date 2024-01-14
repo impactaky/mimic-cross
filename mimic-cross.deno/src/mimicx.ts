@@ -1,6 +1,6 @@
 #!/usr/bin/env -S mimic-deno run -A --ext=ts
 import { Command } from "cliffy/command/mod.ts";
-import { deployPackages, aptGet } from "../apt/apt.ts";
+import { aptGet, deployPackages } from "../apt/apt.ts";
 import { logger } from "./log.ts";
 import { runOnHost } from "./chroot.ts";
 

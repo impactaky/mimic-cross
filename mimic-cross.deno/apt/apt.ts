@@ -25,16 +25,25 @@ export async function aptGetOnHost(arg: string | string[]) {
   logger.info(`(aptGetOnHost) Run apt-get ${arg}`);
   await prepareChroot;
   const args = arg instanceof Array ? arg : $.split(arg);
-  if (args[0] === "install" && Deno.env.get("HOSTNAME") === "buildkitsandbox") {
-    await runOnHost(`apt-get update`);
-    await runOnHost(
-      ["apt-get", "install", "-y", "--no-install-recommends", ...args.slice(1)],
-    ).env("DEBIAN_FRONTEND", "noninteractive");
-    await runOnHost(`apt-get clean`);
-    await $.path(`${config.hostRoot}/var/lib/apt/lists`).remove({
-      recursive: true,
-    });
-    return;
+  if (Deno.env.get("HOSTNAME") === "buildkitsandbox") {
+    if (args[0] === "install") {
+      await runOnHost(
+        [
+          "apt-get",
+          "install",
+          "-y",
+          "--no-install-recommends",
+          ...args.slice(1),
+        ],
+      ).env("DEBIAN_FRONTEND", "noninteractive");
+      return;
+    } else if (args[0] === "clean") {
+      await runOnHost([`apt-get`, ...args]);
+      await $.path(`${config.hostRoot}/var/lib/apt/lists`).remove({
+        recursive: true,
+      });
+      return;
+    }
   }
   await runOnHost([`apt-get`, ...args]);
   return;
