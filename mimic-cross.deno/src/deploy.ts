@@ -3,6 +3,13 @@ import { PathRefLike } from "daxex/mod.ts";
 import { config } from "config/config.ts";
 import { logger } from "./log.ts";
 
+export async function keepOriginalBin(path: PathRefLike) {
+  const pathRef = $.path(path);
+  const dst = $.path(`${config.keepBin}/${pathRef.basename()}`);
+  await pathRef.copyFile(dst);
+  logger.info(`(keepOriginalBin) Copy ${path} to ${dst}`);
+}
+
 export async function readRunpath(
   path: PathRefLike,
 ): Promise<string | undefined> {
