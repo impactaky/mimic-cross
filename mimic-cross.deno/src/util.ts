@@ -36,3 +36,22 @@ export async function getElfArch(
       return;
   }
 }
+
+export async function parseLdconf(filePath: PathRefLike): Promise<string[]> {
+  const pathRef = $.path(filePath);
+  const text = await pathRef.readText();
+  const ldconfDirs: string[] = [];
+  for (const line of text.split("\n")) {
+    if (line.startsWith("#")) continue;
+    if (line.startsWith("include ")) {
+      const included = line.slice("include ".length).trim();
+      for await (const entry of pathRef.expandGlob(included)) {
+        ldconfDirs.push(...(await parseLdconf(entry.path)));
+      }
+      continue;
+    }
+    if (line.trim() === "") continue;
+    ldconfDirs.push(line.trim());
+  }
+  return ldconfDirs;
+}
