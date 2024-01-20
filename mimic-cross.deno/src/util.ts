@@ -64,7 +64,7 @@ export async function isElfExecutable(path: PathRefLike): Promise<boolean> {
   return false;
 }
 
-export function isInPATH(filePath: PathRefLike, paths?: string[]) {
+export function isInPath(filePath: PathRefLike, paths?: string[]) {
   filePath = $.path(filePath);
   paths = paths ? paths : Deno.env.get("PATH")?.split(":");
   if (!paths) return false;

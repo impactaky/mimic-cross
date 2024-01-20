@@ -1,6 +1,6 @@
 import $ from "daxex/mod.ts";
 import { assert, assertEquals } from "std/assert/mod.ts";
-import { isElfExecutable, parseLdconf } from "./util.ts";
+import { isElfExecutable, isInPath, parseLdconf } from "./util.ts";
 import { config } from "../config/config.ts";
 
 Deno.test("isElfExecutable native", async () => {
@@ -16,6 +16,11 @@ Deno.test("isElfExecutable host", async () => {
 Deno.test("isElfExecutable(directory)", async () => {
   const ret = await isElfExecutable($.path("/usr/libexec"));
   assert(!ret);
+});
+
+Deno.test("isInPath", () => {
+  assert(!isInPath("/foo/var/cli", ["/foo"]));
+  assert(isInPath("/foo/var/cli", ["/foo/var"]));
 });
 
 Deno.test("parse /etc/ld.so.conf", async () => {
