@@ -2,6 +2,7 @@ import $ from "daxex/mod.ts";
 import { PathRefLike } from "daxex/mod.ts";
 import { config } from "config/config.ts";
 import { logger } from "./log.ts";
+import { isElfExecutable } from "./util.ts";
 
 export async function keepOriginalBin(path: PathRefLike) {
   const pathRef = $.path(path);
@@ -59,4 +60,16 @@ export function mimicDeploy(
   const src = $.path(`${config.hostRoot}/${arg1}`);
   const dst = $.path(arg1);
   return implMimicDeploy(src, dst);
+}
+
+export async function deployIfHostCommands(
+  commands: string[],
+  blockList?: Set<string>,
+) {
+  for (const command of commands) {
+    const hostPath = $.path(`${config.hostRoot}/${command}`);
+    if (blockList && blockList.has(command)) continue;
+    if (!(await isElfExecutable(hostPath))) continue;
+    await mimicDeploy(hostPath, command);
+  }
 }

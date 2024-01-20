@@ -1,5 +1,5 @@
-// import { deployAllCommands } from "../../apt/helper.ts";
+// import { deployIfHostCommands } from "../../apt/helper.ts";
 
 // export async function postInstall() {
-//   await deployAllCommands("<package name>");
+//   await deployIfHostCommands("<package name>");
 // }

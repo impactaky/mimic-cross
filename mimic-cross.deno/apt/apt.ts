@@ -2,9 +2,9 @@ import $ from "daxex/mod.ts";
 import { PathRefLike } from "daxex/mod.ts";
 import { prepareChroot, runOnHost } from "../src/chroot.ts";
 import { config } from "../config/config.ts";
-import { deployAllCommands } from "./helper.ts";
 import { logger } from "../src/log.ts";
 import { format } from "std/datetime/mod.ts";
+import { deployIfHostCommands } from "../src/deploy.ts";
 
 export interface deployPackageOptions {
   force?: boolean;
@@ -49,6 +49,15 @@ export async function aptGetOnHost(arg: string | string[]) {
   return;
 }
 
+export async function deployPackageCommands(
+  package_: string,
+  blockList?: Set<string>,
+) {
+  logger.info(`(deployPackageCommands) ${package_}`);
+  const commands = await runOnHost(`dpkg -L ${package_}`).lines();
+  await deployIfHostCommands(commands, blockList);
+}
+
 export async function deployPackages(
   packages: string[],
   options?: deployPackageOptions,
@@ -64,23 +73,24 @@ export async function deployPackages(
   );
   for (const p of filteredPackages) {
     const modulePath = `${packageDir}/${p}.ts`;
+    let module;
     try {
-      const module = await import(`${modulePath}`);
-      if (module.postInstall && typeof module.postInstall === "function") {
-        logger.debug(`(deployPackages) call ${modulePath} postInstall`);
-        await module.postInstall();
-      } else {
-        logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
-        await deployAllCommands(p);
-      }
+      module = await import(`${modulePath}`);
     } catch (error) {
       if (options?.force) {
-        await deployAllCommands(p);
+        await deployPackageCommands(p);
+        continue;
       } else {
         logger.error(`(deployPackages) can't import ${modulePath}`);
         throw error;
       }
-      continue;
+    }
+    if (module.postInstall && typeof module.postInstall === "function") {
+      logger.debug(`(deployPackages) call ${modulePath} postInstall`);
+      await module.postInstall();
+    } else {
+      logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
+      await deployPackageCommands(p);
     }
   }
 }

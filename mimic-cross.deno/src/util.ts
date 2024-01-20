@@ -37,6 +37,43 @@ export async function getElfArch(
   }
 }
 
+export async function getElfType(
+  path: PathRefLike,
+): Promise<string | undefined> {
+  const type =
+    (await $`${config.internalBin}/readelf -h ${$.path(path)}`.noThrow().stderr(
+      "null",
+    )
+      .apply((l) => {
+        const e = $.split(l);
+        if (e[0].trim() !== "Type:") return;
+        return e[1];
+      }).text()).trimEnd();
+  return type;
+}
+
+export async function isElfExecutable(path: PathRefLike): Promise<boolean> {
+  const pathRef = $.path(path);
+  if (!pathRef.isFileSync() || pathRef.isSymlinkSync()) return false;
+  // path is executable
+  const ret = await $`[ -x ${pathRef} ]`.noThrow();
+  if (ret.code !== 0) return false;
+  const type = await getElfType(pathRef);
+  if (!type) return false;
+  if (type === "EXEC" || type === "DYN") return true;
+  return false;
+}
+
+export function isInPATH(filePath: PathRefLike, paths?: string[]) {
+  filePath = $.path(filePath);
+  paths = paths ? paths : Deno.env.get("PATH")?.split(":");
+  if (!paths) return false;
+  for (const p of paths) {
+    if (filePath.dirname() === p) return true;
+  }
+  return false;
+}
+
 export async function parseLdconf(filePath: PathRefLike): Promise<string[]> {
   const pathRef = $.path(filePath);
   const text = await pathRef.readText();
