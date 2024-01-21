@@ -1,4 +1,8 @@
-import { deployPackages, getIntalledPackagesFromLog } from "./apt.ts";
+import {
+  deployPackages,
+  findCommandsFromPackage,
+  getIntalledPackagesFromLog,
+} from "./apt.ts";
 import { checkNeeded, getElfArch } from "../src/util.ts";
 import $ from "dax/mod.ts";
 import { assert, assertEquals } from "std/assert/mod.ts";
@@ -29,4 +33,14 @@ Deno.test("getIntalledPackagesFromLog not found", async () => {
     $.path("test/dpkg.log"),
   );
   assertEquals(packages, []);
+});
+
+Deno.test("findCommandsFromPackage(bin)", async () => {
+  const commands = await findCommandsFromPackage("grep");
+  assertEquals(commands, ["bin/grep"]);
+});
+
+Deno.test("findCommandsFromPackage(lib)", async () => {
+  const commands = await findCommandsFromPackage("libsystemd0");
+  assertEquals(commands, []);
 });

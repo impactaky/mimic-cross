@@ -1,6 +1,11 @@
 #!/usr/bin/env -S mimic-deno run -A --ext=ts
 import { Command } from "cliffy/command/mod.ts";
-import { aptGet, deployPackages } from "../apt/apt.ts";
+import {
+  aptGet,
+  deployPackages,
+  findCommandsFromPackage,
+  getAllInstalledPackages,
+} from "../apt/apt.ts";
 import { logger } from "./log.ts";
 import { runOnHost } from "./chroot.ts";
 
@@ -39,5 +44,22 @@ await new Command()
       this.getLiteralArgs() || [],
     );
     await aptGet(combinedArgs, { force: options.force });
+  })
+  .command("suggest [packageName...]", "Suggest supported package list.")
+  .option("-a, --all", "Target all installed packages")
+  .option("--show_commands", "show deploy commands")
+  .action(async function (options, ...packageName) {
+    if (options.all) packageName = await getAllInstalledPackages();
+    for (const p of packageName) {
+      const commands = await findCommandsFromPackage(p);
+      if (commands.length > 0) {
+        console.log(`${p},`);
+        if (options.show_commands) {
+          for (const c of commands) {
+            console.log(`//  ${c}`);
+          }
+        }
+      }
+    }
   })
   .parse(Deno.args);

@@ -4,7 +4,7 @@ import { prepareChroot, runOnHost } from "../src/chroot.ts";
 import { config } from "../config/config.ts";
 import { logger } from "../src/log.ts";
 import { format } from "std/datetime/mod.ts";
-import { deployIfHostCommands } from "../src/deploy.ts";
+import { deployIfHostCommands, findCommands } from "../src/deploy.ts";
 
 export interface deployPackageOptions {
   force?: boolean;
@@ -131,4 +131,23 @@ export async function aptGet(
   logger.debug(`(aptGet) installedPackages = ${installedPackages}`);
   if (installedPackages.length === 0) return;
   return deployPackages(installedPackages, options);
+}
+
+export async function findCommandsFromPackage(
+  package_: string,
+) {
+  const paths = await $`dpkg -L ${package_}`.lines();
+  return await findCommands(paths);
+}
+
+export async function getAllInstalledPackages() {
+  const arch = (await $`dpkg --print-architecture`.text()).trimEnd();
+  return await $`dpkg -l`.apply((l) => {
+    if (!l.startsWith("ii")) return;
+    let name = $.split(l)[1];
+    if (name.endsWith(`:${arch}`)) {
+      name = name.slice(0, -arch.length - 1);
+    }
+    return name;
+  }).lines();
 }

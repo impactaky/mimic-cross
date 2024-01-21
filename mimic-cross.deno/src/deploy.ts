@@ -79,10 +79,13 @@ export async function deployIfHostCommands(
   }
 }
 
-// export async function generateRecipe(commands: string[]) {
-//   for (const command of commands) {
-//     const hostPath = $.path(`${config.hostRoot}/${command}`);
-//     if (!(await isElfExecutable(hostPath))) continue;
-//     await mimicDeploy(hostPath, command);
-//   }
-// }
+export async function findCommands(paths: string[]) {
+  const libDirs = await parseLdconf(`/etc/ld.so.conf`);
+  const commands: string[] = [];
+  for (const path of paths) {
+    if (!(await isElfExecutable(path))) continue;
+    if (isInPath(path, libDirs)) continue;
+    commands.push(path);
+  }
+  return commands;
+}
