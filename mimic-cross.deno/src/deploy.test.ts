@@ -2,6 +2,7 @@ import $ from "daxex/mod.ts";
 import { mimicDeploy, readRunpath } from "./deploy.ts";
 import { assert, assertEquals } from "std/assert/mod.ts";
 import { checkNeeded, getElfArch } from "./util.ts";
+import { config } from "config/config.ts";
 
 const testDataPath = $.path(Deno.env.get("MIMIC_TEST_DATA_PATH")!);
 const deployDir = testDataPath.join("deploy");
@@ -41,5 +42,5 @@ Deno.test("mimicDeploy /bin/ls", async () => {
   assertEquals(runpath, "");
   assert(await checkNeeded(deployBin, "libmimic-cross.so"));
   // TODO support multiarch
-  assertEquals(await getElfArch(deployBin), "x86_64");
+  assertEquals(await getElfArch(deployBin), config.hostArch);
 });

@@ -6,6 +6,8 @@ Deno.test("config", async () => {
   const testConfig = {
     hostRoot: "/host",
   };
+  assertEquals(config.hostArch, "x86_64");
+  assertEquals(config.arch, "aarch64");
   assertEquals(config.hostRoot, "/mimic-cross/host");
   assertEquals(
     config.internalBin,
