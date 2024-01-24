@@ -1,26 +1,25 @@
 #!/bin/bash -eu
 
-arch >/mimic-cross/arch
-HOST_ARCH=$(cat /mimic-cross/host/mimic-cross/arch)
+HOST_ARCH=$(cat /mimic-cross/mimic-cross/host_arch)
 # echo PATH=\"/mimic-cross/deploy/bin:"$PATH"\" >/etc/environment
 
 #shellcheck disable=SC2046,SC2226
-ln -s $(realpath /mimic-cross/host/usr/lib/"$HOST_ARCH"-linux-gnu /usr/lib/)
+ln -s $(realpath /mimic-cross/usr/lib/"$HOST_ARCH"-linux-gnu /usr/lib/)
 if [[ $(realpath /lib) != /usr/lib ]]; then
-  ln -s /mimic-cross/host/lib/"$HOST_ARCH"-linux-gnu /lib
+  ln -s /mimic-cross/lib/"$HOST_ARCH"-linux-gnu /lib
 fi
 
 # TODO support another arch
 mkdir -p /lib64
-ln -s /mimic-cross/host/lib64/ld-linux-x86-64.* /lib64/
-ln -s /mimic-cross/host/usr/aarch64-linux-gnu /usr
+ln -s /mimic-cross/lib64/ld-linux-x86-64.* /lib64/
+ln -s /mimic-cross/usr/aarch64-linux-gnu /usr
 
 # random devices used in apt-key script
-/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/random c 1 8
-/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/urandom c 1 9
-/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/null c 1 3
-/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host mknod /dev/zero c 1 5
-/mimic-cross/host/mimic-cross/internal/bin/chroot /mimic-cross/host chmod 666 /dev/random /dev/urandom /dev/null /dev/zero
+/mimic-cross/mimic-cross/internal/bin/chroot /mimic-cross mknod /dev/random c 1 8
+/mimic-cross/mimic-cross/internal/bin/chroot /mimic-cross mknod /dev/urandom c 1 9
+/mimic-cross/mimic-cross/internal/bin/chroot /mimic-cross mknod /dev/null c 1 3
+/mimic-cross/mimic-cross/internal/bin/chroot /mimic-cross mknod /dev/zero c 1 5
+/mimic-cross/mimic-cross/internal/bin/chroot /mimic-cross chmod 666 /dev/random /dev/urandom /dev/null /dev/zero
 
 
 # mkdir -p /var/log/mimic-cross

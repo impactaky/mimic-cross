@@ -21,7 +21,7 @@ Deno.test("mimicDeploy", async () => {
   const deployBin = deployDir.join("libhello_runpath.so");
   await mimicDeploy(testDataPath.join("libhello_runpath.so"), deployBin);
   const runpath = await readRunpath(deployBin);
-  assertEquals(runpath, "$ORIGIN/foo:/mimic-cross/host/path/to/lib");
+  assertEquals(runpath, "$ORIGIN/foo:/mimic-cross/path/to/lib");
   assert(await checkNeeded(deployBin, "libmimic-cross.so"));
 });
 

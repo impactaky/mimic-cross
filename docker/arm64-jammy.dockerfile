@@ -45,7 +45,7 @@ RUN apt-get update \
 COPY --from=mimic-lib /mimic-lib/build/libmimic-cross.so /usr/lib/x86_64-linux-gnu/
 RUN mkdir -p /mimic-cross/bin/
 COPY --from=mimic-lib /deno/deno /mimic-cross/bin/mimic-deno
-RUN arch > /mimic-cross/arch
+RUN arch > /mimic-cross/host_arch
 
 RUN mkdir -p /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin \
@@ -85,7 +85,7 @@ RUN mkdir -p /test/deploy
 
 FROM --platform=linux/arm64 ubuntu:22.04 as mimic-test
 
-COPY --from=host-stage1 / /mimic-cross/host
+COPY --from=host-stage1 / /mimic-cross
 COPY mimic-cross.deno /mimic-cross/mimic-cross.deno
 RUN /mimic-cross/mimic-cross.deno/setup.sh
 
@@ -94,7 +94,7 @@ ENV MIMIC_TEST_DATA_PATH=/test
 
 COPY mimic-cross.deno /mimic-cross.deno
 WORKDIR /mimic-cross.deno
-ENV PATH="/mimic-cross/host/mimic-cross/bin:$PATH"
+ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
 RUN mimic-deno cache config/*.test.ts src/*.test.ts
 
 # =======================================================================
