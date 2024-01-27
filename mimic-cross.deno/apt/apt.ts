@@ -13,11 +13,13 @@ export interface deployPackageOptions {
 const packageDir = $.path(import.meta.url).parent()?.join("packages");
 if (!packageDir) throw new Error("Package directory path is undefined.");
 const supportedPackagesPromise = (async () => {
-  const supportedPackages = new Set<string>();
-  for await (const file of packageDir.readDir()) {
-    if (!file.isFile) continue;
-    supportedPackages.add(file.name.replace(/\.ts$/, ""));
-  }
+  // Create set from packages/supported.json
+  const data = await $.path(import.meta.url).parent()?.join(
+    "packages",
+    "supported.json",
+  ).readJson<string[]>();
+  if (data === undefined) throw new Error("Can't read supported.json");
+  const supportedPackages = new Set<string>(data);
   return supportedPackages;
 })();
 
@@ -77,15 +79,14 @@ export async function deployPackages(
     try {
       module = await import(`${modulePath}`);
     } catch (error) {
-      if (options?.force) {
-        await deployPackageCommands(p);
-        continue;
-      } else {
-        logger.error(`(deployPackages) can't import ${modulePath}`);
+      if (error.code !== "ERR_MODULE_NOT_FOUND") {
         throw error;
       }
+      logger.debug(`(deployPackages) can't import ${modulePath}`);
     }
-    if (module.postInstall && typeof module.postInstall === "function") {
+    if (
+      module && module.postInstall && typeof module.postInstall === "function"
+    ) {
       logger.debug(`(deployPackages) call ${modulePath} postInstall`);
       await module.postInstall();
     } else {
