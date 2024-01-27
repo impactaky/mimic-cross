@@ -1,5 +1,5 @@
 import $ from "daxex/mod.ts";
-import { config } from "config/config.ts";
+import { config } from "../config/config.ts";
 
 export const prepareChroot = (async () => {
   return await $.path("/etc/resolv.conf").copyFile(

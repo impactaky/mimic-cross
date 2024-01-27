@@ -53,8 +53,6 @@ RUN mkdir -p /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/readelf /mimic-cross/internal/bin \
     && ln -s ../../../usr/sbin/chroot /mimic-cross/internal/bin
 
-# COPY host /mimic-cross/host
-
 # =======================================================================
 
 FROM host-stage1 as mimic-test-host
@@ -92,10 +90,10 @@ RUN /mimic-cross/mimic-cross.deno/setup.sh
 COPY --from=mimic-test-host /test /test
 ENV MIMIC_TEST_DATA_PATH=/test
 
-COPY mimic-cross.deno /mimic-cross.deno
-WORKDIR /mimic-cross.deno
+# COPY mimic-cross.deno /mimic-cross.deno
+# WORKDIR /mimic-cross.deno
 ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
-RUN mimic-deno cache config/*.test.ts src/*.test.ts
+# RUN mimic-deno cache config/*.test.ts src/*.test.ts
 
 # =======================================================================
 

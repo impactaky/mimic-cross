@@ -1,6 +1,6 @@
 import $ from "daxex/mod.ts";
 import { PathRefLike } from "daxex/mod.ts";
-import { config } from "config/config.ts";
+import { config } from "../config/config.ts";
 import { logger } from "./log.ts";
 import { isElfExecutable, isInPath, parseLdconf } from "./util.ts";
 

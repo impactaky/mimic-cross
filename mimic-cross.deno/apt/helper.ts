@@ -6,7 +6,7 @@ export { deployPackageCommands } from "../apt/apt.ts";
 export async function deployCli(command: string, target: PathRefLike) {
   const pathRef = $.path(target);
   await pathRef.writeText(`#!/bin/sh
-/mimic-cross.deno/src/mimicx.ts ${command} -- $@
+/usr/local/bin/mimicx ${command} -- $@
 `);
   await pathRef.chmod(0o755);
 }

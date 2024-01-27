@@ -1,4 +1,4 @@
-#!/usr/bin/env -S mimic-deno run -A --ext=ts
+#!/mimic-cross/mimic-cross/bin/mimic-deno run -A --ext=ts
 import { Command } from "cliffy/command/mod.ts";
 import {
   aptGet,
@@ -8,6 +8,7 @@ import {
 } from "../apt/apt.ts";
 import { logger } from "./log.ts";
 import { runOnHost } from "./chroot.ts";
+import { setup } from "./setup.ts";
 
 // import $ from "daxex/mod.ts";
 // $.setPrintCommand(true);
@@ -46,20 +47,22 @@ await new Command()
     await aptGet(combinedArgs, { force: options.force });
   })
   .command("suggest [packageName...]", "Suggest supported package list.")
-  .option("-a, --all", "Target all installed packages")
   .option("--show_commands", "show deploy commands")
+  .option("-a, --all", "Target all installed packages")
   .action(async function (options, ...packageName) {
     if (options.all) packageName = await getAllInstalledPackages();
     for (const p of packageName) {
       const commands = await findCommandsFromPackage(p);
-      if (commands.length > 0) {
-        console.log(`${p},`);
-        if (options.show_commands) {
-          for (const c of commands) {
-            console.log(`//  ${c}`);
-          }
-        }
+      if (commands.length === 0) continue;
+      console.log(`${p},`);
+      if (!options.showCommands) continue;
+      for (const c of commands) {
+        console.log(`//  ${c}`);
       }
     }
+  })
+  .command("setup", "Setup mimic-cross environment")
+  .action(async function () {
+    await setup();
   })
   .parse(Deno.args);

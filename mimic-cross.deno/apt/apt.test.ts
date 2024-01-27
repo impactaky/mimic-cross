@@ -6,7 +6,7 @@ import {
 import { checkNeeded, getElfArch } from "../src/util.ts";
 import $ from "dax/mod.ts";
 import { assert, assertEquals } from "std/assert/mod.ts";
-import { config } from "config/config.ts";
+import { config } from "../config/config.ts";
 
 Deno.test("deployPackages coreutils", async () => {
   await deployPackages(["coreutils"]);
@@ -38,7 +38,7 @@ Deno.test("getIntalledPackagesFromLog not found", async () => {
 
 Deno.test("findCommandsFromPackage(bin)", async () => {
   const commands = await findCommandsFromPackage("grep");
-  assertEquals(commands, ["bin/grep"]);
+  assertEquals(commands, ["/bin/grep"]);
 });
 
 Deno.test("findCommandsFromPackage(lib)", async () => {

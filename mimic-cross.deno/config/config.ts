@@ -4,6 +4,7 @@ export let config = {
   arch: "set by loadConfig()",
   hostArch: "set by loadConfig()",
   hostRoot: "/mimic-cross",
+  mimicCrossRoot: "/mimic-cross/mimic-cross.deno",
   internalBin: "/mimic-cross/mimic-cross/internal/bin",
   keepBin: "/mimic-cross/mimic-cross/keep/bin",
   logFile: "/var/log/mimic-cross.log",
