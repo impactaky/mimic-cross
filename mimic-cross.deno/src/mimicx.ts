@@ -47,7 +47,7 @@ await new Command()
     await aptGet(combinedArgs, { force: options.force });
   })
   .command("suggest [packageName...]", "Suggest supported package list.")
-  .option("--show_commands", "show deploy commands")
+  .option("--show-commands", "show deploy commands")
   .option("-a, --all", "Target all installed packages")
   .action(async function (options, ...packageName) {
     if (options.all) packageName = await getAllInstalledPackages();
