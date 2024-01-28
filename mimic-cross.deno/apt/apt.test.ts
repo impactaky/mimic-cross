@@ -14,6 +14,12 @@ Deno.test("deployPackages coreutils", async () => {
   assertEquals(await getElfArch($.path("/bin/cat")), config.hostArch);
 });
 
+Deno.test("deployPackages libc-bin with blockList", async () => {
+  await deployPackages(["libc-bin"]);
+  assertEquals(await getElfArch($.path("/sbin/ldconfig.real")), config.arch);
+  assertEquals(await getElfArch($.path("/usr/bin/locale")), config.hostArch);
+});
+
 Deno.test("getIntalledPackagesFromLog", async () => {
   const packages = await getIntalledPackagesFromLog(
     "2024-01-13 15:26:44",

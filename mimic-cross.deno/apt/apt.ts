@@ -10,16 +10,23 @@ export interface deployPackageOptions {
   force?: boolean;
 }
 
+interface packageInfo {
+  useCustomFunction?: boolean;
+  isCrossTool?: boolean;
+  blockList?: string[];
+}
+
 const packageDir = $.path(import.meta.url).parent()?.join("packages");
 if (!packageDir) throw new Error("Package directory path is undefined.");
 const supportedPackagesPromise = (async () => {
   // Create set from packages/supported.json
-  const data = await $.path(import.meta.url).parent()?.join(
+  const supportedPackages = await $.path(import.meta.url).parent()?.join(
     "packages",
     "supported.json",
-  ).readJson<string[]>();
-  if (data === undefined) throw new Error("Can't read supported.json");
-  const supportedPackages = new Set<string>(data);
+  ).readJson<Record<string, packageInfo>>();
+  if (supportedPackages === undefined) {
+    throw new Error("Can't read supported.json");
+  }
   return supportedPackages;
 })();
 
@@ -60,6 +67,14 @@ export async function deployPackageCommands(
   await deployIfHostCommands(commands, blockList);
 }
 
+export async function deployCrossTool(
+  packageName: string,
+  blockList?: Set<string>,
+) {
+  const crossPackageName = `${packageName}-${config.arch}-linux-gnu`;
+  await deployPackageCommands(crossPackageName, blockList);
+}
+
 export async function deployPackages(
   packages: string[],
   options?: deployPackageOptions,
@@ -68,31 +83,34 @@ export async function deployPackages(
   logger.debug(`(deployPackages) ${packages} { force=${options?.force} }`);
   const filteredPackages = options?.force
     ? packages
-    : packages.filter((p) => supportedPackages.has(p));
+    : packages.filter((p) => p in supportedPackages);
   logger.debug(`(deployPackages) filteredPackages = ${filteredPackages}`);
   await aptGetOnHost(
     `install -y --no-install-recommends ${filteredPackages.join(" ")}`,
   );
   for (const p of filteredPackages) {
-    const modulePath = `${packageDir}/${p}.ts`;
-    let module;
-    try {
-      module = await import(`${modulePath}`);
-    } catch (error) {
-      if (error.code !== "ERR_MODULE_NOT_FOUND") {
-        throw error;
+    const packageInfo = supportedPackages[p];
+    if (packageInfo === undefined) {
+      logger.error(
+        `(deployPackages) Unsuported package ${p} exists in filterdPacakges.`,
+      );
+      throw new Error(`Package ${p} is not supported.`);
+    }
+    if (packageInfo.useCustomFunction) {
+      const modulePath = `${packageDir}/${p}.ts`;
+      const module = await import(`${modulePath}`);
+      if (module.postInstall && typeof module.postInstall === "function") {
+        logger.debug(`(deployPackages) call ${modulePath} postInstall`);
+        await module.postInstall();
+        continue;
       }
-      logger.debug(`(deployPackages) can't import ${modulePath}`);
     }
-    if (
-      module && module.postInstall && typeof module.postInstall === "function"
-    ) {
-      logger.debug(`(deployPackages) call ${modulePath} postInstall`);
-      await module.postInstall();
-    } else {
-      logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
-      await deployPackageCommands(p);
+    if (packageInfo.isCrossTool) {
+      logger.debug(`(deployPackages) call depolyCrossTool(${p})`);
+      continue;
     }
+    logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
+    await deployPackageCommands(p, new Set(packageInfo.blockList));
   }
 }
 
