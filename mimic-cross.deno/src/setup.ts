@@ -13,5 +13,7 @@ export async function setup() {
   await runOnHost("chmod 666 /dev/random /dev/urandom /dev/null /dev/zero");
   await $.path(`${config.logFile}`).parent()?.mkdir({ recursive: true });
   await $.path(`${config.keepBin}`).mkdir({ recursive: true });
+  await $.path(`${config.internalBin}`).mkdir({ recursive: true });
+  await $.path(`${config.internalRoot}/arch`).writeText(config.arch);
   await deployInstalledPackages();
 }

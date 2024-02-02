@@ -31,7 +31,6 @@ done
    /mimic-cross/mimic-cross.deno/src/mimicx.ts
 mv ./mimicx /usr/local/bin
 
-# 追加した行
 echo '#!/bin/bash
 /mimic-cross/mimic-cross/bin/mimic-deno run -A /mimic-cross/mimic-cross.deno/src/mimicx.ts $@' \
 > /usr/local/bin/mimicx
