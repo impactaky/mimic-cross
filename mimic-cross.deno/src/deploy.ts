@@ -26,28 +26,34 @@ export async function readRunpath(
     .text()).trimEnd();
 }
 
-async function implMimicDeploy(src: PathRefLike, dst: PathRefLike) {
-  await $.path(src).copyFile($.path(dst));
-  logger.info(`(deploy) Copy ${src} to ${dst}`);
-  await $`${config.internalBin}/patchelf --add-needed libmimic-cross.so ${dst}`;
-
-  const runpath = await readRunpath(dst);
-  logger.debug(`(deploy) ${dst} RUNPATH is "${runpath}"`);
+async function mimic(path: PathRefLike) {
+  await $`${config.internalBin}/patchelf --add-needed libmimic-cross.so ${path}`;
+  const runpath = await readRunpath(path);
+  logger.debug(`(deploy) ${path} RUNPATH is "${runpath}"`);
   if (!runpath) return;
-  let needRunpathPatch = false;
-  for (const p of runpath.split(":")) {
-    if (!p.startsWith("$ORIGIN")) {
-      needRunpathPatch = true;
-      break;
-    }
+  const runpaths = runpath.split(":");
+  const newRunpaths: string[] = [];
+  for (const p of runpaths) {
+    if (p.startsWith("$ORIGIN")) continue;
+    if (p.startsWith(config.hostRoot)) continue;
+    const mimicedPath = `${config.hostRoot}/${p}`;
+    if (runpaths.includes(mimicedPath)) continue;
+    newRunpaths.push(mimicedPath);
   }
-  if (!needRunpathPatch) return;
-  const newRunpath = runpath.replace(/^\//, `${config.hostRoot}/`).replace(
-    ":/",
-    `:${config.hostRoot}/`,
-  );
-  await $`${config.internalBin}/patchelf --set-rpath ${newRunpath} ${dst}`;
-  logger.info(`(deploy) Modify RUNPATH in ${dst}`);
+  if (newRunpaths.length === 0) return;
+  const newRunpath = newRunpaths.join(":");
+  await $`${config.internalBin}/patchelf --set-rpath ${newRunpath}:${runpath} ${path}`;
+  logger.info(`(deploy) Modify RUNPATH in ${path}`);
+}
+
+async function implMimicDeploy(src: PathRefLike, dst: PathRefLike) {
+  const dstPathRef = $.path(dst);
+  await mimic(src);
+  if (dstPathRef.existsSync()) {
+    await dstPathRef.remove();
+  }
+  await $.path(dst).createSymlinkTo($.path(src).toString());
+  logger.info(`(deploy) Symlink ${dst} to ${src}`);
 }
 
 export function mimicDeploy(

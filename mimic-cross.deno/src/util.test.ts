@@ -4,7 +4,7 @@ import { isElfExecutable, isInPath, parseLdconf } from "./util.ts";
 import { config } from "../config/config.ts";
 
 Deno.test("isElfExecutable native", async () => {
-  const ret = await isElfExecutable("/bin/cat");
+  const ret = await isElfExecutable("/usr/bin/dpkg");
   assert(ret);
 });
 
