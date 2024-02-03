@@ -81,9 +81,19 @@ export async function deployPackages(
 ) {
   const supportedPackages = await supportedPackagesPromise;
   logger.debug(`(deployPackages) ${packages} { force=${options?.force} }`);
-  const filteredPackages = options?.force
-    ? packages
-    : packages.filter((p) => p in supportedPackages);
+  const filteredPackages: string[] = (() => {
+    if (options?.force) return packages;
+    const filteredPackages: string[] = [];
+    for (const p of packages) {
+      if (!(p in supportedPackages)) continue;
+      if (supportedPackages[p].isCrossTool) {
+        filteredPackages.push(`${p}-${config.arch}-linux-gnu`);
+        continue;
+      }
+      filteredPackages.push(p);
+    }
+    return filteredPackages;
+  })();
   logger.debug(`(deployPackages) filteredPackages = ${filteredPackages}`);
   await aptGetOnHost(
     `install -y --no-install-recommends ${filteredPackages.join(" ")}`,
@@ -107,6 +117,7 @@ export async function deployPackages(
     }
     if (packageInfo.isCrossTool) {
       logger.debug(`(deployPackages) call depolyCrossTool(${p})`);
+      await deployCrossTool(p, new Set(packageInfo.blockList));
       continue;
     }
     logger.debug(`(deployPackages) call depolyAllCommands(${p})`);

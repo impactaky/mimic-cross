@@ -1,7 +1,4 @@
-import {
-  deployPackages,
-  getIntalledPackagesFromLog,
-} from "./apt.ts";
+import { deployPackages, getIntalledPackagesFromLog } from "./apt.ts";
 import { checkNeeded, getElfArch } from "../src/util.ts";
 import $ from "dax/mod.ts";
 import { assert, assertEquals } from "std/assert/mod.ts";

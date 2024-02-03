@@ -1,5 +1,7 @@
 {
-  "apt": { "useCustomFunction": true },
+  "apt": {
+    "useCustomFunction": true
+  },
   "base-files": {},
   "base-passwd": {},
   "bash": {},
@@ -7,13 +9,40 @@
   "bsdutils": {},
   "cmake": {},
   "coreutils": {},
+  "cpp-11": {
+    "isCrossTool": true
+  },
+  "cpp-11-aarch64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/cc1"
+    ]
+  },
   "curl": {},
   "dash": {},
   "debianutils": {},
   "diffutils": {},
   "e2fsprogs": {},
-  "findutils": {},
   "fdisk": {},
+  "findutils": {},
+  "g++-11": {
+    "isCrossTool": true
+  },
+  "g++-11-aarch64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/cc1plus",
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/g++-mapper-server"
+    ]
+  },
+  "gcc-11": {
+    "isCrossTool": true
+  },
+  "gcc-11-aarch64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/collect2",
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/lto-wrapper",
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/lto1"
+    ]
+  },
   "git": {},
   "gnupg-utils": {},
   "gpg": {},
@@ -26,7 +55,11 @@
   "grep": {},
   "gzip": {},
   "hostname": {},
-  "libc-bin": { "blockList": ["/sbin/ldconfig.real"] },
+  "libc-bin": {
+    "blockList": [
+      "/sbin/ldconfig.real"
+    ]
+  },
   "libpam-modules-bin": {},
   "login": {},
   "logsave": {},
