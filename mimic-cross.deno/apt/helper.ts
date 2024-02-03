@@ -5,6 +5,16 @@ import { deployPackageCommands } from "../apt/apt.ts";
 export { deployPackageCommands } from "../apt/apt.ts";
 import { config } from "../config/config.ts";
 
+export async function fileHas(
+  path: PathRefLike,
+  sentence: string,
+): Promise<boolean> {
+  const filePath = $.path(path);
+  if (!filePath.isFileSync()) return false;
+  const content = await filePath.readText();
+  return content.includes(sentence);
+}
+
 export async function deployCli(command: string, target: PathRefLike) {
   const pathRef = $.path(target);
   await pathRef.writeText(`#!/bin/sh

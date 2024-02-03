@@ -74,6 +74,9 @@
   "perl-base": {},
   "procps": {},
   "sed": {},
+  "sudo": {
+    "useCustomFunction": true
+  },
   "software-properties-common": {},
   "sysvinit-utils": {},
   "tar": {},
