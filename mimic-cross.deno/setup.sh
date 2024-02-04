@@ -32,7 +32,7 @@ done
 mv ./mimicx /usr/local/bin
 
 echo '#!/bin/bash
-/mimic-cross/mimic-cross/bin/mimic-deno run -A /mimic-cross/mimic-cross.deno/src/mimicx.ts $@' \
+/mimic-cross/mimic-cross/bin/mimic-deno run -A /mimic-cross/mimic-cross.deno/src/mimicx.ts "$@"' \
 > /usr/local/bin/mimicx
 chmod +x /usr/local/bin/mimicx
 

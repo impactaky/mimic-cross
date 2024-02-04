@@ -6,6 +6,7 @@ import {
   findCommandsFromPackage,
   getAllInstalledPackages,
 } from "../apt/apt.ts";
+import { mimicPython } from "./python.ts";
 import { logger } from "./log.ts";
 import { runOnHost } from "./chroot.ts";
 import { setup } from "./setup.ts";
@@ -45,6 +46,16 @@ await new Command()
       this.getLiteralArgs() || [],
     );
     await aptGet(combinedArgs, { force: options.force });
+  })
+  .command("python [args...]", "mimic python command")
+  .option("--python <python:string>", "called as (e.g. /usr/bin/python3)", {
+    default: "/usr/bin/python3",
+  })
+  .action(async function (options, ...command) {
+    const combinedArgs: string[] = (command || []).concat(
+      this.getLiteralArgs() || [],
+    );
+    await mimicPython(options.python, combinedArgs);
   })
   .command("suggest [packageName...]", "Suggest supported package list.")
   .option("--show-commands", "show deploy commands")

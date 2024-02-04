@@ -18,7 +18,7 @@ export async function fileHas(
 export async function deployCli(command: string, target: PathRefLike) {
   const pathRef = $.path(target);
   await pathRef.writeText(`#!/bin/sh
-/usr/local/bin/mimicx ${command} -- $@
+/usr/local/bin/mimicx ${command} -- "$@"
 `);
   await pathRef.chmod(0o755);
 }
