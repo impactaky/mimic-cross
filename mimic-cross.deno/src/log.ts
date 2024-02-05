@@ -9,13 +9,13 @@ const formatter = (record: log.LogRecord) =>
 
 await log.setup({
   handlers: {
-    console: new log.handlers.ConsoleHandler("WARNING", {
+    console: new log.ConsoleHandler("WARNING", {
       formatter: formatter,
     }),
-    consoleVerbose: new log.handlers.ConsoleHandler("DEBUG", {
+    consoleVerbose: new log.ConsoleHandler("DEBUG", {
       formatter: formatter,
     }),
-    file: new log.handlers.RotatingFileHandler("DEBUG", {
+    file: new log.RotatingFileHandler("DEBUG", {
       maxBytes: 1024 * 1024 * 10,
       maxBackupCount: 10,
       filename: config.logFile,

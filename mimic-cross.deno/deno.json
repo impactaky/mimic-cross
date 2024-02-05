@@ -1,8 +1,7 @@
 {
   "imports": {
     "cliffy/": "https://deno.land/x/cliffy@v1.0.0-rc.3/",
-    "dax/": "https://deno.land/x/dax@0.36.0/",
-    "daxex/": "https://deno.land/x/dax_extras@2.3.2/",
-    "std/": "https://deno.land/std@0.210.0/"
+    "daxex/": "https://deno.land/x/dax_extras@2.3.3/",
+    "std/": "https://deno.land/std@0.214.0/"
   }
 }
