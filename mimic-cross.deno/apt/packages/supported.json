@@ -73,6 +73,9 @@
   "patch": {},
   "perl-base": {},
   "procps": {},
+  "python3.10-minimal": {
+    "useCustomFunction": true
+  },
   "sed": {},
   "sudo": {
     "useCustomFunction": true

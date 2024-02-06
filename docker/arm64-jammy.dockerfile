@@ -39,6 +39,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         binutils \
         ca-certificates \
+        patch \
         patchelf \
         wget \
     && apt-get clean \
@@ -48,8 +49,9 @@ RUN mkdir -p /mimic-cross/bin/
 COPY --from=mimic-lib /deno/deno /mimic-cross/bin/mimic-deno
 RUN arch > /mimic-cross/host_arch
 
-RUN mkdir -p /mimic-cross/internal/bin \
-    && ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin \
+COPY --from=tonistiigi/binfmt /usr/bin/qemu-aarch64 /mimic-cross/internal/bin/qemu-aarch64
+RUN ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin \
+    && ln -s ../../../usr/bin/patch /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/patchelf /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/readelf /mimic-cross/internal/bin \
     && ln -s ../../../usr/sbin/chroot /mimic-cross/internal/bin
@@ -92,6 +94,12 @@ COPY --from=mimic-test-host /test /test
 ENV MIMIC_TEST_DATA_PATH=/test
 
 ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python3 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists
 
 # =======================================================================
 

@@ -1,0 +1,14 @@
+--- /mimic-cross/usr/lib/python3.10/sysconfig.py	2024-02-05 09:10:21.423325028 +0000
++++ ./sysconfig.py	2024-02-05 09:10:09.235192033 +0000
+@@ -513,6 +513,11 @@
+     _temp = __import__(name, globals(), locals(), ['build_time_vars'], 0)
+     build_time_vars = _temp.build_time_vars
+     vars.update(build_time_vars)
++    if os.path.exists('/mimic-cross/mimic-cross/internal/config_vars.pickle'):
++        with open('/mimic-cross/mimic-cross/internal/config_vars.pickle', 'rb') as f:
++            import pickle
++            vars.update(pickle.load(f))
++
+ 
+ def _init_non_posix(vars):
+     """Initialize the module as appropriate for NT"""

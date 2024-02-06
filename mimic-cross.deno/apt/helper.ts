@@ -1,6 +1,6 @@
 import $ from "daxex/mod.ts";
 import { PathRefLike } from "daxex/mod.ts";
-export { mimicDeploy } from "../src/deploy.ts";
+export { keepOriginalBin, mimicDeploy, mimicize } from "../src/deploy.ts";
 import { deployPackageCommands } from "../apt/apt.ts";
 export { deployPackageCommands } from "../apt/apt.ts";
 import { config } from "../config/config.ts";
@@ -15,10 +15,15 @@ export async function fileHas(
   return content.includes(sentence);
 }
 
-export async function deployCli(command: string, target: PathRefLike) {
+export async function deployCli(
+  command: string,
+  target: PathRefLike,
+  commandArg?: string,
+) {
+  commandArg = commandArg || "";
   const pathRef = $.path(target);
   await pathRef.writeText(`#!/bin/sh
-/usr/local/bin/mimicx ${command} -- "$@"
+/usr/local/bin/mimicx ${command} ${commandArg} -- "$@"
 `);
   await pathRef.chmod(0o755);
 }

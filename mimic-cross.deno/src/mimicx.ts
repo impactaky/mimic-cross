@@ -49,7 +49,7 @@ await new Command()
   })
   .command("python [args...]", "mimic python command")
   .option("--python <python:string>", "called as (e.g. /usr/bin/python3)", {
-    default: "/usr/bin/python3",
+    default: "/usr/bin/python3.10",
   })
   .action(async function (options, ...command) {
     const combinedArgs: string[] = (command || []).concat(

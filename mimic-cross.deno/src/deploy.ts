@@ -26,7 +26,8 @@ export async function readRunpath(
     .text()).trimEnd();
 }
 
-async function mimic(path: PathRefLike) {
+export async function mimicize(path: PathRefLike) {
+  logger.info(`(mimicize) mimicize ${path}`);
   await $`${config.internalBin}/patchelf --add-needed libmimic-cross.so ${path}`;
   const runpath = await readRunpath(path);
   logger.debug(`(deploy) ${path} RUNPATH is "${runpath}"`);
@@ -43,12 +44,12 @@ async function mimic(path: PathRefLike) {
   if (newRunpaths.length === 0) return;
   const newRunpath = newRunpaths.join(":");
   await $`${config.internalBin}/patchelf --set-rpath ${newRunpath}:${runpath} ${path}`;
-  logger.info(`(deploy) Modify RUNPATH in ${path}`);
+  logger.info(`(mimisize) Modify RUNPATH in ${path}`);
 }
 
 async function implMimicDeploy(src: PathRefLike, dst: PathRefLike) {
   const dstPathRef = $.path(dst);
-  await mimic(src);
+  await mimicize(src);
   if (dstPathRef.existsSync()) {
     await dstPathRef.remove();
   }
