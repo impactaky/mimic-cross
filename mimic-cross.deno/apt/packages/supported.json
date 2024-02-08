@@ -76,11 +76,14 @@
   "patch": {},
   "perl-base": {},
   "procps": {},
-  "python": {
-    "postInstall": "skip"
+  "python3": {
+    "postInstall": "custom"
   },
   "python3.10-minimal": {
     "postInstall": "custom"
+  },
+  "python3.10-venv": {
+    "postInstall": "skip"
   },
   "sed": {},
   "sudo": {

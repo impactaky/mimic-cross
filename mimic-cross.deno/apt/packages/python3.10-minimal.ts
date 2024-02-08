@@ -7,5 +7,5 @@ export async function postInstall() {
   const pythonPath = "/usr/bin/python3.10";
   await keepOriginalBin(pythonPath);
   await mimicize(`${config.hostRoot}/${pythonPath}`);
-  await deployCli("python", pythonPath, `--python ${pythonPath}`);
+  await deployCli("python", pythonPath, '--python "$0"');
 }

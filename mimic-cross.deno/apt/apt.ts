@@ -119,16 +119,17 @@ export async function deployPackages(
       logger.debug(`(deployPackages) call depolyCrossTool(${p})`);
       await deployCrossTool(p, new Set(packageInfo.blockList));
       continue;
-    }
-    else if (!packageInfo.postInstall || packageInfo.postInstall === "default") {
+    } else if (
+      !packageInfo.postInstall || packageInfo.postInstall === "default"
+    ) {
       logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
       await deployPackageCommands(p, new Set(packageInfo.blockList));
-    }
-    else if (packageInfo.postInstall === "skip") {
+    } else if (packageInfo.postInstall === "skip") {
       logger.debug(`(deployPackages) skip postInstall(${p})`);
-    }
-    else {
-      logger.error(`(deployPackages) Unknown postInstall ${packageInfo.postInstall}`);
+    } else {
+      logger.error(
+        `(deployPackages) Unknown postInstall ${packageInfo.postInstall}`,
+      );
       throw new Error(`Unknown postInstall ${packageInfo.postInstall}`);
     }
   }
