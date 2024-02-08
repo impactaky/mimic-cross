@@ -11,7 +11,7 @@ export interface deployPackageOptions {
 }
 
 interface packageInfo {
-  useCustomFunction?: boolean;
+  postInstall?: string;
   isCrossTool?: boolean;
   blockList?: string[];
 }
@@ -106,7 +106,7 @@ export async function deployPackages(
       );
       throw new Error(`Package ${p} is not supported.`);
     }
-    if (packageInfo.useCustomFunction) {
+    if (packageInfo.postInstall === "custom") {
       const modulePath = `${packageDir}/${p}.ts`;
       const module = await import(`${modulePath}`);
       if (module.postInstall && typeof module.postInstall === "function") {
@@ -115,13 +115,22 @@ export async function deployPackages(
         continue;
       }
     }
-    if (packageInfo.isCrossTool) {
+    if (packageInfo.postInstall === "crossTool") {
       logger.debug(`(deployPackages) call depolyCrossTool(${p})`);
       await deployCrossTool(p, new Set(packageInfo.blockList));
       continue;
     }
-    logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
-    await deployPackageCommands(p, new Set(packageInfo.blockList));
+    else if (!packageInfo.postInstall || packageInfo.postInstall === "default") {
+      logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
+      await deployPackageCommands(p, new Set(packageInfo.blockList));
+    }
+    else if (packageInfo.postInstall === "skip") {
+      logger.debug(`(deployPackages) skip postInstall(${p})`);
+    }
+    else {
+      logger.error(`(deployPackages) Unknown postInstall ${packageInfo.postInstall}`);
+      throw new Error(`Unknown postInstall ${packageInfo.postInstall}`);
+    }
   }
 }
 

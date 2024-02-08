@@ -1,6 +1,6 @@
 {
   "apt": {
-    "useCustomFunction": true
+    "postInstall": "custom"
   },
   "base-files": {},
   "base-passwd": {},
@@ -10,7 +10,8 @@
   "cmake": {},
   "coreutils": {},
   "cpp-11": {
-    "isCrossTool": true
+    "isCrossTool": true,
+    "postIntall": "crossTool"
   },
   "cpp-11-aarch64-linux-gnu": {
     "blockList": [
@@ -25,7 +26,8 @@
   "fdisk": {},
   "findutils": {},
   "g++-11": {
-    "isCrossTool": true
+    "isCrossTool": true,
+    "postIntall": "crossTool"
   },
   "g++-11-aarch64-linux-gnu": {
     "blockList": [
@@ -34,7 +36,8 @@
     ]
   },
   "gcc-11": {
-    "isCrossTool": true
+    "isCrossTool": true,
+    "postIntall": "crossTool"
   },
   "gcc-11-aarch64-linux-gnu": {
     "blockList": [
@@ -73,12 +76,15 @@
   "patch": {},
   "perl-base": {},
   "procps": {},
+  "python": {
+    "postInstall": "skip"
+  },
   "python3.10-minimal": {
-    "useCustomFunction": true
+    "postInstall": "custom"
   },
   "sed": {},
   "sudo": {
-    "useCustomFunction": true
+    "postInstall": "custom"
   },
   "software-properties-common": {},
   "sysvinit-utils": {},
