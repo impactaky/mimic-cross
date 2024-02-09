@@ -98,6 +98,8 @@ ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         python3 \
+        python3.10-venv \
+        python3-pip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
 

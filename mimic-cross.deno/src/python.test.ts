@@ -2,6 +2,7 @@ import { callMimicedPython, callNativePython, mimicPython } from "./python.ts";
 import { assert, assertEquals } from "std/assert/mod.ts";
 import { config } from "../config/config.ts";
 import $ from "daxex/mod.ts";
+import { runOnHost } from "./chroot.ts";
 
 Deno.test("callNativePython", async () => {
   const machine = await callNativePython("/usr/bin/python3.10", [
@@ -44,4 +45,11 @@ Deno.test("venv", async () => {
     await venvDir.remove({ recursive: true });
     await hostVenvDir.remove({ recursive: true });
   }
+});
+
+Deno.test("pip", async () => {
+  await mimicPython("/usr/bin/python3", ["-m", "pip", "install", "jinja2"]);
+  const pipList = await runOnHost(`python3 -m pip list`).text();
+  assert(pipList.includes("MarkupSafe"));
+  assert(!pipList.includes("Jinja2"));
 });

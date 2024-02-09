@@ -25,7 +25,7 @@ export function callNativePython(
     `${config.keepBin}/${versionedPython}`,
     "--",
     ...args,
-  ]).env({ "MIMIC_CROSS_DISABLE": "1" });
+  ]).env({ ...Deno.env.toObject(), "MIMIC_CROSS_DISABLE": "1" });
 }
 
 export function callMimicedPython(
@@ -73,6 +73,7 @@ export function callMimicedPython(
   logger.debug(`(callMimicedPython) call mimiced python`);
   return $.command([`${config.hostRoot}/${calledAs}`, ...args])
     .env({
+      ...Deno.env.toObject(),
       "PYTHONPATH": mimicedPythonPaths.join(":"),
       "LD_LIBRARY_PATH": mimicedLibraryPaths.join(":"),
     });
@@ -90,17 +91,39 @@ function detectModule(args: string[]): string | undefined {
   return undefined;
 }
 
+async function pip(calledAs: string, args: string[]) {
+  logger.info(`(pip) Call native pip : ${args}`);
+  const pipLog = Deno.makeTempFileSync({ dir: "/tmp", suffix: ".log" });
+  await callNativePython(calledAs, [...args, "--log-file", pipLog]);
+  try {
+    const needMimic = await $.cat(pipLog).apply((l) => {
+      const sep = $.split(l);
+      if (sep[1] !== "Added") return;
+      if (!l.includes(`${config.arch}.whl`)) return;
+      return sep[2];
+    }).lines();
+    if (needMimic.length === 0) return;
+    logger.info(`(pip) Call host pip install: ${needMimic}`);
+    await runOnHost([calledAs, "-m", "pip", "install", ...needMimic]);
+  } finally {
+    if (logger.mode !== "DEBUG") {
+      await $.path(pipLog).remove();
+    }
+  }
+}
+
 async function venv(calledAs: string, args: string[]) {
-  logger.info(`(venv) Call native venv : ${args}`);
-  await callNativePython(calledAs, args);
   // resolve venv directory
   let i = args.findIndex((arg) => arg === "-m") + 2;
   for (; i < args.length; i++) {
     if (args[i].startsWith("-")) continue;
     args[i] = $.path(args[i]).resolve().toString();
   }
-  logger.info("(venv) Call host venv");
-  await runOnHost([calledAs, ...args]);
+  logger.info(`(venv) Call venv : ${args}`);
+  await Promise.all([
+    callNativePython(calledAs, args),
+    runOnHost([calledAs, ...args]),
+  ]);
 }
 
 export async function mimicPython(
@@ -119,6 +142,9 @@ export async function mimicPython(
   switch (module) {
     case "venv":
       await venv(calledAs, args);
+      break;
+    case "pip":
+      await pip(calledAs, args);
       break;
     default:
       await callNativePython(calledAs, args);

@@ -77,7 +77,10 @@
   "perl-base": {},
   "procps": {},
   "python3": {
-    "postInstall": "custom"
+    "postInstall": "skip"
+  },
+  "python3-pip": {
+    "postInstall": "skip"
   },
   "python3.10-minimal": {
     "postInstall": "custom"
