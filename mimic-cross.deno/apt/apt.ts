@@ -44,17 +44,17 @@ export async function aptGetOnHost(arg: string | string[]) {
           "--no-install-recommends",
           ...args.slice(1),
         ],
-      ).env("DEBIAN_FRONTEND", "noninteractive");
+      ).env({ ...Deno.env.toObject(), "DEBIAN_FRONTEND": "noninteractive" });
       return;
     } else if (args[0] === "clean") {
-      await runOnHost([`apt-get`, ...args]);
+      await runOnHost([`apt-get`, ...args]).env(Deno.env.toObject());
       await $.path(`${config.hostRoot}/var/lib/apt/lists`).remove({
         recursive: true,
       });
       return;
     }
   }
-  await runOnHost([`apt-get`, ...args]);
+  await runOnHost([`apt-get`, ...args]).env(Deno.env.toObject());
   return;
 }
 
@@ -162,7 +162,9 @@ export async function aptGet(
   const ts = format(new Date(), "yyyy-MM-dd HH:mm:ss");
   const args = arg instanceof Array ? arg : $.split(arg);
   logger.info(`(aptGet) Run apt-get ${arg}`);
-  await $.command([`${config.keepBin}/apt-get`, ...args]);
+  await $.command([`${config.keepBin}/apt-get`, ...args]).env(
+    Deno.env.toObject(),
+  );
   if (args[0] === "update") {
     await aptGetOnHost(args);
   }
