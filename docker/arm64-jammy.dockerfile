@@ -37,6 +37,7 @@ FROM ubuntu:22.04 as host-stage1
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        bash \
         binutils \
         ca-certificates \
         patch \
@@ -50,7 +51,8 @@ COPY --from=mimic-lib /deno/deno /mimic-cross/bin/mimic-deno
 RUN arch > /mimic-cross/host_arch
 
 COPY --from=tonistiigi/binfmt /usr/bin/qemu-aarch64 /mimic-cross/internal/bin/qemu-aarch64
-RUN ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin \
+RUN ln -s ../../../usr/bin/bash /mimic-cross/internal/bin \
+    && ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/patch /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/patchelf /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/readelf /mimic-cross/internal/bin \
