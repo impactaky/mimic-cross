@@ -155,6 +155,46 @@ export function getIntalledPackagesFromLog(
   }).lines();
 }
 
+async function mimicAptGetUpdate(args: string[]) {
+  // Check apt-config
+  await $`apt-config dump`.forEach((l) => {
+    const sep = $.split(l);
+    const assertAptConfig = (expect: string) => {
+      if (sep[1] === expect) return;
+      throw new Error(
+        `Currently only default path ${expect}, given : ${sep[1]}`,
+      );
+    };
+    switch (sep[0]) {
+      case "Dir::Etc::sourcelist": {
+        assertAptConfig('"sources.list";');
+        return;
+      }
+      case "Dir::Etc::sourceparts": {
+        assertAptConfig('"sources.list.d";');
+        return;
+      }
+      case "Dir::Etc::trusted": {
+        assertAptConfig('"trusted.gpg";');
+        return;
+      }
+      case "Dir::Etc::trustedparts": {
+        assertAptConfig('"trusted.gpg.d";');
+        return;
+      }
+      default:
+        return;
+    }
+  });
+  // TODO detect sources.list modification
+  // TODO check sources.list.d URL
+  await Promise.all([
+    $`/usr/bin/cp -a /etc/apt/trusted.gpg.d/. ${config.hostRoot}/etc/apt/trusted.gpg.d/`,
+    $`/usr/bin/cp -a /etc/apt/sources.list.d/. ${config.hostRoot}/etc/apt/sources.list.d/`,
+  ]);
+  await aptGetOnHost(args);
+}
+
 export async function aptGet(
   arg: string | string[],
   options?: deployPackageOptions,
@@ -166,7 +206,7 @@ export async function aptGet(
     Deno.env.toObject(),
   );
   if (args[0] === "update") {
-    await aptGetOnHost(args);
+    await mimicAptGetUpdate(args);
   }
   logger.debug(`(aptGet) Start search installed packages from ${ts}`);
   const installedPackages = await getIntalledPackagesFromLog(ts);

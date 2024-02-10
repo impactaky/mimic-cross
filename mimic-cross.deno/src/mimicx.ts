@@ -11,8 +11,8 @@ import { logger } from "./log.ts";
 import { runOnHost } from "./chroot.ts";
 import { setup } from "./setup.ts";
 
-import $ from "daxex/mod.ts";
-$.setPrintCommand(true);
+// import $ from "daxex/mod.ts";
+// $.setPrintCommand(true);
 
 await new Command()
   .name("mimicx")
