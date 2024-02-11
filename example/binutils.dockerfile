@@ -17,7 +17,7 @@
 # => [7/7] RUN make -j `nproc`                                                                                                            434.8s
 
 
-FROM impactaky/mc-ubuntu22.04-arm64:2.0.0
+FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}:2.0.0
 # [+] Building 127.0s (13/13) FINISHED                                                                                     docker-container:test
 # => [2/7] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget ca-certificates         binutils gcc make l  62.8s
 # => [3/7] RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz                                                                  5.2s
