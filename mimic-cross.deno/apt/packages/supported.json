@@ -79,6 +79,9 @@
   "python3": {
     "postInstall": "skip"
   },
+  "python3-distutils": {
+    "postInstall": "skip"
+  },
   "python3-pip": {
     "postInstall": "skip"
   },
