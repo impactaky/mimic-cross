@@ -19,8 +19,9 @@ const bakeJson = {
 };
 
 function getNameAndTag(image: string) {
-  const name = image.includes(":") ? image.split(":")[0] : image;
-  const tag = image.includes(":") ? image.split(":")[1] : "latest";
+  const lastIndex = image.lastIndexOf(":");
+  const name = lastIndex !== -1 ? image.substring(0, lastIndex) : image;
+  const tag = lastIndex !== -1 ? image.substring(lastIndex + 1) : "latest";
   return { name, tag };
 }
 
