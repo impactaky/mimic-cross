@@ -191,6 +191,7 @@ async function mimicAptGetUpdate(args: string[]) {
   await Promise.all([
     $`/usr/bin/cp -a /etc/apt/trusted.gpg.d/. ${config.hostRoot}/etc/apt/trusted.gpg.d/`,
     $`/usr/bin/cp -a /etc/apt/sources.list.d/. ${config.hostRoot}/etc/apt/sources.list.d/`,
+    $`/usr/bin/cp -a /usr/share/keyrings/. ${config.hostRoot}/usr/share/keyrings/`,
   ]);
   await aptGetOnHost(args);
 }
