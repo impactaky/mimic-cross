@@ -1,7 +1,7 @@
 import $ from "daxex/mod.ts";
 import { config } from "../config/config.ts";
 import { runOnHost } from "./chroot.ts";
-import { deployInstalledPackages } from "../apt/apt.ts";
+import { aptGetOnHost, deployInstalledPackages } from "../apt/apt.ts";
 
 export async function setup() {
   await Promise.all([
@@ -15,5 +15,7 @@ export async function setup() {
   await $.path(`${config.keepBin}`).mkdir({ recursive: true });
   await $.path(`${config.internalBin}`).mkdir({ recursive: true });
   await $.path(`${config.internalRoot}/arch`).writeText(config.arch);
+  await aptGetOnHost(["update"]);
   await deployInstalledPackages();
+  await aptGetOnHost(["clean"]);
 }
