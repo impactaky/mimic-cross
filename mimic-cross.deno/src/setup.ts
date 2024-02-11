@@ -15,6 +15,9 @@ export async function setup() {
   await $.path(`${config.keepBin}`).mkdir({ recursive: true });
   await $.path(`${config.internalBin}`).mkdir({ recursive: true });
   await $.path(`${config.internalRoot}/arch`).writeText(config.arch);
+  await $.path(`/usr/${config.arch}-linux-gnu`).createSymlinkTo(
+    `${config.hostRoot}/usr/${config.arch}-linux-gnu`,
+  );
   await aptGetOnHost(["update"]);
   await deployInstalledPackages();
   await aptGetOnHost(["clean"]);
