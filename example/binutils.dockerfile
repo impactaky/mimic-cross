@@ -17,14 +17,15 @@
 # => [7/7] RUN make -j `nproc`                                                                                                            434.8s
 
 
-FROM impactaky/mimic-cross-arm64-ubuntu20.04:71cc12616b8952d9b2d76113932f435124f9b5e8
-# [+] Building 97.5s (11/11) FINISHED
-# => [2/7] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget ca-certificates         binutils gcc make li  51.9s
-# => [3/7] RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz                                                                   5.0s
-# => [4/7] RUN tar xf ./binutils-2.36.tar.gz                                                                                                1.8s
-# => [5/7] WORKDIR /binutils-2.36                                                                                                           0.0s
-# => [6/7] RUN ./configure                                                                                                                  1.7s
-# => [7/7] RUN make -j `nproc`                                                                                                             34.2s
+FROM impactaky/mc-ubuntu22.04-arm64:2.0.0
+# [+] Building 127.0s (13/13) FINISHED                                                                                     docker-container:test
+# => [2/7] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget ca-certificates         binutils gcc make l  62.8s
+# => [3/7] RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz                                                                  5.2s
+# => [4/7] RUN tar xf ./binutils-2.36.tar.gz                                                                                               1.8s
+# => [5/7] WORKDIR /binutils-2.36                                                                                                          0.1s
+# => [6/7] RUN ./configure                                                                                                                 1.5s
+# => [7/7] RUN make -j `nproc`                                                                                                            34.6s
+
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
