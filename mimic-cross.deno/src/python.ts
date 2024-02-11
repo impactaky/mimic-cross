@@ -153,7 +153,7 @@ export async function mimicPython(
       await pip(calledAs, args);
       break;
     default:
-      await callNativePython(calledAs, args);
+      await callMimicedPython(calledAs, args);
       break;
   }
 }
