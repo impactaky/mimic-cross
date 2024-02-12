@@ -4,6 +4,7 @@ ARG HOST_BASE_IMAGE_TAG
 ARG BASE_IMAGE
 ARG BASE_IMAGE_TAG
 ARG MIMIC_ARCH
+FROM tonistiigi/binfmt:qemu-v8.1.5-40 as binfmt
 # =======================================================================
 
 FROM scratch as mimic-host-native
@@ -27,24 +28,23 @@ RUN apt-get update \
 # Download zig
 RUN mkdir /zig
 WORKDIR /zig
-RUN wget -q https://ziglang.org/download/0.11.0/zig-linux-x86_64-0.11.0.tar.xz \
-    && tar xf zig-linux-x86_64-0.11.0.tar.xz \
-    && rm zig-linux-x86_64-0.11.0.tar.xz
+RUN wget -q "https://ziglang.org/download/0.11.0/zig-linux-$(arch)-0.11.0.tar.xz" \
+    && tar xf zig-linux-*-0.11.0.tar.xz \
+    && rm zig-linux-*-0.11.0.tar.xz
 
 COPY mimic-lib /mimic-lib
 WORKDIR /mimic-lib
-RUN /zig/zig-linux-x86_64-0.11.0/zig build
+RUN "/zig/zig-linux-$(arch)-0.11.0/zig" build
 
 # Download deno
+# hadolint ignore=DL3059
 RUN mkdir -p /deno
 WORKDIR /deno
-RUN wget -q https://github.com/denoland/deno/releases/download/v1.39.1/deno-x86_64-unknown-linux-gnu.zip \
-    && unzip ./deno-x86_64-unknown-linux-gnu.zip \
-    && rm ./deno-x86_64-unknown-linux-gnu.zip
+COPY docker/download_deno.sh .
+RUN ./download_deno.sh
 
 # =======================================================================
 
-FROM tonistiigi/binfmt as binfmt
 FROM ${HOST_BASE_IMAGE}:${HOST_BASE_IMAGE_TAG} as mimic-host
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -63,7 +63,7 @@ RUN mkdir -p /mimic-cross/bin/
 COPY --from=mimic-host-build /deno/deno /mimic-cross/bin/mimic-deno
 RUN arch > /mimic-cross/host_arch
 
-COPY --from=binfmt /usr/bin/qemu-aarch64 /mimic-cross/internal/bin/qemu-aarch64
+COPY --from=binfmt /usr/bin/qemu-* /mimic-cross/internal/bin/
 RUN ln -s ../../../usr/bin/bash /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/patch /mimic-cross/internal/bin \
