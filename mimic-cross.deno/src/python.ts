@@ -70,11 +70,14 @@ export function callMimicedPython(
     mimicedLibraryPaths.push(userLibraryPath);
   }
 
-  logger.debug(`(callMimicedPython) call mimiced python`);
+  logger.debug(
+    `(callMimicedPython) call mimiced python : ${config.hostRoot}/usr/bin/${versionedPython} as ${calledAs}`,
+  );
+  // logger.debug(`(callMimicedPython) Deno.env : ${JSON.stringify(Deno.env.toObject())}`)
   return $.command([
     `${config.internalBin}/bash`,
     "-c",
-    `exec -a ${calledAs} -- ${config.hostRoot}/${calledAs} "${
+    `exec -a ${calledAs} -- ${config.hostRoot}/usr/bin/${versionedPython} "${
       args.join('" "')
     }"`,
   ])
@@ -127,7 +130,7 @@ async function venv(calledAs: string, args: string[]) {
   }
   logger.info(`(venv) Call venv : ${args}`);
   await Promise.all([
-    callMimicedPython(calledAs, args),
+    callNativePython(calledAs, args),
     runOnHost([calledAs, ...args]),
   ]);
 }
