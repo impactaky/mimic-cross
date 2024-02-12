@@ -34,7 +34,9 @@ RUN wget -q "https://ziglang.org/download/0.11.0/zig-linux-$(arch)-0.11.0.tar.xz
 
 COPY mimic-lib /mimic-lib
 WORKDIR /mimic-lib
-RUN "/zig/zig-linux-$(arch)-0.11.0/zig" build
+RUN "/zig/zig-linux-$(arch)-0.11.0/zig" build \
+    && mkdir -p "lib/$(arch)-linux-gnu" \
+    && mv zig-out/lib/libmimic-cross.so "lib/$(arch)-linux-gnu"
 
 # Download deno
 # hadolint ignore=DL3059
@@ -58,7 +60,7 @@ RUN apt-get update \
         wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
-COPY --from=mimic-host-build /mimic-lib/zig-out/lib/libmimic-cross.so /usr/lib/x86_64-linux-gnu/
+COPY --from=mimic-host-build /mimic-lib/lib/ /usr/lib/
 RUN mkdir -p /mimic-cross/bin/
 COPY --from=mimic-host-build /deno/deno /mimic-cross/bin/mimic-deno
 RUN arch > /mimic-cross/host_arch
