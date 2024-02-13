@@ -210,6 +210,9 @@ export async function aptGet(
   await $.command([`${config.keepBin}/apt-get`, ...args]).env(
     Deno.env.toObject(),
   );
+  if (Deno.env.get("MIMIC_CROSS_DISABLE") === "1") {
+    return;
+  }
   if (args[0] === "update") {
     await mimicAptGetUpdate(args);
   }
@@ -217,7 +220,7 @@ export async function aptGet(
   const installedPackages = await getIntalledPackagesFromLog(ts);
   logger.debug(`(aptGet) installedPackages = ${installedPackages}`);
   if (installedPackages.length === 0) return;
-  return deployPackages(installedPackages, options);
+  await deployPackages(installedPackages, options);
 }
 
 export async function findCommandsFromPackage(
