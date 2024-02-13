@@ -71,7 +71,9 @@ export async function deployCrossTool(
   packageName: string,
   blockList?: Set<string>,
 ) {
-  const crossPackageName = `${packageName}-${config.arch}-linux-gnu`;
+  const crossPackageName = `${packageName}-${
+    config.arch.replace("_", "-")
+  }-linux-gnu`;
   await deployPackageCommands(crossPackageName, blockList);
 }
 
@@ -87,7 +89,9 @@ export async function deployPackages(
     for (const p of packages) {
       if (!(p in supportedPackages)) continue;
       if (supportedPackages[p].isCrossTool) {
-        filteredPackages.push(`${p}-${config.arch}-linux-gnu`);
+        filteredPackages.push(
+          `${p}-${config.arch.replace("_", "-")}-linux-gnu`,
+        );
         continue;
       }
       filteredPackages.push(p);

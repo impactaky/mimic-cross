@@ -6,6 +6,7 @@
   "base-passwd": {},
   "bash": {},
   "binutils-aarch64-linux-gnu": {},
+  "binutils-x86-64-linux-gnu": {},
   "bsdutils": {},
   "cmake": {},
   "coreutils": {},
@@ -16,6 +17,11 @@
   "cpp-11-aarch64-linux-gnu": {
     "blockList": [
       "/usr/lib/gcc-cross/aarch64-linux-gnu/11/cc1"
+    ]
+  },
+  "cpp-11-x86-64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/cc1"
     ]
   },
   "curl": {},
@@ -35,6 +41,12 @@
       "/usr/lib/gcc-cross/aarch64-linux-gnu/11/g++-mapper-server"
     ]
   },
+  "g++-11-x86-64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/cc1plus",
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/g++-mapper-server"
+    ]
+  },
   "gcc-11": {
     "isCrossTool": true,
     "postIntall": "crossTool"
@@ -44,6 +56,13 @@
       "/usr/lib/gcc-cross/aarch64-linux-gnu/11/collect2",
       "/usr/lib/gcc-cross/aarch64-linux-gnu/11/lto-wrapper",
       "/usr/lib/gcc-cross/aarch64-linux-gnu/11/lto1"
+    ]
+  },
+  "gcc-11-x86-64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/collect2",
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/lto-wrapper",
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/lto1"
     ]
   },
   "git": {},

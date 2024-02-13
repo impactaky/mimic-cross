@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1.4.2
 ARG HOST_BASE_IMAGE
 ARG HOST_BASE_IMAGE_TAG
 ARG BASE_IMAGE
