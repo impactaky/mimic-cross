@@ -19,6 +19,6 @@ export fn uname(buf: *linux.utsname) usize {
     }
     buffer[readBytes] = 0;
 
-    std.mem.copy(u8, &buf.machine, buffer[0..readBytes]);
+    std.mem.copy(u8, &buf.machine, buffer[0..readBytes+1]);
     return ret;
 }
