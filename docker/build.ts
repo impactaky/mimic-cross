@@ -30,6 +30,7 @@ await new Command()
   .version("0.1.0")
   .description("Build mimic-cross image from base image")
   .option("--host-base-image <hostBaseImage:string>", "Specify base host image")
+  .option("--test", "Build test image and finish")
   .option("--host", "Build host image")
   .option("--push", "Same docker buildx push")
   .option("--load", "Build only current platform and load")
@@ -71,6 +72,15 @@ await new Command()
     } else if (options.load) {
       bakeJson.target.default.platforms = [`linux/${Deno.build.arch}`];
       bakeJson.target.default.output = ["type=docker"];
+    }
+    if (options.test) {
+      bakeJson.target.default.target = "mimic-test";
+      bakeJson.target.default.tags = [
+        `${output.name}-${targetArch}-test:${output.tag}`,
+      ];
+      await $.path("bake.json").writeJson(bakeJson);
+      await $`docker buildx bake -f bake.json`;
+      return;
     }
     bakeJson.target.default.tags = [
       `${output.name}-${targetArch}:${output.tag}`,

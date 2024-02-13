@@ -97,7 +97,27 @@ RUN mkdir -p /test/deploy
 
 # =======================================================================
 
+# hadolint ignore=DL3029
 FROM --platform=linux/${MIMIC_ARCH} ${BASE_IMAGE}:${BASE_IMAGE_TAG} as mimic-cross
 
 COPY --from=mimic-host / /mimic-cross
 RUN /mimic-cross/mimic-cross.deno/setup.sh
+
+# =======================================================================
+
+FROM mimic-cross AS mimic-test
+
+COPY --from=mimic-test-host /test /test
+ENV MIMIC_TEST_DATA_PATH=/test
+
+ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python3 \
+        python3.10-venv \
+        python3-pip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists
+
+WORKDIR /mimic-cross/mimic-cross.deno
