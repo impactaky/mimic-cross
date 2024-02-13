@@ -32,6 +32,7 @@ await new Command()
   .option("--host-base-image <hostBaseImage:string>", "Specify base host image")
   .option("--host", "Build host image")
   .option("--push", "Same docker buildx push")
+  .option("--load", "Build only current platform and load")
   .arguments("<baseImage:string> <targetArch:string> <outputImage:string>")
   .action(async (options, baseImage, targetArch, outputImage) => {
     const base = getNameAndTag(baseImage);
@@ -67,14 +68,21 @@ await new Command()
     };
     if (options.push) {
       bakeJson.target.default.output = ["type=registry"];
+    } else if (options.load) {
+      bakeJson.target.default.platforms = [`linux/${Deno.build.arch}`];
+      bakeJson.target.default.output = ["type=docker"];
     }
-    bakeJson.target.default.tags = [`${output.name}-${targetArch}:${output.tag}`];
+    bakeJson.target.default.tags = [
+      `${output.name}-${targetArch}:${output.tag}`,
+    ];
     console.log(bakeJson);
     await $.path("bake.json").writeJson(bakeJson);
     await $`docker buildx bake -f bake.json`;
     if (options.host) {
       bakeJson.target.default.target = internalHost;
-      bakeJson.target.default.tags = [`${output.name}-${targetArch}-host:${output.tag}`];
+      bakeJson.target.default.tags = [
+        `${output.name}-${targetArch}-host:${output.tag}`,
+      ];
       await $.path("bake.json").writeJson(bakeJson);
       await $`docker buildx bake -f bake.json`;
     }
