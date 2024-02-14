@@ -1,0 +1,31 @@
+name: mimic-cross_test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/base.dockerfile
+          tags: impactaky/mc-ubuntu22.04-arm64-host:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            HOST_BASE_IMAGE=ubuntu
+            HOST_BASE_IMAGE_TAG=22.04
+            BASE_IMAGE=ubuntu
+            BASE_IMAGE_TAG=22.04
+            MIMIC_ARCH=arm64
