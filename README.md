@@ -21,11 +21,14 @@ cd ./example
 docker buildx build --platform=linux/arm64,linux/amd64 -f binutils.dockerfile .
 ```
 
-This is the result on my local machine. | Base image | sec | |
------------------------------- | ----- | | ubuntu:22.04 (native compile) | 29.9
-| | ubuntu:22.04 (cross compile) | 434.8 | | mc-ubuntu22.04 (cross compile) |
-34.6 |
+This is the result on my local machine.
 
+| Base image                     | sec   | 
+| ------------------------------ | ----- |
+| ubuntu:22.04 (native compile)  | 29.9  |
+| ubuntu:22.04 (cross compile)   | 434.8 |
+| mc-ubuntu22.04 (cross compile) | 34.6  |
+ 
 ### How to introduce mimic-cross to existing image
 
 Please write as following.
