@@ -1,0 +1,30 @@
+2024-01-11 12:45:02 trigproc man-db:amd64 2.9.1-1 <なし>
+2024-01-11 12:45:02 status half-configured man-db:amd64 2.9.1-1
+2024-01-11 12:45:02 status installed man-db:amd64 2.9.1-1
+2024-01-11 12:45:02 trigproc systemd:amd64 245.4-4ubuntu3.22 <なし>
+2024-01-11 12:45:02 status half-configured systemd:amd64 245.4-4ubuntu3.22
+2024-01-11 12:45:02 status installed systemd:amd64 245.4-4ubuntu3.22
+2024-01-13 15:26:44 startup archives unpack
+2024-01-13 15:26:45 install libtime-duration-perl:all <なし> 1.21-1
+2024-01-13 15:26:45 status half-installed libtime-duration-perl:all 1.21-1
+2024-01-13 15:26:45 status triggers-pending man-db:amd64 2.9.1-1
+2024-01-13 15:26:45 status unpacked libtime-duration-perl:all 1.21-1
+2024-01-13 15:26:45 install moreutils:amd64 <なし> 0.63-1
+2024-01-13 15:26:45 status half-installed moreutils:amd64 0.63-1
+2024-01-13 15:26:45 status unpacked moreutils:amd64 0.63-1
+2024-01-13 15:26:45 startup packages configure
+2024-01-13 15:26:45 configure libtime-duration-perl:all 1.21-1 <なし>
+2024-01-13 15:26:45 status unpacked libtime-duration-perl:all 1.21-1
+2024-01-13 15:26:45 status half-configured libtime-duration-perl:all 1.21-1
+2024-01-13 15:26:45 status installed libtime-duration-perl:all 1.21-1
+2024-01-13 15:26:45 configure moreutils:amd64 0.63-1 <なし>
+2024-01-13 15:26:45 status unpacked moreutils:amd64 0.63-1
+2024-01-13 15:26:45 status half-configured moreutils:amd64 0.63-1
+2024-01-13 15:26:45 status installed moreutils:amd64 0.63-1
+2024-01-13 15:26:45 trigproc man-db:amd64 2.9.1-1 <なし>
+2024-01-13 15:26:45 status half-configured man-db:amd64 2.9.1-1
+2024-01-13 15:26:47 status installed man-db:amd64 2.9.1-1
+2024-01-13 17:00:17 status installed file:arm64 1:5.41-3ubuntu0.1
+2024-01-13 17:00:17 trigproc libc-bin:arm64 2.35-0ubuntu3.5 <none>
+2024-01-13 17:00:17 status half-configured libc-bin:arm64 2.35-0ubuntu3.5
+2024-01-13 17:00:17 status installed libc-bin:arm64 2.35-0ubuntu3.5

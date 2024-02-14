@@ -1,0 +1,122 @@
+{
+  "apt": {
+    "postInstall": "custom"
+  },
+  "base-files": {},
+  "base-passwd": {},
+  "bash": {},
+  "binutils-aarch64-linux-gnu": {},
+  "binutils-x86-64-linux-gnu": {},
+  "bsdutils": {},
+  "cmake": {},
+  "coreutils": {},
+  "cpp-11": {
+    "isCrossTool": true,
+    "postIntall": "crossTool"
+  },
+  "cpp-11-aarch64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/cc1"
+    ]
+  },
+  "cpp-11-x86-64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/cc1"
+    ]
+  },
+  "curl": {},
+  "dash": {},
+  "debianutils": {},
+  "diffutils": {},
+  "e2fsprogs": {},
+  "fdisk": {},
+  "findutils": {},
+  "g++-11": {
+    "isCrossTool": true,
+    "postIntall": "crossTool"
+  },
+  "g++-11-aarch64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/cc1plus",
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/g++-mapper-server"
+    ]
+  },
+  "g++-11-x86-64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/cc1plus",
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/g++-mapper-server"
+    ]
+  },
+  "gcc-11": {
+    "isCrossTool": true,
+    "postIntall": "crossTool"
+  },
+  "gcc-11-aarch64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/collect2",
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/lto-wrapper",
+      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/lto1"
+    ]
+  },
+  "gcc-11-x86-64-linux-gnu": {
+    "blockList": [
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/collect2",
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/lto-wrapper",
+      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/lto1"
+    ]
+  },
+  "git": {},
+  "gnupg-utils": {},
+  "gpg": {},
+  "gpg-agent": {},
+  "gpg-wks-client": {},
+  "gpg-wks-server": {},
+  "gpgconf": {},
+  "gpgsm": {},
+  "gpgv": {},
+  "grep": {},
+  "gzip": {},
+  "hostname": {},
+  "libc-bin": {
+    "blockList": [
+      "/sbin/ldconfig.real"
+    ]
+  },
+  "libpam-modules-bin": {},
+  "login": {},
+  "logsave": {},
+  "make": {},
+  "mawk": {},
+  "mount": {},
+  "ncurses-bin": {},
+  "ninja-build": {},
+  "openssl": {},
+  "passwd": {},
+  "patch": {},
+  "perl-base": {},
+  "procps": {},
+  "python3": {
+    "postInstall": "skip"
+  },
+  "python3-distutils": {
+    "postInstall": "skip"
+  },
+  "python3-pip": {
+    "postInstall": "skip"
+  },
+  "python3.10-minimal": {
+    "postInstall": "custom"
+  },
+  "python3.10-venv": {
+    "postInstall": "skip"
+  },
+  "sed": {},
+  "sudo": {
+    "postInstall": "custom"
+  },
+  "software-properties-common": {},
+  "sysvinit-utils": {},
+  "tar": {},
+  "util-linux": {},
+  "wget": {}
+}

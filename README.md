@@ -1,54 +1,104 @@
 # mimic-cross
 
-Note: This project will be substantially rewritten.   
-Currently, written in bash, which makes it difficult to maintain and add extensibility.
+Fast cross-compiled environment requiring no special recipes.
 
-I don't have much time at the moment, so if there is a strong demand, please write in the issue or in the discussion.
+## Quick start
 
-Future goals: 
+### Usage
 
-* Rewriting in Typescript
-    * [dax_extras](https://github.com/impactaky/dax_extras) is started for this purpose
-* Support for tools other than apt-get
-    * Support CentOS
-    * This is useful for building python wheel
-* Support multi-arch
-    * So that the host machine can work with aarch64
- 
-## About
-
-A cross compile environment Docker image,
-can be used like docker multiarch image without speed penalty.
-
-## Usage
-
-Change base image. [Example](/example/binutils.dockerfile)  
+Just use this as base image and build image with `--platform` option.
 
 ```Dockerfile
-# FROM ubuntu:20.04
-# FROM multiarch/ubuntu-core:arm64-focal
-FROM impactaky/mimic-cross:arm64-focal
+FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}:2.0.0
 ```
+
+### Run example
+
+Use [binutils build example](/example/binutils.dockerfile).
+
+```bash
+cd ./example
+docker buildx build --platform=linux/arm64,linux/amd64 -f binutils.dockerfile .
+```
+
+This is the result on my local machine. | Base image | sec | |
+------------------------------ | ----- | | ubuntu:22.04 (native compile) | 29.9
+| | ubuntu:22.04 (cross compile) | 434.8 | | mc-ubuntu22.04 (cross compile) |
+34.6 |
+
+### How to introduce mimic-cross to existing image
+
+Please write as following.
+
+```Dockerfile
+FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}-host:2.0.0 AS mimic-host
+FROM ubuntu:22.04
+COPY --from=mimic-host / /mimic-cross
+RUN /mimic-cross/mimic-cross.deno/setup.sh
+```
+
+## Notes
+
+mimic-cross currently does not support the apt command, please use apt-get.
+
+mimic-cross currently does not support the pip command. Please use
+`python3 -m pip` instead.
 
 ## Supported environments
 
-Currently, support only ubuntu18.04 or 20.04 and aarch64. 
+- OS
+  - ubuntu:22.04
+- Build platform
+  - linux/amd64
+  - linux/arm64
+- Target platform
+  - linux/amd64
+  - linux/arm64
+- Package manager
+  - apt-get
+- Compiler
+  - gcc-11
+  - g++-11
+- Language
+  - python3.10
+
+Supported packages can be found in
+[supported.json](/mimic-cross.deno/apt/packages/supported.json)
+
+## How to add support packages
+
+T.B.D.
+
+## How to make runable users binary
+
+T.B.D.
 
 ## How mimic-cross works
 
 ![Untitled Diagram (1)](https://user-images.githubusercontent.com/37619203/131243313-c4f6264f-621c-47b6-981b-a76f4ec7902f.png)
 
+Mimic-cross introduces binaries running on host into the environment run by
+qemu-use-static to speed up the process. To do so, the mimic-cross image has a
+sysroot for the host architecture under /mimic-cross.
 
-Mimic-cross introduces binaries running on host into the environment run by qemu-use-static to speed up the process.
-To do so, the mimic-cross image has a sysroot for the host architecture under /host.
-
-This allows us to run the program faster without using QEMU instead of increasing the image size.  
+This allows us to run the program faster without using QEMU instead of
+increasing the image size.\
 The image size increase can be handled by multistage build.
 
-### More details
+### What happen when run package manager
 
-* [apt package management in mimic-cross](docs/apt-get.md)
-* [about mimic python](docs/python3.md)
+1. Run in target sysroot
+2. Check installed package
+3. If supported package installed, package install in /mimic-cross sysroot.
+4. Set up for mimicking (Patch to elf RUNPATH, etc...)
 
+## Environent variables
 
+### MIMIC_CROSS_DISABLE=1
 
+When this value is set, execute only the original command by qemu and no special
+mimic-cross processing.
+
+If you run the pip command with this, you will not be able to invoke the
+installed packages in the mimic-cross environment, but you can reduce the image
+size if you are simply installing dependencies needed for the build
