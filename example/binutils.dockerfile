@@ -7,7 +7,7 @@
 # => [7/7] RUN make -j `nproc`                                                                                                            27.9s
 
 
-FROM --platform=linux/arm64 ubuntu:22.04
+# FROM --platform=linux/arm64 ubunu:22.04
 # [+] Building 537.1s (11/11) FINISHED
 # => [2/7] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget ca-certificates         binutils gcc make li  67.4s
 # => [3/7] RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz                                                                   5.7s
@@ -17,7 +17,7 @@ FROM --platform=linux/arm64 ubuntu:22.04
 # => [7/7] RUN make -j `nproc`                                                                                                            434.8s
 
 
-# FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}:2.0.0
+FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}:2.0.0
 # => [2/7] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget ca-certificates         binutils gcc make l  62.8s
 # => [3/7] RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz                                                                  5.2s
 # => [4/7] RUN tar xf ./binutils-2.36.tar.gz                                                                                               1.8s
@@ -33,10 +33,10 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
 
-RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz
-RUN tar xf ./binutils-2.36.tar.gz
+RUN wget -q https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz \
+    && tar xf ./binutils-2.36.tar.gz
 WORKDIR /binutils-2.36
 RUN ./configure
-RUN make -j `nproc`
+RUN make -j "$(nproc)"
 
 # vim:set ft=dockerfile :

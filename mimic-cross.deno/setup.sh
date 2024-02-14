@@ -13,7 +13,7 @@ function create_ld_linux_symlink() {
   fi
 }
 
-ln -s $(realpath /mimic-cross/usr/lib/"$HOST_ARCH"-linux-gnu /usr/lib/)
+ln -s "$(realpath /mimic-cross/usr/lib/"$HOST_ARCH"-linux-gnu)" "$(realpath /usr/lib/)"
 if [[ $(realpath /lib) != /usr/lib ]]; then
   ln -s /mimic-cross/lib/"$HOST_ARCH"-linux-gnu /lib
 fi
