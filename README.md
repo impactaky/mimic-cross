@@ -105,3 +105,9 @@ mimic-cross processing.
 If you run the pip command with this, you will not be able to invoke the
 installed packages in the mimic-cross environment, but you can reduce the image
 size if you are simply installing dependencies needed for the build
+
+### MIMIC_CRSOS_DEBUG=1
+
+When this variable is set, debugging information is output.
+
+When reporting errors, please set this variable and attach the /var/log/mimic-cross.log.
