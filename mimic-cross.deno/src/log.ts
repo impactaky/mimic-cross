@@ -63,11 +63,14 @@ class mimicLogger {
     this.#logger.info(...args);
   }
   warning(...args: Parameters<log.Logger["warning"]>) {
-    this.#logger.warning(...args);
+    this.#logger.warn(...args);
   }
   error(...args: Parameters<log.Logger["error"]>) {
     this.#logger.error(...args);
   }
 }
 
+if (Deno.env.get("MIMIC_CROSS_DEBUG") === "1") {
+  config.logMode = "debug";
+}
 export const logger = new mimicLogger(config.logMode);
