@@ -17,7 +17,7 @@
 # => [7/7] RUN make -j `nproc`                                                                                                            434.8s
 
 
-FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}:2.0.0
+FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}
 # => [2/7] RUN apt-get update &&     apt-get install -y --no-install-recommends         wget ca-certificates         binutils gcc make l  62.8s
 # => [3/7] RUN wget https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz                                                                  5.2s
 # => [4/7] RUN tar xf ./binutils-2.36.tar.gz                                                                                               1.8s
