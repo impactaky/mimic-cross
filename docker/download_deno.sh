@@ -2,7 +2,7 @@
 
 set -eu
 
-VERSION="v1.40.4"
+VERSION="v1.40.5"
 
 if [[ "$(arch)" == "x86_64" ]]; then
     wget -q -O deno.zip https://github.com/denoland/deno/releases/download/${VERSION}/deno-x86_64-unknown-linux-gnu.zip
