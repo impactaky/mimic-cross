@@ -9,7 +9,7 @@ Fast cross-compiled environment requiring no special recipes.
 Just use this as base image and build image with `--platform` option.
 
 ```Dockerfile
-FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}:2.0.0
+FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}
 ```
 
 ### Run example
@@ -34,7 +34,7 @@ This is the result on my local machine.
 Please write as following.
 
 ```Dockerfile
-FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}-host:2.0.0 AS mimic-host
+FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu22.04-${TARGETARCH}-host AS mimic-host
 FROM ubuntu:22.04
 COPY --from=mimic-host / /mimic-cross
 RUN /mimic-cross/mimic-cross.deno/setup.sh
