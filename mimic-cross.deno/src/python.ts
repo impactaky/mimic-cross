@@ -78,7 +78,7 @@ export function callMimicedPython(
     `${config.internalBin}/bash`,
     "-c",
     `exec -a ${calledAs} -- ${config.hostRoot}/usr/bin/${versionedPython} "${
-      args.join('" "')
+      args.map(arg => arg.replaceAll('"', '\\"')).join('" "')
     }"`,
   ])
     .env({
