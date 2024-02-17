@@ -57,7 +57,9 @@ await new Command()
       `COPY --from=${internalHost} / /mimic-cross`,
       `RUN /mimic-cross/mimic-cross.deno/setup.sh`,
     );
-    const text = await $.path(import.meta.url).parent()?.join("base.dockerfile")
+    const text = await $.path(import.meta.url).parent()?.join(
+      "../docker/base.dockerfile",
+    )
       .readText();
     await $.path("Dockerfile").writeText(text + "\n" + appendTexts.join("\n"));
     bakeJson.target.default.args = {
