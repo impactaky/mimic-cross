@@ -1,6 +1,21 @@
 const std = @import("std");
 const options = @import("build_options");
 
+fn nativeFromEnv(allocator: std.mem.Allocator, comptime option: []const u8) !?[:0]const u8 {
+    comptime var env_key: []const u8 = undefined;
+    comptime {
+        var buf: [option.len]u8 = undefined;
+        _ = std.ascii.upperString(&buf, option);
+        env_key = "MIMIC_CROSS_GCC_NATIVE_" ++ buf;
+    }
+    const env = std.os.getenv(env_key);
+    if (env) |v| {
+        return try std.fmt.allocPrintZ(allocator, "-m" ++ option ++ "={s}", .{v});
+    } else {
+        return null;
+    }
+}
+
 pub fn main() !void {
     const mimic_target = comptime options.mimic_target ++ "\x00";
     comptime var march_option: [:0]const u8 = undefined;
@@ -24,11 +39,11 @@ pub fn main() !void {
         var mimiced_args = try allocator.allocSentinel(?[*:0]const u8, args.len, null);
         for (args, 0..) |arg, i| {
             if (std.mem.eql(u8, arg, "-march=native")) {
-                mimiced_args[i] = march_option;
+                mimiced_args[i] = try nativeFromEnv(allocator, "arch") orelse march_option;
             } else if (std.mem.eql(u8, arg, "-mtune=native")) {
-                mimiced_args[i] = "-mtune=generic";
+                mimiced_args[i] = try nativeFromEnv(allocator, "tune") orelse "-mtune=generic";
             } else if (std.mem.eql(u8, arg, "-mcpu=native")) {
-                mimiced_args[i] = "-mtune=generic";
+                mimiced_args[i] = try nativeFromEnv(allocator, "cpu") orelse "-mcpu=generic";
             } else {
                 mimiced_args[i] = arg;
             }
