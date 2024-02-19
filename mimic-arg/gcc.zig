@@ -2,10 +2,21 @@ const std = @import("std");
 const options = @import("build_options");
 
 pub fn main() !void {
+    const mimic_target = comptime options.mimic_target ++ "\x00";
+    comptime var march_option: [:0]const u8 = undefined;
+    comptime {
+        if (std.mem.eql(u8, options.mimic_arch, "aarch64")) {
+            march_option = "-march=armv8-a";
+        } else if (std.mem.eql(u8, options.mimic_arch, "x86_64")) {
+            march_option = "-march=x86-64";
+        } else {
+            @compileError("Unsupported architecture!");
+        }
+    }
+
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
-    const mimic_target = try allocator.dupeZ(u8, options.mimic_target);
 
     const pid = try std.os.fork();
     if (pid == 0) {
@@ -13,7 +24,7 @@ pub fn main() !void {
         var mimiced_args = try allocator.allocSentinel(?[*:0]const u8, args.len, null);
         for (args, 0..) |arg, i| {
             if (std.mem.eql(u8, arg, "-march=native")) {
-                mimiced_args[i] = "-march=armv8-a";
+                mimiced_args[i] = march_option;
             } else if (std.mem.eql(u8, arg, "-mtune=native")) {
                 mimiced_args[i] = "-mtune=generic";
             } else if (std.mem.eql(u8, arg, "-mcpu=native")) {
