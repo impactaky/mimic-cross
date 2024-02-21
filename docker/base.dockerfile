@@ -30,7 +30,7 @@ WORKDIR /zig
 RUN wget -q "https://ziglang.org/download/0.11.0/zig-linux-$(arch)-0.11.0.tar.xz" \
     && tar xf zig-linux-*-0.11.0.tar.xz \
     && rm zig-linux-*-0.11.0.tar.xz \
-    && ln -sf "/zig/zig-linux-$(arch)-0.11.0/zig" /zig/zig
+    && ln -sf "./zig-linux-$(arch)-0.11.0/zig" /zig/zig
 
 COPY mimic-lib /mimic-lib
 WORKDIR /mimic-lib
@@ -74,7 +74,7 @@ RUN mkdir -p /mimic-cross/bin/
 COPY --from=mimic-host-build /deno/deno /mimic-cross/bin/mimic-deno
 RUN arch > /mimic-cross/host_arch
 COPY --from=mimic-host-build /zig/ /mimic-cross/internal/zig/
-RUN ln -s /mimic-cross/internal/zig/zig /mimic-cross/internal/bin/zig
+RUN ln -s ../zig/zig /mimic-cross/internal/bin/zig
 
 COPY mimic-cross.deno /mimic-cross.deno
 
@@ -119,6 +119,7 @@ ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         gcc \
+        g++ \
         python3 \
         python3.10-venv \
         python3-pip \

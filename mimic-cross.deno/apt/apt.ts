@@ -5,15 +5,11 @@ import { config } from "../config/config.ts";
 import { logger } from "../src/log.ts";
 import { format } from "std/datetime/mod.ts";
 import { deployIfHostCommands, findCommands } from "../src/deploy.ts";
+import { PackageInfo } from "./package_info.ts";
+import { deployCrossTool } from "./helper.ts";
 
 export interface deployPackageOptions {
   force?: boolean;
-}
-
-interface packageInfo {
-  postInstall?: string;
-  isCrossTool?: boolean;
-  blockList?: string[];
 }
 
 const packageDir = $.path(import.meta.url).parent()?.join("packages");
@@ -23,7 +19,7 @@ const supportedPackagesPromise = (async () => {
   const supportedPackages = await $.path(import.meta.url).parent()?.join(
     "packages",
     "supported.json",
-  ).readJson<Record<string, packageInfo>>();
+  ).readJson<Record<string, PackageInfo>>();
   if (supportedPackages === undefined) {
     throw new Error("Can't read supported.json");
   }
@@ -60,21 +56,11 @@ export async function aptGetOnHost(arg: string | string[]) {
 
 export async function deployPackageCommands(
   package_: string,
-  blockList?: Set<string>,
+  packageInfo: PackageInfo,
 ) {
   logger.info(`(deployPackageCommands) ${package_}`);
   const commands = await runOnHost(`dpkg -L ${package_}`).lines();
-  await deployIfHostCommands(commands, blockList);
-}
-
-export async function deployCrossTool(
-  packageName: string,
-  blockList?: Set<string>,
-) {
-  const crossPackageName = `${packageName}-${
-    config.arch.replace("_", "-")
-  }-linux-gnu`;
-  await deployPackageCommands(crossPackageName, blockList);
+  await deployIfHostCommands(commands, new Set(packageInfo.blockList));
 }
 
 export async function deployPackages(
@@ -110,31 +96,30 @@ export async function deployPackages(
       );
       throw new Error(`Package ${p} is not supported.`);
     }
-    if (packageInfo.postInstall === "custom") {
-      const modulePath = `${packageDir}/${p}.ts`;
-      const module = await import(`${modulePath}`);
-      if (module.postInstall && typeof module.postInstall === "function") {
-        logger.debug(`(deployPackages) call ${modulePath} postInstall`);
-        await module.postInstall();
-        continue;
-      }
-    }
-    if (packageInfo.postInstall === "crossTool") {
-      logger.debug(`(deployPackages) call depolyCrossTool(${p})`);
-      await deployCrossTool(p, new Set(packageInfo.blockList));
-      continue;
-    } else if (
-      !packageInfo.postInstall || packageInfo.postInstall === "default"
-    ) {
+    if (!packageInfo.postInstall || packageInfo.postInstall === "default") {
       logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
-      await deployPackageCommands(p, new Set(packageInfo.blockList));
+      await deployPackageCommands(p, packageInfo);
+    } else if (packageInfo.postInstall === "crossTool") {
+      logger.debug(`(deployPackages) call depolyCrossTool(${p})`);
+      await deployCrossTool(p, packageInfo);
+      continue;
     } else if (packageInfo.postInstall === "skip") {
       logger.debug(`(deployPackages) skip postInstall(${p})`);
     } else {
-      logger.error(
-        `(deployPackages) Unknown postInstall ${packageInfo.postInstall}`,
-      );
-      throw new Error(`Unknown postInstall ${packageInfo.postInstall}`);
+      const modulePath = `${packageDir}/${packageInfo.postInstall}.ts`;
+      let module = undefined;
+      try {
+        module = await import(`${modulePath}`);
+      } catch (e) {
+        logger.error(
+          `(deployPackages) Can't import ${modulePath}: ${e.message}`,
+        );
+        throw new Error(`Can't import ${modulePath}: ${e.message}`);
+      }
+      if (module.postInstall && typeof module.postInstall === "function") {
+        logger.debug(`(deployPackages) call ${modulePath} postInstall`);
+        await module.postInstall(p, packageInfo);
+      }
     }
   }
 }

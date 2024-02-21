@@ -18,6 +18,11 @@ export async function setup() {
   await $.path(`/usr/${config.arch}-linux-gnu`).createSymlinkTo(
     `${config.hostRoot}/usr/${config.arch}-linux-gnu`,
   );
+  const gccCrossPath = $.path(`/usr/lib/gcc-cross`);
+  await gccCrossPath.mkdir({ recursive: true });
+  await gccCrossPath.join(`${config.arch}-linux-gnu`).createSymlinkTo(
+    `${config.hostRoot}/usr/lib/gcc-cross/${config.arch}-linux-gnu`,
+  );
   await aptGetOnHost(["update"]);
   await deployInstalledPackages();
   await aptGetOnHost(["clean"]);

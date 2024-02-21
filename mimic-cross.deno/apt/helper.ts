@@ -4,6 +4,7 @@ export { keepOriginalBin, mimicDeploy, mimicize } from "../src/deploy.ts";
 import { deployPackageCommands } from "../apt/apt.ts";
 export { deployPackageCommands } from "../apt/apt.ts";
 import { config } from "../config/config.ts";
+import { PackageInfo } from "../apt/package_info.ts";
 
 export async function fileHas(
   path: PathRefLike,
@@ -30,8 +31,10 @@ export async function deployCli(
 
 export async function deployCrossTool(
   packageName: string,
-  blockList?: Set<string>,
+  packageInfo: PackageInfo,
 ) {
-  const crossPackageName = `${packageName}-${config.arch}-linux-gnu`;
-  await deployPackageCommands(crossPackageName, blockList);
+  const crossPackageName = `${packageName}-${
+    config.arch.replace("_", "-")
+  }-linux-gnu`;
+  await deployPackageCommands(crossPackageName, packageInfo);
 }
