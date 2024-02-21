@@ -111,3 +111,15 @@ size if you are simply installing dependencies needed for the build
 When this variable is set, debugging information is output.
 
 When reporting errors, please set this variable and attach the /var/log/mimic-cross.log.
+
+### MIIMC_CROSS_GCC_NATIVE_ARCH=xxx
+
+Replace gcc/g++ -march=native option to -march=xxx
+
+### MIIMC_CROSS_GCC_NATIVE_CPU=xxx
+
+Replace gcc/g++ -mcpu=native option to -march=xxx
+
+### MIIMC_CROSS_GCC_NATIVE_TUNE=xxx
+
+Replace gcc/g++ -mtune=native option to -mtune=xxx
