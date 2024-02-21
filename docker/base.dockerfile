@@ -29,11 +29,12 @@ RUN mkdir /zig
 WORKDIR /zig
 RUN wget -q "https://ziglang.org/download/0.11.0/zig-linux-$(arch)-0.11.0.tar.xz" \
     && tar xf zig-linux-*-0.11.0.tar.xz \
-    && rm zig-linux-*-0.11.0.tar.xz
+    && rm zig-linux-*-0.11.0.tar.xz \
+    && ln -sf "./zig-linux-$(arch)-0.11.0/zig" /zig/zig
 
 COPY mimic-lib /mimic-lib
 WORKDIR /mimic-lib
-RUN "/zig/zig-linux-$(arch)-0.11.0/zig" build \
+RUN /zig/zig build \
     && mkdir -p "lib/$(arch)-linux-gnu" \
     && mv zig-out/lib/libmimic-cross.so "lib/$(arch)-linux-gnu"
 
@@ -59,10 +60,6 @@ RUN apt-get update \
         wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
-COPY --from=mimic-host-build /mimic-lib/lib/ /usr/lib/
-RUN mkdir -p /mimic-cross/bin/
-COPY --from=mimic-host-build /deno/deno /mimic-cross/bin/mimic-deno
-RUN arch > /mimic-cross/host_arch
 
 COPY --from=binfmt /usr/bin/qemu-* /mimic-cross/internal/bin/
 RUN ln -s ../../../usr/bin/bash /mimic-cross/internal/bin \
@@ -71,6 +68,13 @@ RUN ln -s ../../../usr/bin/bash /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/patchelf /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/readelf /mimic-cross/internal/bin \
     && ln -s ../../../usr/sbin/chroot /mimic-cross/internal/bin
+
+COPY --from=mimic-host-build /mimic-lib/lib/ /usr/lib/
+RUN mkdir -p /mimic-cross/bin/
+COPY --from=mimic-host-build /deno/deno /mimic-cross/bin/mimic-deno
+RUN arch > /mimic-cross/host_arch
+COPY --from=mimic-host-build /zig/ /mimic-cross/internal/zig/
+RUN ln -s ../zig/zig /mimic-cross/internal/bin/zig
 
 COPY mimic-cross.deno /mimic-cross.deno
 
@@ -114,6 +118,8 @@ ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        gcc \
+        g++ \
         python3 \
         python3.10-venv \
         python3-pip \

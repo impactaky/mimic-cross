@@ -1,6 +1,6 @@
 {
   "apt": {
-    "postInstall": "custom"
+    "postInstall": "apt"
   },
   "base-files": {},
   "base-passwd": {},
@@ -36,34 +36,20 @@
     "postIntall": "crossTool"
   },
   "g++-11-aarch64-linux-gnu": {
-    "blockList": [
-      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/cc1plus",
-      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/g++-mapper-server"
-    ]
+    "postInstall": "g++"
   },
   "g++-11-x86-64-linux-gnu": {
-    "blockList": [
-      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/cc1plus",
-      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/g++-mapper-server"
-    ]
+    "postInstall": "g++"
   },
   "gcc-11": {
     "isCrossTool": true,
     "postIntall": "crossTool"
   },
   "gcc-11-aarch64-linux-gnu": {
-    "blockList": [
-      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/collect2",
-      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/lto-wrapper",
-      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/lto1"
-    ]
+    "postInstall": "gcc"
   },
   "gcc-11-x86-64-linux-gnu": {
-    "blockList": [
-      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/collect2",
-      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/lto-wrapper",
-      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/lto1"
-    ]
+    "postInstall": "gcc"
   },
   "git": {},
   "gnupg-utils": {},
@@ -105,14 +91,14 @@
     "postInstall": "skip"
   },
   "python3.10-minimal": {
-    "postInstall": "custom"
+    "postInstall": "python3.10-minimal"
   },
   "python3.10-venv": {
     "postInstall": "skip"
   },
   "sed": {},
   "sudo": {
-    "postInstall": "custom"
+    "postInstall": "sudo"
   },
   "software-properties-common": {},
   "sysvinit-utils": {},
