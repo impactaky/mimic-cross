@@ -126,4 +126,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
 
-WORKDIR /mimic-cross/mimic-cross.deno
+# =======================================================================
+
+FROM mimic-test AS mimic-test-run
+RUn mimic-deno test -A --parallel
