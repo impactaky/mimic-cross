@@ -57,17 +57,19 @@ RUN apt-get update \
         ca-certificates \
         patch \
         patchelf \
+        unzip \
         wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
 
 COPY --from=binfmt /usr/bin/qemu-* /mimic-cross/internal/bin/
 RUN ln -s ../../../usr/bin/bash /mimic-cross/internal/bin \
+    && ln -s ../../../usr/sbin/chroot /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/objdump /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/patch /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/patchelf /mimic-cross/internal/bin \
     && ln -s ../../../usr/bin/readelf /mimic-cross/internal/bin \
-    && ln -s ../../../usr/sbin/chroot /mimic-cross/internal/bin
+    && ln -s ../../../usr/bin/unzip /mimic-cross/internal/bin
 
 COPY --from=mimic-host-build /mimic-lib/lib/ /usr/lib/
 RUN mkdir -p /mimic-cross/bin/

@@ -36,10 +36,10 @@
     "postIntall": "crossTool"
   },
   "g++-11-aarch64-linux-gnu": {
-    "postInstall": "g++"
+    "postInstall": "gcc"
   },
   "g++-11-x86-64-linux-gnu": {
-    "postInstall": "g++"
+    "postInstall": "gcc"
   },
   "gcc-11": {
     "isCrossTool": true,
@@ -91,7 +91,7 @@
     "postInstall": "skip"
   },
   "python3.10-minimal": {
-    "postInstall": "python3.10-minimal"
+    "postInstall": "python"
   },
   "python3.10-venv": {
     "postInstall": "skip"
