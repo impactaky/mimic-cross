@@ -129,4 +129,4 @@ RUN apt-get update \
 # =======================================================================
 
 FROM mimic-test AS mimic-test-run
-RUn mimic-deno test -A --parallel
+RUN mimic-deno test -A --parallel
