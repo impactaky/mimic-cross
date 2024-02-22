@@ -8,6 +8,11 @@ import { deployIfHostCommands, findCommands } from "../src/deploy.ts";
 import { PackageInfo } from "./package_info.ts";
 import { deployCrossTool } from "./helper.ts";
 
+import * as apt from "./packages/apt.ts";
+import * as gcc from "./packages/gcc.ts";
+import * as sudo from "./packages/sudo.ts";
+import * as python from "./packages/python3.10-minimal.ts";
+
 export interface deployPackageOptions {
   force?: boolean;
 }
@@ -96,30 +101,40 @@ export async function deployPackages(
       );
       throw new Error(`Package ${p} is not supported.`);
     }
-    if (!packageInfo.postInstall || packageInfo.postInstall === "default") {
-      logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
-      await deployPackageCommands(p, packageInfo);
-    } else if (packageInfo.postInstall === "crossTool") {
-      logger.debug(`(deployPackages) call depolyCrossTool(${p})`);
-      await deployCrossTool(p, packageInfo);
-      continue;
-    } else if (packageInfo.postInstall === "skip") {
-      logger.debug(`(deployPackages) skip postInstall(${p})`);
-    } else {
-      const modulePath = `${packageDir}/${packageInfo.postInstall}.ts`;
-      let module = undefined;
-      try {
-        module = await import(`${modulePath}`);
-      } catch (e) {
+    switch (packageInfo.postInstall) {
+      case "default":
+      case undefined:
+        logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
+        await deployPackageCommands(p, packageInfo);
+        break;
+      case "crossTool":
+        logger.debug(`(deployPackages) call depolyCrossTool(${p})`);
+        await deployCrossTool(p, packageInfo);
+        break;
+      case "skip":
+        logger.debug(`(deployPackages) skip postInstall(${p})`);
+        break;
+      case "apt":
+        logger.debug(`(deployPackages) apt.postInstall(${p})`);
+        await apt.postInstall();
+        break;
+      case "gcc":
+        logger.debug(`(deployPackages) gcc.postInstall(${p})`);
+        await gcc.postInstall(p, packageInfo);
+        break;
+      case "sudo":
+        logger.debug(`(deployPackages) sudo.postInstall(${p})`);
+        await sudo.postInstall();
+        break;
+      case "python":
+        logger.debug(`(deployPackages) python.postInstall(${p})`);
+        await python.postInstall();
+        break;
+      default:
         logger.error(
-          `(deployPackages) Can't import ${modulePath}: ${e.message}`,
+          `(deployPackages) Unknown postInstall ${packageInfo.postInstall}`,
         );
-        throw new Error(`Can't import ${modulePath}: ${e.message}`);
-      }
-      if (module.postInstall && typeof module.postInstall === "function") {
-        logger.debug(`(deployPackages) call ${modulePath} postInstall`);
-        await module.postInstall(p, packageInfo);
-      }
+        throw new Error(`Unknown postInstall ${packageInfo.postInstall}`);
     }
   }
 }
