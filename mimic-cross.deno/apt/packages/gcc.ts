@@ -8,7 +8,7 @@ export async function postInstall(
   packageInfo: PackageInfo,
 ) {
   const matched = packageName.match(/^(gcc|g\+\+)-(\d+).+/);
-  const version = matched?.[1];
+  const version = matched?.[2];
   const versioned = matched?.slice(1, 3).join("-");
   if (packageInfo.blockList === undefined) packageInfo.blockList = [];
   const gccCrossPath = `/usr/lib/gcc-cross/${config.arch}-linux-gnu`;

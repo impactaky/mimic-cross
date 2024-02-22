@@ -64,6 +64,7 @@ export async function deployPackageCommands(
   packageInfo: PackageInfo,
 ) {
   logger.info(`(deployPackageCommands) ${package_}`);
+  logger.debug(`(deployPackageCommands) blockList = ${packageInfo.blockList}`);
   const commands = await runOnHost(`dpkg -L ${package_}`).lines();
   await deployIfHostCommands(commands, new Set(packageInfo.blockList));
 }
