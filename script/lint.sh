@@ -2,7 +2,7 @@
 
 set -eu
 
-if [[ "$1" == "--check" ]]; then
+if [[ "${1-}" == "--check" ]]; then
   deno fmt --check
 else
   deno fmt
