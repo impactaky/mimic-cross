@@ -18,6 +18,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
+        curl \
         unzip \
         wget \
         xz-utils \
@@ -38,12 +39,13 @@ RUN /zig/zig build \
     && mkdir -p "lib/$(arch)-linux-gnu" \
     && mv zig-out/lib/libmimic-cross.so "lib/$(arch)-linux-gnu"
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Download deno
 # hadolint ignore=DL3059
 RUN mkdir -p /deno
 WORKDIR /deno
-COPY docker/download_deno.sh .
-RUN ./download_deno.sh
+RUN wget -qO- https://deno.land/install.sh | sh \
+    && mv /root/.deno/bin/deno /deno/deno
 
 # =======================================================================
 
