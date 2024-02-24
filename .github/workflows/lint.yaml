@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+      - name: Set ownership
+        run: chown -R $(id -u):$(id -g) $PWD
       - name: Run lint script
         uses: docker://impactaky/mimic-cross-lint
         with:
