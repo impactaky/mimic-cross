@@ -18,6 +18,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
+        curl \
         unzip \
         wget \
         xz-utils \
@@ -42,8 +43,8 @@ RUN /zig/zig build \
 # hadolint ignore=DL3059
 RUN mkdir -p /deno
 WORKDIR /deno
-COPY docker/download_deno.sh .
-RUN ./download_deno.sh
+RUN curl -fsSL https://deno.land/install.sh | sh \
+    && mv /root/.deno/bin/deno /deno/deno
 
 # =======================================================================
 
