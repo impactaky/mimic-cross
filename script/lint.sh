@@ -8,5 +8,5 @@ else
   deno fmt
 fi
 deno lint
-find -name "*.sh" | xargs shellcheck
-find -name "*.dockerfile" | xargs hadolint
+find . -name "*.sh" -print0 | xargs -0 shellcheck
+find . -name "*.dockerfile" -print0 | xargs -0 hadolint
