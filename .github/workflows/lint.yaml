@@ -1,0 +1,20 @@
+name: Lint
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    - uses: actions/checkout@v4
+    - name: Run lint script
+      uses: docker://impactaky/mimic-cross-lint
+      with:
+       entrypoint: './script/lint.sh'
+       args: "--check"
