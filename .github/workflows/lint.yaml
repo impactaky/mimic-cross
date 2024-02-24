@@ -17,5 +17,5 @@ jobs:
       - name: Run lint script
         uses: docker://impactaky/mimic-cross-lint
         with:
-        entrypoint: './script/lint.sh'
-        args: "--check"
+          entrypoint: './script/lint.sh'
+          args: "--check"
