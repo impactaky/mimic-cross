@@ -96,7 +96,7 @@ export async function deployPackages(
   );
   for (const p of filteredPackages) {
     const packageInfo = supportedPackages[p];
-    if (packageInfo === undefined) {
+    if (packageInfo === undefined && !options?.force) {
       logger.error(
         `(deployPackages) Unsuported package ${p} exists in filterdPacakges.`,
       );

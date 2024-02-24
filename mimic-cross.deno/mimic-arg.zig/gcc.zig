@@ -61,7 +61,6 @@ pub fn main() !u8 {
         if (status_signal != 0) {
             return 128 + status_signal;
         }
-        std.debug.print("result: {d}, {d}\n", .{ result.pid, result.status });
         std.os.exit(@as(u8, @truncate(result.status >> 8)));
     }
 }
