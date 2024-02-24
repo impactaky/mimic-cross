@@ -16,7 +16,7 @@ fn nativeFromEnv(allocator: std.mem.Allocator, comptime option: []const u8) !?[:
     }
 }
 
-pub fn main() !void {
+pub fn main() !u8 {
     const mimic_target = comptime options.mimic_target ++ "\x00";
     comptime var march_option: [:0]const u8 = undefined;
     comptime {
@@ -55,6 +55,13 @@ pub fn main() !void {
         std.os.execveZ(mimic_target, mimiced_args, mimiced_env) catch unreachable; // This code won't be executed if execveZ is successful
     } else {
         var wait_status: u32 = 0;
-        _ = std.os.waitpid(pid, wait_status);
+        const result = std.os.waitpid(pid, wait_status);
+        // terminated by signal
+        const status_signal = @as(u8, @truncate(result.status & 0xff));
+        if (status_signal != 0) {
+            return 128 + status_signal;
+        }
+        std.debug.print("result: {d}, {d}\n", .{ result.pid, result.status });
+        std.os.exit(@as(u8, @truncate(result.status >> 8)));
     }
 }

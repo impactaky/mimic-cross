@@ -1,6 +1,6 @@
 import { PackageInfo } from "../package_info.ts";
 import { deployPackageCommands } from "../apt.ts";
-import { createGccTrampoline } from "../../src/gcc.ts";
+import { createGccTrampoline } from "../../src/args.ts";
 import { config } from "../../config/config.ts";
 
 export async function postInstall(
@@ -13,6 +13,8 @@ export async function postInstall(
   if (packageInfo.blockList === undefined) packageInfo.blockList = [];
   const gccCrossPath = `/usr/lib/gcc-cross/${config.arch}-linux-gnu`;
   packageInfo.blockList.push(
+    `/usr/bin/gcc-${config.arch}-linux-gnu-${versioned}`,
+    `/usr/bin/g++-${config.arch}-linux-gnu-${versioned}`,
     `${gccCrossPath}/${version}/collect2`,
     `${gccCrossPath}/${version}/lto-wrapper`,
     `${gccCrossPath}/${version}/lto1`,
