@@ -84,13 +84,12 @@ COPY mimic-cross.deno /mimic-cross.deno
 
 # ======================================================================
 
-FROM mimic-host as mimic-test-host
+FROM mimic-host-build as mimic-test-host
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         gcc \
         libc6-dev \
-        sudo \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
 

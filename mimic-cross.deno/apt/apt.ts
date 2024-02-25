@@ -4,32 +4,14 @@ import { prepareChroot, runOnHost } from "../src/chroot.ts";
 import { config } from "../config/config.ts";
 import { logger } from "../src/log.ts";
 import { format } from "std/datetime/mod.ts";
-import { deployIfHostCommands, findCommands } from "../src/deploy.ts";
-import { PackageInfo } from "./package_info.ts";
-import { deployCrossTool } from "./helper.ts";
-
-import * as apt from "./packages/apt.ts";
-import * as gcc from "./packages/gcc.ts";
-import * as sudo from "./packages/sudo.ts";
-import * as python from "./packages/python3.10-minimal.ts";
+import { findCommands } from "../src/deploy.ts";
+import { deployCrossTool, deployPackageCommands } from "./helper.ts";
+import { supportedPackagesPromise } from "./load.ts";
+import { recipes } from "./packages/recipes.ts";
 
 export interface deployPackageOptions {
   force?: boolean;
 }
-
-const packageDir = $.path(import.meta.url).parent()?.join("packages");
-if (!packageDir) throw new Error("Package directory path is undefined.");
-const supportedPackagesPromise = (async () => {
-  // Create set from packages/supported.json
-  const supportedPackages = await $.path(import.meta.url).parent()?.join(
-    "packages",
-    "supported.json",
-  ).readJson<Record<string, PackageInfo>>();
-  if (supportedPackages === undefined) {
-    throw new Error("Can't read supported.json");
-  }
-  return supportedPackages;
-})();
 
 export async function aptGetOnHost(arg: string | string[]) {
   logger.info(`(aptGetOnHost) Run apt-get ${arg}`);
@@ -57,16 +39,6 @@ export async function aptGetOnHost(arg: string | string[]) {
   }
   await runOnHost([`apt-get`, ...args]).env(Deno.env.toObject());
   return;
-}
-
-export async function deployPackageCommands(
-  package_: string,
-  packageInfo: PackageInfo,
-) {
-  logger.info(`(deployPackageCommands) ${package_}`);
-  logger.debug(`(deployPackageCommands) blockList = ${packageInfo.blockList}`);
-  const commands = await runOnHost(`dpkg -L ${package_}`).lines();
-  await deployIfHostCommands(commands, new Set(packageInfo.blockList));
 }
 
 export async function deployPackages(
@@ -115,27 +87,15 @@ export async function deployPackages(
       case "skip":
         logger.debug(`(deployPackages) skip postInstall(${p})`);
         break;
-      case "apt":
-        logger.debug(`(deployPackages) apt.postInstall(${p})`);
-        await apt.postInstall();
-        break;
-      case "gcc":
-        logger.debug(`(deployPackages) gcc.postInstall(${p})`);
-        await gcc.postInstall(p, packageInfo);
-        break;
-      case "sudo":
-        logger.debug(`(deployPackages) sudo.postInstall(${p})`);
-        await sudo.postInstall();
-        break;
-      case "python":
-        logger.debug(`(deployPackages) python.postInstall(${p})`);
-        await python.postInstall();
-        break;
-      default:
-        logger.error(
-          `(deployPackages) Unknown postInstall ${packageInfo.postInstall}`,
-        );
-        throw new Error(`Unknown postInstall ${packageInfo.postInstall}`);
+      default: {
+        const recipe = recipes.get(packageInfo.postInstall);
+        if (!recipe) {
+          throw new Error(`Recipe ${p} not found`);
+        }
+        if (recipe.postInstall) {
+          await recipe.postInstall(p, packageInfo);
+        }
+      }
     }
   }
 }
