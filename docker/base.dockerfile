@@ -44,8 +44,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3059
 RUN mkdir -p /deno
 WORKDIR /deno
-COPY docker/download_deno.sh .
-RUN ./download_deno.sh
+RUN wget -qO- https://deno.land/install.sh | sh \
+    && mv /root/.deno/bin/deno /deno/deno
 
 # =======================================================================
 
