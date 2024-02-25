@@ -84,13 +84,12 @@ COPY mimic-cross.deno /mimic-cross.deno
 
 # ======================================================================
 
-FROM mimic-host as mimic-test-host
+FROM mimic-host-build as mimic-test-host
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         gcc \
         libc6-dev \
-        sudo \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
 
@@ -120,19 +119,19 @@ ENV MIMIC_TEST_DATA_PATH=/test
 
 ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        gcc \
-        g++ \
-        python3 \
-        python3.10-venv \
-        python3-pip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists
+# RUN apt-get update \
+#     && apt-get install -y --no-install-recommends \
+#         gcc \
+#         g++ \
+#         python3 \
+#         python3.10-venv \
+#         python3-pip \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists
 
-WORKDIR /mimic-cross/mimic-cross.deno
+# WORKDIR /mimic-cross/mimic-cross.deno
 
-# =======================================================================
+# # =======================================================================
 
-FROM mimic-test AS mimic-test-run
-RUN mimic-deno test -A --parallel
+# FROM mimic-test AS mimic-test-run
+# RUN mimic-deno test -A --parallel

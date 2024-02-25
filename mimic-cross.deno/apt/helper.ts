@@ -1,10 +1,12 @@
 import $ from "daxex/mod.ts";
 import { PathRefLike } from "daxex/mod.ts";
 export { keepOriginalBin, mimicDeploy, mimicize } from "../src/deploy.ts";
-import { deployPackageCommands } from "../apt/apt.ts";
-export { deployPackageCommands } from "../apt/apt.ts";
 import { config } from "../config/config.ts";
 import { PackageInfo } from "../apt/package_info.ts";
+import { deployIfHostCommands } from "../src/deploy.ts";
+import { logger } from "../src/log.ts";
+import { runOnHost } from "../src/chroot.ts";
+
 
 export async function fileHas(
   path: PathRefLike,
@@ -27,6 +29,16 @@ export async function deployCli(
 /usr/local/bin/mimicx ${command} ${commandArg} -- "$@"
 `);
   await pathRef.chmod(0o755);
+}
+
+export async function deployPackageCommands(
+  package_: string,
+  packageInfo: PackageInfo,
+) {
+  logger.info(`(deployPackageCommands) ${package_}`);
+  logger.debug(`(deployPackageCommands) blockList = ${packageInfo.blockList}`);
+  const commands = await runOnHost(`dpkg -L ${package_}`).lines();
+  await deployIfHostCommands(commands, new Set(packageInfo.blockList));
 }
 
 export async function deployCrossTool(

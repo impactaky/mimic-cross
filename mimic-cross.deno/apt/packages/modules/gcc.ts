@@ -1,7 +1,7 @@
-import { PackageInfo } from "../package_info.ts";
-import { deployPackageCommands } from "../apt.ts";
-import { createGccTrampoline } from "../../src/args.ts";
-import { config } from "../../config/config.ts";
+import { PackageInfo } from "../../package_info.ts";
+import { deployPackageCommands } from "../../helper.ts";
+import { createGccTrampoline } from "../../../src/args.ts";
+import { config } from "../../../config/config.ts";
 
 export async function postInstall(
   packageName: string,

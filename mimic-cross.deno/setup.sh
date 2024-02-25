@@ -26,10 +26,8 @@ find /mimic-cross -name "ld-linux-*" | while read -r host_ld_linux; do
   fi
 done
 
-ls /mimic-cross/mimic-cross.deno/apt/packages/apt.ts
 pushd /mimic-cross/mimic-cross.deno
-PATH=/mimic-cross/mimic-cross/internal/bin /mimic-cross/mimic-cross/bin/mimic-deno compile -A src/mimicx.ts
-mv mimicx /usr/local/bin/
-popd
-
+PATH=/mimic-cross/mimic-cross/internal/bin /mimic-cross/mimic-cross/bin/mimic-deno compile -A src/mimicx.ts 
+ln -s /mimic-cross/mimic-cross.deno/mimicx /usr/local/bin/mimicx
 mimicx setup
+popd

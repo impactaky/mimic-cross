@@ -1,7 +1,7 @@
 import $ from "daxex/mod.ts";
-import { fileHas, mimicDeploy } from "../helper.ts";
-import { logger } from "../../src/log.ts";
-import { config } from "../../config/config.ts";
+import { fileHas, mimicDeploy } from "../../helper.ts";
+import { logger } from "../../../src/log.ts";
+import { config } from "../../../config/config.ts";
 
 export async function postInstall() {
   const sudoPath = await $.which("sudo");
