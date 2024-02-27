@@ -112,12 +112,8 @@ RUN /mimic-cross/mimic-cross.deno/setup.sh
 
 # =======================================================================
 
-FROM mimic-cross AS mimic-test
-
-COPY --from=mimic-test-host /test /test
-ENV MIMIC_TEST_DATA_PATH=/test
-
-ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
+# hadolint ignore=DL3029
+FROM --platform=linux/${MIMIC_ARCH} ${BASE_IMAGE}:${BASE_IMAGE_TAG} as mimic-test
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -129,9 +125,17 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
 
-WORKDIR /mimic-cross/mimic-cross.deno
+COPY --from=mimic-host / /mimic-cross
+RUN /mimic-cross/mimic-cross.deno/setup.sh
 
 # =======================================================================
 
 FROM mimic-test AS mimic-test-run
+
+COPY --from=mimic-test-host /test /test
+
+ENV MIMIC_TEST_DATA_PATH=/test
+ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
+WORKDIR /mimic-cross/mimic-cross.deno
+
 RUN mimic-deno test -A --parallel
