@@ -68,9 +68,9 @@ mimic-cross currently does not support the pip command. Please use
 Supported packages can be found in
 [supported.json](/mimic-cross.deno/apt/packages/supported.json)
 
-## How to add support packages
+## How to custom mimic-cross for your environment
 
-T.B.D.
+See [custom.md](doc/custom.md).
 
 ## How to make runable users binary
 
