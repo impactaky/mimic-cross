@@ -93,7 +93,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
 
-COPY ./test/hello.c /test/hello.c
+COPY /test /test
 WORKDIR /test
 RUN gcc -shared -o libhello.so hello.c \
     && gcc -shared -o libhello_runpath.so hello.c -Wl,-rpath,\$ORIGIN/foo:/path/to/lib \
@@ -124,6 +124,8 @@ RUN apt-get update \
         python3-pip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
+
+COPY --from=mimic-test-host /test/custom /etc/mimic-cross/custom
 
 COPY --from=mimic-host / /mimic-cross
 RUN /mimic-cross/mimic-cross.deno/setup.sh

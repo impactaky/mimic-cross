@@ -2,3 +2,4 @@ Dockerfile
 bake.json
 .vscode
 zig-cache
+.coverage

@@ -3,7 +3,8 @@
     "cliffy/": "https://deno.land/x/cliffy@v1.0.0-rc.3/",
     "daxex/": "https://deno.land/x/dax_extras@2.3.3/",
     "import/": "https://deno.land/x/import@0.2.1/",
-    "std/": "https://deno.land/std@0.214.0/"
+    "std/": "https://deno.land/std@0.214.0/",
+    "mimic-cross/": "/mimic-cross/mimic-cross.deno/"
   },
   "tasks": {
     "compile": "PATH=/mimic-cross/mimic-cross/internal/bin /mimic-cross/mimic-cross/bin/mimic-deno compile -c deno.json -A src/mimicx.ts",
