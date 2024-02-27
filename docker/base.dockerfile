@@ -84,17 +84,16 @@ COPY mimic-cross.deno /mimic-cross.deno
 
 # ======================================================================
 
-FROM mimic-host as mimic-test-host
+FROM mimic-host-build as mimic-test-host
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         gcc \
         libc6-dev \
-        sudo \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
 
-COPY ./test/hello.c /test/hello.c
+COPY /test /test
 WORKDIR /test
 RUN gcc -shared -o libhello.so hello.c \
     && gcc -shared -o libhello_runpath.so hello.c -Wl,-rpath,\$ORIGIN/foo:/path/to/lib \
@@ -113,12 +112,8 @@ RUN /mimic-cross/mimic-cross.deno/setup.sh
 
 # =======================================================================
 
-FROM mimic-cross AS mimic-test
-
-COPY --from=mimic-test-host /test /test
-ENV MIMIC_TEST_DATA_PATH=/test
-
-ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
+# hadolint ignore=DL3029
+FROM --platform=linux/${MIMIC_ARCH} ${BASE_IMAGE}:${BASE_IMAGE_TAG} as mimic-test
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -130,9 +125,19 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
 
-WORKDIR /mimic-cross/mimic-cross.deno
+COPY --from=mimic-test-host /test/custom /etc/mimic-cross/custom
+
+COPY --from=mimic-host / /mimic-cross
+RUN /mimic-cross/mimic-cross.deno/setup.sh
 
 # =======================================================================
 
 FROM mimic-test AS mimic-test-run
+
+COPY --from=mimic-test-host /test /test
+
+ENV MIMIC_TEST_DATA_PATH=/test
+ENV PATH="/mimic-cross/mimic-cross/bin:$PATH"
+WORKDIR /mimic-cross/mimic-cross.deno
+
 RUN mimic-deno test -A --parallel

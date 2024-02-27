@@ -26,10 +26,16 @@ find /mimic-cross -name "ld-linux-*" | while read -r host_ld_linux; do
   fi
 done
 
-ls /mimic-cross/mimic-cross.deno/apt/packages/apt.ts
 pushd /mimic-cross/mimic-cross.deno
-PATH=/mimic-cross/mimic-cross/internal/bin /mimic-cross/mimic-cross/bin/mimic-deno compile -A src/mimicx.ts
-mv mimicx /usr/local/bin/
+mkdir -p /etc/mimic-cross/custom
+if [[ ! -e /etc/mimic-cross/custom/supported.json ]]; then
+  cp apt/custom/supported.json /etc/mimic-cross/custom/supported.json
+fi
+if [[ ! -e /etc/mimic-cross/custom/recipes.ts ]]; then
+  cp apt/custom/recipes.ts /etc/mimic-cross/custom/recipes.ts
+fi
+PATH=/mimic-cross/mimic-cross/internal/bin /mimic-cross/mimic-cross/bin/mimic-deno compile -c deno.json -A src/mimicx.ts 
+ln -s /mimic-cross/mimic-cross.deno/mimicx /usr/local/bin/mimicx
 popd
 
 mimicx setup

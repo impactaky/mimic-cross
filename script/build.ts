@@ -76,7 +76,8 @@ await new Command()
       bakeJson.target.default.output = ["type=docker"];
     }
     if (options.test) {
-      bakeJson.target.default.target = "mimic-test";
+      bakeJson.target.default.platforms = [`linux/${Deno.build.arch}`];
+      bakeJson.target.default.target = "mimic-test-run";
       bakeJson.target.default.tags = [
         `${output.name}-${targetArch}-test:${output.tag}`,
       ];
