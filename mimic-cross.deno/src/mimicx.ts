@@ -28,9 +28,8 @@ await new Command()
     }
   })
   .command("deploy-packages <packageName...:string>", "Deploy packages.")
-  .option("-f, --force", "force deploy package")
-  .action(async (options, ...packageName) => {
-    await deployPackages(packageName, { force: options.force });
+  .action(async (_options, ...packageName) => {
+    await deployPackages(packageName);
   })
   .command("chroot [command...]", "Run command in host")
   .action(async function (_, ...command) {
@@ -40,12 +39,11 @@ await new Command()
     await runOnHost(combinedArgs);
   })
   .command("apt-get [args...]", "mimic apt-get command")
-  .option("-f, --force", "force deploy package")
-  .action(async function (options, ...command) {
+  .action(async function (_options, ...command) {
     const combinedArgs: string[] = (command || []).concat(
       this.getLiteralArgs() || [],
     );
-    await aptGet(combinedArgs, { force: options.force });
+    await aptGet(combinedArgs);
   })
   .command("python [args...]", "mimic python command")
   .option("--python <python:string>", "called as (e.g. /usr/bin/python3)", {

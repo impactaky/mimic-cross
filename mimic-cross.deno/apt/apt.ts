@@ -5,12 +5,7 @@ import { config } from "../config/config.ts";
 import { logger } from "../src/log.ts";
 import { format } from "std/datetime/mod.ts";
 import { findCommands } from "../src/deploy.ts";
-import { supportedPackagesPromise } from "./load.ts";
-import { getRecipe } from "./package.ts";
-
-export interface deployPackageOptions {
-  force?: boolean;
-}
+import { callPostInstall, getSupportedPackagesFrom } from "./package.ts";
 
 export async function aptGetOnHost(arg: string | string[]) {
   logger.info(`(aptGetOnHost) Run apt-get ${arg}`);
@@ -40,47 +35,14 @@ export async function aptGetOnHost(arg: string | string[]) {
   return;
 }
 
-export async function deployPackages(
-  packages: string[],
-  options?: deployPackageOptions,
-) {
-  const supportedPackages = await supportedPackagesPromise;
-  logger.debug(`(deployPackages) ${packages} { force=${options?.force} }`);
-  const filteredPackages: string[] = (() => {
-    if (options?.force) return packages;
-    const filteredPackages: string[] = [];
-    for (const p of packages) {
-      if (!(p in supportedPackages)) continue;
-      const recipe = getRecipe(supportedPackages[p]);
-      if (recipe.nameResolver) {
-        filteredPackages.push(...recipe.nameResolver(p, supportedPackages[p]));
-        continue;
-      }
-      filteredPackages.push(p);
-    }
-    return filteredPackages;
-  })();
+export async function deployPackages(packages: string[]) {
+  logger.debug(`(deployPackages) ${packages}`);
+  const filteredPackages = await getSupportedPackagesFrom(packages);
   logger.debug(`(deployPackages) filteredPackages = ${filteredPackages}`);
   await aptGetOnHost(
     `install -y --no-install-recommends ${filteredPackages.join(" ")}`,
   );
-  for (const p of filteredPackages) {
-    const packageInfo = supportedPackages[p];
-    if (packageInfo === undefined && !options?.force) {
-      logger.error(
-        `(deployPackages) Unsuported package ${p} exists in filterdPacakges.`,
-      );
-      throw new Error(`Package ${p} is not supported.`);
-    }
-    const recipe = getRecipe(packageInfo);
-    if (!recipe) {
-      throw new Error(`Recipe ${p} not found`);
-    }
-    if (recipe.postInstall) {
-      logger.debug(`(deployPackages) call postInstall(${p})`);
-      await recipe.postInstall(p, packageInfo);
-    }
-  }
+  await callPostInstall(filteredPackages);
 }
 
 export async function deployInstalledPackages() {
@@ -144,10 +106,7 @@ async function mimicAptGetUpdate(args: string[]) {
   await aptGetOnHost(args);
 }
 
-export async function aptGet(
-  arg: string | string[],
-  options?: deployPackageOptions,
-) {
+export async function aptGet(arg: string | string[]) {
   const ts = format(new Date(), "yyyy-MM-dd HH:mm:ss");
   const args = arg instanceof Array ? arg : $.split(arg);
   logger.info(`(aptGet) Run apt-get ${arg}`);
@@ -164,7 +123,7 @@ export async function aptGet(
   const installedPackages = await getIntalledPackagesFromLog(ts);
   logger.debug(`(aptGet) installedPackages = ${installedPackages}`);
   if (installedPackages.length === 0) return;
-  await deployPackages(installedPackages, options);
+  await deployPackages(installedPackages);
 }
 
 export async function findCommandsFromPackage(

@@ -4,5 +4,9 @@
     "daxex/": "https://deno.land/x/dax_extras@2.3.3/",
     "import/": "https://deno.land/x/import@0.2.1/",
     "std/": "https://deno.land/std@0.214.0/"
+  },
+  "tasks": {
+    "compile": "PATH=/mimic-cross/mimic-cross/internal/bin /mimic-cross/mimic-cross/bin/mimic-deno compile -c deno.json -A src/mimicx.ts",
+    "test": "/mimic-cross/mimic-cross/bin/mimic-deno test -A --parallel --coverage=.coverage && /mimic-cross/mimic-cross/bin/mimic-deno coverage .coverage"
   }
 }
