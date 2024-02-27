@@ -5,9 +5,8 @@ import { config } from "../config/config.ts";
 import { logger } from "../src/log.ts";
 import { format } from "std/datetime/mod.ts";
 import { findCommands } from "../src/deploy.ts";
-import { deployCrossTool, deployPackageCommands } from "./helper.ts";
 import { supportedPackagesPromise } from "./load.ts";
-import { recipes } from "./packages/recipes.ts";
+import { getRecipe } from "./package.ts";
 
 export interface deployPackageOptions {
   force?: boolean;
@@ -52,10 +51,9 @@ export async function deployPackages(
     const filteredPackages: string[] = [];
     for (const p of packages) {
       if (!(p in supportedPackages)) continue;
-      if (supportedPackages[p].isCrossTool) {
-        filteredPackages.push(
-          `${p}-${config.arch.replace("_", "-")}-linux-gnu`,
-        );
+      const recipe = getRecipe(supportedPackages[p]);
+      if (recipe.nameResolver) {
+        filteredPackages.push(...recipe.nameResolver(p, supportedPackages[p]));
         continue;
       }
       filteredPackages.push(p);
@@ -74,28 +72,13 @@ export async function deployPackages(
       );
       throw new Error(`Package ${p} is not supported.`);
     }
-    switch (packageInfo.postInstall) {
-      case "default":
-      case undefined:
-        logger.debug(`(deployPackages) call depolyAllCommands(${p})`);
-        await deployPackageCommands(p, packageInfo);
-        break;
-      case "crossTool":
-        logger.debug(`(deployPackages) call depolyCrossTool(${p})`);
-        await deployCrossTool(p, packageInfo);
-        break;
-      case "skip":
-        logger.debug(`(deployPackages) skip postInstall(${p})`);
-        break;
-      default: {
-        const recipe = recipes.get(packageInfo.postInstall);
-        if (!recipe) {
-          throw new Error(`Recipe ${p} not found`);
-        }
-        if (recipe.postInstall) {
-          await recipe.postInstall(p, packageInfo);
-        }
-      }
+    const recipe = getRecipe(packageInfo);
+    if (!recipe) {
+      throw new Error(`Recipe ${p} not found`);
+    }
+    if (recipe.postInstall) {
+      logger.debug(`(deployPackages) call postInstall(${p})`);
+      await recipe.postInstall(p, packageInfo);
     }
   }
 }

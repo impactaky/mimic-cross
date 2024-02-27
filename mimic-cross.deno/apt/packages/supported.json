@@ -1,6 +1,6 @@
 {
   "apt": {
-    "postInstall": "apt"
+    "recipe": "apt"
   },
   "base-files": {},
   "base-passwd": {},
@@ -11,8 +11,7 @@
   "cmake": {},
   "coreutils": {},
   "cpp-11": {
-    "isCrossTool": true,
-    "postIntall": "crossTool"
+    "recipe": "crossTool"
   },
   "cpp-11-aarch64-linux-gnu": {
     "blockList": [
@@ -32,24 +31,22 @@
   "fdisk": {},
   "findutils": {},
   "g++-11": {
-    "isCrossTool": true,
-    "postIntall": "crossTool"
+    "recipe": "crossTool"
   },
   "g++-11-aarch64-linux-gnu": {
-    "postInstall": "gcc"
+    "recipe": "gcc"
   },
   "g++-11-x86-64-linux-gnu": {
-    "postInstall": "gcc"
+    "recipe": "gcc"
   },
   "gcc-11": {
-    "isCrossTool": true,
-    "postIntall": "crossTool"
+    "recipe": "crossTool"
   },
   "gcc-11-aarch64-linux-gnu": {
-    "postInstall": "gcc"
+    "recipe": "gcc"
   },
   "gcc-11-x86-64-linux-gnu": {
-    "postInstall": "gcc"
+    "recipe": "gcc"
   },
   "git": {},
   "gnupg-utils": {},
@@ -82,23 +79,23 @@
   "perl-base": {},
   "procps": {},
   "python3": {
-    "postInstall": "skip"
+    "recipe": "skip"
   },
   "python3-distutils": {
-    "postInstall": "skip"
+    "recipe": "skip"
   },
   "python3-pip": {
-    "postInstall": "skip"
+    "recipe": "skip"
   },
   "python3.10-minimal": {
-    "postInstall": "python"
+    "recipe": "python"
   },
   "python3.10-venv": {
-    "postInstall": "skip"
+    "recipe": "skip"
   },
   "sed": {},
   "sudo": {
-    "postInstall": "sudo"
+    "recipe": "sudo"
   },
   "software-properties-common": {},
   "sysvinit-utils": {},
