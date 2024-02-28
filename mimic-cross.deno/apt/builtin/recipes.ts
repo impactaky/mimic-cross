@@ -80,7 +80,9 @@ export function builtinRecipes(recipes: Map<string, PackageRecipe>) {
     postInstall: async (name, _info) => {
       const matched = name.match(/^(python\d+\.\d+)-minimal/);
       const versionedPython = matched?.[1];
-      if (!versionedPython) throw new Error("Can't parse python version");
+      if (!versionedPython) {
+        throw new Error(`Can't parse python version: ${name}`);
+      }
       await setupMimicPython(versionedPython);
       const pythonPath = `/usr/bin/${versionedPython}`;
       await keepOriginalBin(pythonPath);
