@@ -1,7 +1,5 @@
 {
-  "apt": {
-    "recipe": "apt"
-  },
+  "apt": { "recipe": "apt" },
   "base-files": {},
   "base-passwd": {},
   "bash": {},
@@ -10,18 +8,33 @@
   "bsdutils": {},
   "cmake": {},
   "coreutils": {},
-  "cpp-11": {
-    "recipe": "crossTool"
+  "cpp-9": { "recipe": "crossTool" },
+  "cpp-10": { "recipe": "crossTool" },
+  "cpp-11": { "recipe": "crossTool" },
+  "cpp-12": { "recipe": "crossTool" },
+  "cpp-9-aarch64-linux-gnu": {
+    "blockList": ["/usr/lib/gcc-cross/aarch64-linux-gnu/9/cc1"]
+  },
+  "cpp-10-aarch64-linux-gnu": {
+    "blockList": ["/usr/lib/gcc-cross/aarch64-linux-gnu/10/cc1"]
   },
   "cpp-11-aarch64-linux-gnu": {
-    "blockList": [
-      "/usr/lib/gcc-cross/aarch64-linux-gnu/11/cc1"
-    ]
+    "blockList": ["/usr/lib/gcc-cross/aarch64-linux-gnu/11/cc1"]
+  },
+  "cpp-12-aarch64-linux-gnu": {
+    "blockList": ["/usr/lib/gcc-cross/aarch64-linux-gnu/12/cc1"]
+  },
+  "cpp-9-x86-64-linux-gnu": {
+    "blockList": ["/usr/lib/gcc-cross/x86_64-linux-gnu/9/cc1"]
+  },
+  "cpp-10-x86-64-linux-gnu": {
+    "blockList": ["/usr/lib/gcc-cross/x86_64-linux-gnu/10/cc1"]
   },
   "cpp-11-x86-64-linux-gnu": {
-    "blockList": [
-      "/usr/lib/gcc-cross/x86_64-linux-gnu/11/cc1"
-    ]
+    "blockList": ["/usr/lib/gcc-cross/x86_64-linux-gnu/11/cc1"]
+  },
+  "cpp-12-x86-64-linux-gnu": {
+    "blockList": ["/usr/lib/gcc-cross/x86_64-linux-gnu/12/cc1"]
   },
   "curl": {},
   "dash": {},
@@ -30,24 +43,30 @@
   "e2fsprogs": {},
   "fdisk": {},
   "findutils": {},
-  "g++-11": {
-    "recipe": "crossTool"
-  },
-  "g++-11-aarch64-linux-gnu": {
-    "recipe": "gcc"
-  },
-  "g++-11-x86-64-linux-gnu": {
-    "recipe": "gcc"
-  },
-  "gcc-11": {
-    "recipe": "crossTool"
-  },
-  "gcc-11-aarch64-linux-gnu": {
-    "recipe": "gcc"
-  },
-  "gcc-11-x86-64-linux-gnu": {
-    "recipe": "gcc"
-  },
+  "g++-9": { "recipe": "crossTool" },
+  "g++-10": { "recipe": "crossTool" },
+  "g++-11": { "recipe": "crossTool" },
+  "g++-12": { "recipe": "crossTool" },
+  "g++-9-aarch64-linux-gnu": { "recipe": "gcc" },
+  "g++-10-aarch64-linux-gnu": { "recipe": "gcc" },
+  "g++-11-aarch64-linux-gnu": { "recipe": "gcc" },
+  "g++-12-aarch64-linux-gnu": { "recipe": "gcc" },
+  "g++-9-x86-64-linux-gnu": { "recipe": "gcc" },
+  "g++-10-x86-64-linux-gnu": { "recipe": "gcc" },
+  "g++-11-x86-64-linux-gnu": { "recipe": "gcc" },
+  "g++-12-x86-64-linux-gnu": { "recipe": "gcc" },
+  "gcc-9": { "recipe": "crossTool" },
+  "gcc-10": { "recipe": "crossTool" },
+  "gcc-11": { "recipe": "crossTool" },
+  "gcc-12": { "recipe": "crossTool" },
+  "gcc-9-aarch64-linux-gnu": { "recipe": "gcc" },
+  "gcc-10-aarch64-linux-gnu": { "recipe": "gcc" },
+  "gcc-11-aarch64-linux-gnu": { "recipe": "gcc" },
+  "gcc-12-aarch64-linux-gnu": { "recipe": "gcc" },
+  "gcc-9-x86-64-linux-gnu": { "recipe": "gcc" },
+  "gcc-10-x86-64-linux-gnu": { "recipe": "gcc" },
+  "gcc-11-x86-64-linux-gnu": { "recipe": "gcc" },
+  "gcc-12-x86-64-linux-gnu": { "recipe": "gcc" },
   "git": {},
   "gnupg-utils": {},
   "gpg": {},
@@ -60,11 +79,7 @@
   "grep": {},
   "gzip": {},
   "hostname": {},
-  "libc-bin": {
-    "blockList": [
-      "/sbin/ldconfig.real"
-    ]
-  },
+  "libc-bin": { "blockList": ["/sbin/ldconfig.real"] },
   "libpam-modules-bin": {},
   "login": {},
   "logsave": {},
@@ -78,25 +93,19 @@
   "patch": {},
   "perl-base": {},
   "procps": {},
-  "python3": {
-    "recipe": "skip"
-  },
-  "python3-distutils": {
-    "recipe": "skip"
-  },
-  "python3-pip": {
-    "recipe": "skip"
-  },
-  "python3.10-minimal": {
-    "recipe": "python"
-  },
-  "python3.10-venv": {
-    "recipe": "skip"
-  },
+  "python3": { "recipe": "skip" },
+  "python3-distutils": { "recipe": "skip" },
+  "python3-pip": { "recipe": "skip" },
+  "python3.8-minimal": { "recipe": "python" },
+  "python3.9-minimal": { "recipe": "python" },
+  "python3.10-minimal": { "recipe": "python" },
+  "python3.11-minimal": { "recipe": "python" },
+  "python3.8-venv": { "recipe": "skip" },
+  "python3.9-venv": { "recipe": "skip" },
+  "python3.10-venv": { "recipe": "skip" },
+  "python3.11-venv": { "recipe": "skip" },
   "sed": {},
-  "sudo": {
-    "recipe": "sudo"
-  },
+  "sudo": { "recipe": "sudo" },
   "software-properties-common": {},
   "sysvinit-utils": {},
   "tar": {},
