@@ -77,9 +77,12 @@ export function builtinRecipes(recipes: Map<string, PackageRecipe>) {
   });
 
   recipes.set("python", {
-    postInstall: async (_name, _info) => {
-      await setupMimicPython("python3.10");
-      const pythonPath = "/usr/bin/python3.10";
+    postInstall: async (name, _info) => {
+      const matched = name.match(/^(python\d+\.\d+)-minimal/);
+      const versionedPython = matched?.[1];
+      if (!versionedPython) throw new Error("Can't parse python version");
+      await setupMimicPython(versionedPython);
+      const pythonPath = `/usr/bin/${versionedPython}`;
       await keepOriginalBin(pythonPath);
       await mimicize(`${config.hostRoot}/${pythonPath}`);
       await deployCli("python", pythonPath, '--python "$0"');
