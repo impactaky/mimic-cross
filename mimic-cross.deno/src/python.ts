@@ -22,7 +22,7 @@ export function callNativePython(
     `${config.internalBin}/qemu-${config.arch}`,
     "-0",
     `${calledAs}`,
-    `${config.keepBin}/${versionedPython}`,
+    `${config.keep}/usr/bin/${versionedPython}`,
     "--",
     ...args,
   ]).env({ ...Deno.env.toObject(), "MIMIC_CROSS_DISABLE": "1" });

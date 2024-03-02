@@ -110,7 +110,7 @@ export async function aptGet(arg: string | string[]) {
   const ts = format(new Date(), "yyyy-MM-dd HH:mm:ss");
   const args = arg instanceof Array ? arg : $.split(arg);
   logger.info(`(aptGet) Run apt-get ${arg}`);
-  await $.command([`${config.keepBin}/apt-get`, ...args]).env(
+  await $.command([`${config.keep}/usr/bin/apt-get`, ...args]).env(
     Deno.env.toObject(),
   );
   if (Deno.env.get("MIMIC_CROSS_DISABLE") === "1") {

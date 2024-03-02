@@ -7,8 +7,7 @@ export let config = {
   mimicCrossRoot: "/mimic-cross/mimic-cross.deno",
   internalRoot: "/mimic-cross/mimic-cross/internal",
   internalBin: "/mimic-cross/mimic-cross/internal/bin",
-  keepBin: "/mimic-cross/mimic-cross/keep/bin",
-  keepHostBin: "/mimic-cross/mimic-cross_bin",
+  keep: "/mimic-cross/mimic-cross/keep",
   logFile: "/var/log/mimic-cross.log",
   logMode: "default", // default | verbose | debug
 };
