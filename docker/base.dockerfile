@@ -128,6 +128,8 @@ RUN apt-get update \
 COPY --from=mimic-test-host /test/custom /etc/mimic-cross/custom
 
 COPY --from=mimic-host / /mimic-cross
+RUN rm /etc/apt/apt.conf.d/docker-clean /mimic-cross/etc/apt/apt.conf.d/docker-clean
+# hadolint ignore=DL3059
 RUN /mimic-cross/mimic-cross.deno/setup.sh
 
 # =======================================================================
