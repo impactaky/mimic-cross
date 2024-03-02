@@ -8,6 +8,7 @@
   },
   "tasks": {
     "compile": "PATH=/mimic-cross/mimic-cross/internal/bin /mimic-cross/mimic-cross/bin/mimic-deno compile -c deno.json -A src/mimicx.ts",
-    "test": "/mimic-cross/mimic-cross/bin/mimic-deno test -A --parallel --coverage=.coverage && /mimic-cross/mimic-cross/bin/mimic-deno coverage .coverage"
+    "test": "/mimic-cross/mimic-cross/bin/mimic-deno test -A --parallel --coverage=.coverage && /mimic-cross/mimic-cross/bin/mimic-deno coverage .coverage",
+    "lint": "deno run -A ./script/lint.ts --git"
   }
 }
