@@ -6,9 +6,11 @@ import { isElfExecutable, isInPath, parseLdconf } from "./util.ts";
 
 export async function keepOriginalBin(path: PathRefLike) {
   const pathRef = $.path(path);
-  const dst = $.path(`${config.keepBin}/${pathRef.basename()}`);
-  await pathRef.copyFile(dst);
-  logger.info(`(keepOriginalBin) Copy ${path} to ${dst}`);
+  const dst = $.path(`${config.keep}/${pathRef}`);
+  await dst.parent()?.ensureDir();
+  await pathRef.rename(dst);
+  logger.info(`(keepOriginalBin) Move ${path} to ${dst}`);
+  return dst;
 }
 
 export async function readRunpath(
