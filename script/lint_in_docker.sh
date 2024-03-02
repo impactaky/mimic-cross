@@ -7,4 +7,5 @@ docker run --rm -it -v="$(pwd):$(pwd)" --workdir="$(pwd)" \
     -v /etc/passwd:/etc/passwd -v /etc/group:/etc/group \
     -v /etc/shadow:/etc/shadow -v /etc/gshadow:/etc/gshadow \
     -v "$HOME:$HOME" \
-    impactaky/mimic-cross-lint ./script/lint.sh "$@"
+    impactaky/mimic-cross-lint \
+    deno task lint
