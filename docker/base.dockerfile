@@ -117,6 +117,8 @@ FROM --platform=linux/${MIMIC_ARCH} ${BASE_IMAGE}:${BASE_IMAGE_TAG} as mimic-tes
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        clang \
+        clang-15 \
         gcc \
         g++ \
         python3 \

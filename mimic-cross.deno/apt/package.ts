@@ -28,7 +28,6 @@ export const recipes = (() => {
   const recipes: Map<string, PackageRecipe> = new Map();
   builtinRecipes(recipes);
   customRecipes(recipes);
-  console.log(recipes);
   return recipes;
 })();
 

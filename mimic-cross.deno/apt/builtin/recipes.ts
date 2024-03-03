@@ -10,7 +10,7 @@ import $ from "daxex/mod.ts";
 import { config } from "../../config/config.ts";
 import { logger } from "../../src/log.ts";
 import { setupMimicPython } from "../../src/python.ts";
-import { createGccTrampoline } from "../../src/args.ts";
+import { createClangTrampoline, createGccTrampoline } from "../../src/args.ts";
 import { PackageRecipe } from "../package.ts";
 
 export function builtinRecipes(recipes: Map<string, PackageRecipe>) {
@@ -34,6 +34,15 @@ export function builtinRecipes(recipes: Map<string, PackageRecipe>) {
       if (!aptGetPath) return;
       await keepOriginalBin(aptGetPath);
       await deployCli("apt-get", aptGetPath);
+    },
+  });
+
+  recipes.set("clang", {
+    postInstall: async (name, info) => {
+      const matched = name.match(/^clang-(\d+).*/);
+      const version = matched?.[1];
+      await deployPackageCommands(name, info);
+      await createClangTrampoline(`/usr/lib/llvm-${version}/bin/clang`);
     },
   });
 
