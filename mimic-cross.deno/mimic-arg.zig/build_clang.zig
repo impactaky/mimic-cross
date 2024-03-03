@@ -4,7 +4,7 @@ pub fn build(b: *std.build.Builder) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     const mimic_target = b.option([]const u8, "mimic_target", "Mimic target executable") orelse {
-        return error.MissingMmicTarget;
+        return error.MissingMimicTarget;
     };
     const mimic_arch = b.option([]const u8, "mimic_arch", "Mimic arch executable") orelse {
         return error.MissingMimicArch;
