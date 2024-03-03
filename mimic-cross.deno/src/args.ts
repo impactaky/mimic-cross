@@ -15,9 +15,15 @@ export async function createTrampolineByZig(
   const hostPathRef = $.path(`${config.hostRoot}/${targetPath}`);
   const keepedPathRef = await keepOriginalBin(hostPathRef);
   const tmpDir = await Deno.makeTempDir();
-  await $`${config.internalBin}/zig build --build-file ${buildFile} -Dmimic_target=${keepedPathRef} -Dmimic_arch=${config.arch} -p ${tmpDir} --cache-dir ${tmpDir}/cache`
-    .cwd(config.mimicCrossRoot + "/mimic-arg.zig");
-  await $.path(`${tmpDir}/bin/${keepedPathRef.basename()}`).rename(hostPathRef);
+  try {
+    await $`${config.internalBin}/zig build --build-file ${buildFile} -Dmimic_target=${keepedPathRef} -Dmimic_arch=${config.arch} -p ${tmpDir} --cache-dir ${tmpDir}/cache`
+      .cwd(config.mimicCrossRoot + "/mimic-arg.zig");
+    await $.path(`${tmpDir}/bin/${keepedPathRef.basename()}`).rename(
+      hostPathRef,
+    );
+  } finally {
+    await $.path(tmpDir).remove({ recursive: true });
+  }
   await targetPathRef.remove();
   await targetPathRef.createSymlinkTo(hostPathRef.toString());
 }
