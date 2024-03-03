@@ -1,5 +1,7 @@
 import { assert, assertEquals } from "std/assert/mod.ts";
 import $ from "daxex/mod.ts";
+import { getElfArch } from "./util.ts";
+import { config } from "../config/config.ts";
 
 Deno.test("callGccWithNative", async () => {
   const text =
@@ -57,4 +59,14 @@ Deno.test("callG++WithEnv", async () => {
   assertEquals(values[0], "armv8.2-a"); // arch
   assertEquals(values[1], "cortex-a75"); // cpu
   assertEquals(values[2], "cortex-a75"); // tune
+});
+
+Deno.test("clang", async () => {
+  assertEquals(await getElfArch("/usr/bin/clang"), config.hostArch);
+  await $`clang -o /tmp/main /test/main.c`;
+});
+
+Deno.test("clang-15", async () => {
+  assertEquals(await getElfArch("/usr/bin/clang-15"), config.hostArch);
+  await $`clang-15 -o /tmp/main /test/main.c`;
 });

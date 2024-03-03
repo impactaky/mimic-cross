@@ -14,7 +14,5 @@ pub fn build(b: *std.build.Builder) !void {
     build_options.addOption([]const u8, "mimic_arch", mimic_arch);
     const gcc = b.addExecutable(.{ .name = std.fs.path.basename(mimic_target), .root_source_file = .{ .path = "gcc.zig" }, .target = target, .optimize = optimize, .linkage = .dynamic });
     gcc.addOptions("build_options", build_options);
-    const gcc_step = b.step("gcc", "mimic gcc");
-    gcc_step.dependOn(&gcc.step);
     b.installArtifact(gcc);
 }
