@@ -89,14 +89,8 @@ export function callMimicedPython(
 }
 
 function detectModule(args: string[]): string | undefined {
-  for (let i = 0; i < args.length; i++) {
-    if (args[i] === "-m") {
-      if (i + 1 >= args.length) {
-        throw new Error("Can't find module name after -m option.");
-      }
-      return args[i + 1];
-    }
-  }
+  // FXIME
+  if (args[0] === "-m") return args[1];
   return undefined;
 }
 
