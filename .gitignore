@@ -1,6 +1,7 @@
+.cache
+.coverage
+.vscode
 Dockerfile
 bake.json
-.vscode
-zig-cache
-.coverage
-.cache
+deno.lock
+zig-cache/
