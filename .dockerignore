@@ -1,2 +1,5 @@
+.coverage
 .git
 .vscode
+deno.lock
+zig-cache/
