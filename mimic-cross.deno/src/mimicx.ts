@@ -6,6 +6,7 @@ import {
   findCommandsFromPackage,
   getAllInstalledPackages,
 } from "../apt/apt.ts";
+import { supportedPackages } from "../apt/package.ts";
 import { mimicPython } from "./python.ts";
 import { logger } from "./log.ts";
 import { runOnHost } from "./chroot.ts";
@@ -56,15 +57,14 @@ await new Command()
     await mimicPython(options.python, combinedArgs);
   })
   .command("suggest [packageName...]", "Suggest supported package list.")
-  .option("--show-commands", "show deploy commands")
   .option("-a, --all", "Target all installed packages")
   .action(async function (options, ...packageName) {
     if (options.all) packageName = await getAllInstalledPackages();
     for (const p of packageName) {
+      if (p in supportedPackages) continue;
       const commands = await findCommandsFromPackage(p);
       if (commands.length === 0) continue;
       console.log(`${p},`);
-      if (!options.showCommands) continue;
       for (const c of commands) {
         console.log(`//  ${c}`);
       }
