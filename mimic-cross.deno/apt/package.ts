@@ -8,7 +8,7 @@ import customPackageData from "/etc/mimic-cross/custom/supported.json" with {
   type: "json",
 };
 
-const supportedPackages: Record<string, PackageInfo> = {
+export const supportedPackages: Record<string, PackageInfo> = {
   ...builtinPackageData,
   ...customPackageData,
 };
