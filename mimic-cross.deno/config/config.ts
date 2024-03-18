@@ -20,6 +20,10 @@ export async function loadConfig() {
   }
   config.hostArch = Deno.build.arch;
   config.arch = (await $`arch`.text()).trimEnd();
+  if (Deno.uid() != 0) {
+    config.logFile = Deno.env.get("HOME") + "/.cache/mimic-cross/log";
+    await $.path(config.logFile).parent()!.ensureDir();
+  }
 }
 
 await loadConfig();
