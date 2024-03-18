@@ -1,6 +1,6 @@
 import $ from "daxex/mod.ts";
 import { PathRefLike } from "daxex/mod.ts";
-import { prepareChroot, runOnHost } from "../src/chroot.ts";
+import { runOnHost } from "../src/chroot.ts";
 import { config } from "../config/config.ts";
 import { logger } from "../src/log.ts";
 import { format } from "std/datetime/mod.ts";
@@ -9,7 +9,6 @@ import { callPostInstall, getSupportedPackagesFrom } from "./package.ts";
 
 export async function aptGetOnHost(arg: string | string[]) {
   logger.info(`(aptGetOnHost) Run apt-get ${arg}`);
-  await prepareChroot;
   const args = arg instanceof Array ? arg : $.split(arg);
   if (Deno.env.get("HOSTNAME") === "buildkitsandbox") {
     if (args[0] === "install") {
