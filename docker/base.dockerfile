@@ -122,7 +122,7 @@ RUN apt-get update \
         gcc \
         g++ \
         python3 \
-        python3.10-venv \
+        $(if [ "${BASE_IMAGE_TAG}" = "24.04" ]; then echo "python3.12-venv"; else echo "python3.10-venv"; fi) \
         python3-pip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists
