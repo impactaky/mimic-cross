@@ -51,6 +51,7 @@ mimic-cross currently does not support the pip command. Please use
 
 - OS
   - ubuntu:22.04
+  - ubuntu:24.04
 - Build platform
   - linux/amd64
   - linux/arm64
@@ -64,6 +65,7 @@ mimic-cross currently does not support the pip command. Please use
   - g++-11
 - Language
   - python3.10
+  - python3.12 (Ubuntu 24.04)
 
 Supported packages can be found in
 [supported.json](/mimic-cross.deno/apt/packages/supported.json)
