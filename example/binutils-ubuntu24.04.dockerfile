@@ -1,3 +1,4 @@
+# hadolint ignore=DL3007
 FROM --platform=${BUILDPLATFORM} impactaky/mc-ubuntu24.04-${TARGETARCH}:latest
 
 RUN apt-get update && \
